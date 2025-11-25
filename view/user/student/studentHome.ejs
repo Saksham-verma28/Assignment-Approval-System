@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Assignment Dashboard</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet" href="/css/usercss/studentHome.css">
+</head>
+
+<body>
+    <div class="dashboard-container">
+
+        <div class="dashboard-header">
+            <div class="header-top">
+                <h1>Assignment Dashboard</h1>
+                <button class="logout-button" onclick="window.location.href='/auth/logout';">Logout</button>
+            </div>
+
+            <div class="header-content">
+                <p>Welcome back, <strong><%= name %></strong></p>
+                <a href="/student/upload/assignment" class="upload-button">Upload New Assignment</a>
+            </div>
+        </div>
+
+        <div class="metrics-grid">
+            <div class="metric-card draft">
+                <div class="count"><%= totalDrafts %></div>
+                <div class="label">Drafts (In Progress)</div>
+            </div>
+
+            <div class="metric-card submitted">
+                <div class="count"><%= totalSubmitted %></div>
+                <div class="label">Submitted</div>
+            </div>
+
+            <div class="metric-card approved">
+                <div class="count">0</div>
+                <div class="label">Approved / Graded</div>
+            </div>
+
+            <div class="metric-card rejected">
+                <div class="count">0</div>
+                <div class="label">Rejected / Needs Revision</div>
+            </div>
+        </div>
+
+        <div class="recent-section">
+
+            <div class="recent-section-header">
+                <h2>Recent Uploaded</h2>
+                <a href="/student/assignment/all" class="view-all-link">View All →</a>
+            </div>
+
+            <form action="/student/status/filter" method="post">
+                <div class="filter-controls">
+                    <div class="filter-group">
+                        <label for="statusFilter">Filter by Status:</label>
+                        <select name="status" id="statusFilter">
+                            <option value="all">All Statuses</option>
+                            <option value="draft">Draft</option>
+                            <option value="submitted">Submitted</option>
+                            <option value="approved">Approved</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="apply-btn">Apply</button>
+                </div>
+            </form>
+
+            <table class="submission-table" id="assignmentTable">
+                <thead>
+                    <tr>
+                        <th>Assignment Title</th>
+                        <th>Category</th>
+                        <th>Status</th>
+                        <th>Submission Date</th>
+                        <th>Actions</th>
+                        <th>Check History</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <% if (assignments && assignments.length > 0) { %>
+                        <% assignments.forEach(function(assignment) { %>
+                            <tr data-status="<%= assignment.status %>" data-id="<%= assignment._id %>"> 
+                                
+                                <td data-label="Title"><%= assignment.title %></td>
+
+                                <td data-label="Category"><%= assignment.category %></td>
+
+                                <td data-label="Status">
+                                    <span class="status-badge badge-<%= assignment.status %>">
+                                        <%= assignment.status %>
+                                    </span>
+                                </td>
+
+                                <td data-label="Submitted"><%= assignment.submit %></td>
+
+                                <td data-label="Actions" class="actions-cell">
+
+                                    <a href="<%= assignment.upload_path %>" 
+                                       class="action-btn view-btn"
+                                       target="_blank" rel="noopener noreferrer">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </a>
+
+                                    <a href="/student/assignment/download/<%= assignment._id %>"
+                                       class="action-btn download-btn">
+                                        <i class="fa-solid fa-download"></i>
+                                    </a>
+
+                                </td>
+
+                                <td data-label="History">
+                                    <a href="/student/assignment/history/<%= assignment._id %>" class="history-btn">History</a>
+                                </td>
+
+                            </tr>
+                        <% }); %>
+                    <% } else { %>
+                        <tr class="no-assignments">
+                            <td colspan="6">No assignments found.</td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+    
+    <div id="submissionModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Confirm Submission & Select Reviewer</h2>
+            
+            <form id="submissionForm" method="POST"> 
+                <input type="hidden" id="assignmentId" name="assignmentId">
+                
+                <p>You are about to submit: <span id="assignmentTitleDisplay" style="font-weight: bold;"></span></p>
+                
+                <div class="form-group">
+                    <label for="professorSelect">Select Target Professor:</label>
+                    <select id="professorSelect" name="professorId" required>
+                        <option value="">-- Select Professor --</option>
+                        <option value="prof123">Dr. Eleanor Vance (CS Dept)</option>
+                        <option value="prof456">Dr. James Kuang (EE Dept)</option>
+                        <option value="prof789">Prof. Sara Lee (Math Dept)</option>
+                    </select>
+                </div>
+                <button type="submit" class="confirm-submit-btn">Confirm & Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById('submissionModal');
+            const closeButton = document.querySelector('.close-button');
+            const assignmentTitleDisplay = document.getElementById('assignmentTitleDisplay');
+            const assignmentIdInput = document.getElementById('assignmentId');
+            const submissionForm = document.getElementById('submissionForm');
+            const draftStatusBadges = document.querySelectorAll('.badge-draft');
+
+            draftStatusBadges.forEach(badge => {
+                if (badge.textContent.trim().toLowerCase() === 'draft') {
+                    badge.style.cursor = 'pointer'; 
+                    badge.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const row = badge.closest('tr');
+                        if (!row) return;
+                        const title = row.querySelector('[data-label="Title"]').textContent;
+                        const assignmentId = row.getAttribute('data-id');
+                        assignmentTitleDisplay.textContent = title;
+                        assignmentIdInput.value = assignmentId;
+                        submissionForm.action = `/student/assignment/submit/${assignmentId}`;
+                        modal.style.display = 'block';
+                    });
+                }
+            });
+
+            closeButton.onclick = function() {
+                modal.style.display = 'none';
+            }
+
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>

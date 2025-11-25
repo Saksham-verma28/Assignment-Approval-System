@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Department Form</title>
+    <link rel="stylesheet" href="/css/sidebar.css">
+      <script src="https://unpkg.com/lucide@latest"></script>
+      <link rel="stylesheet" href="/css/departmentForm.css">
+      
+</head>
+<body>
+
+    <%- include('../partials/sidebar') %>
+
+    <div class="form-card">
+        <div id="message">
+        </div>
+        <h1 class="form-heading">Create New Department</h1>
+
+        <form>
+            <div class="form-group">
+                <label for="department-name" class="form-label">Department Name</label>
+                <input
+                    type="text"
+                    id="department-name"
+                    name="department-name"
+                    placeholder="e.g., Computer Science, Electrical Engineering"
+                    class="form-input-base"
+                    required
+                />
+            </div>
+
+            <div class="form-group">
+                <label for="program-type" class="form-label">Primary Program Type</label>
+                <div class="select-wrapper">
+                    <select
+                        id="program-type"
+                        name="program-type"
+                        class="form-input-base select-field"
+                        required
+                    >
+                        <option value="" disabled selected>Select a program type</option>
+                        <option value="UG">Undergraduate</option>
+                        <option value="PG">Graduate</option>
+                        <option value="Research">Research</option>
+                    </select>
+                    <div class="select-arrow">
+                        <svg class="h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group mb-8">
+                <label for="department-address" class="form-label">Department Address</label>
+                <textarea
+                    id="department-address"
+                    name="department-address"
+                    rows="4"
+                    placeholder="Enter the full campus address and building details"
+                    class="form-input-base textarea-resize-handle"
+                    required
+                ></textarea>
+            </div>
+
+            <div class="button-group">
+                <button
+                    type="button"
+                    class="btn-base btn-cancel"
+                    onclick="console.log('Cancel clicked')"
+                >
+                    Cancel
+                </button>
+                <button
+                    type="submit"
+                    class="btn-base btn-submit primary-accent"
+                    id="create"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" style="height: 1.25rem; width: 1.25rem;">
+                        <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                    </svg>
+                    <span>Create Department</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</body>
+<script src="/js/active.js"></script>
+<script>
+    const name = document.getElementById('department-name');
+    const ptype = document.getElementById('program-type');
+    const address = document.getElementById('department-address');
+    const create = document.getElementById('create');
+    const message = document.getElementById('message');
+
+    create.addEventListener('click', async (e) => {
+        e.preventDefault();
+
+        
+        let formData = {
+            department_name: name.value.trim(),
+            program_type: ptype.value,
+            department_address: address.value.trim()
+        };
+        
+    
+        if (!formData.department_name || !formData.program_type || !formData.department_address) {
+            message.innerHTML = `<p style="color:yellow; text-align:center; margin-top:10px; font-weight:bold;">Please fill in all required fields.</p>`;
+            return;
+        }
+
+        try {
+            const res = await fetch('/admin/department/create', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(formData)
+            });
+
+            const data = await res.json();
+
+            
+            message.innerHTML = "";
+            
+           
+            const p = document.createElement('p');
+            
+            if (res.ok) {
+                p.textContent = data.message || "Department created successfully!";
+                p.style.color = "limegreen";
+            } else {
+                p.textContent = data.message || "Error creating department!";
+                p.style.color = "red";
+            }
+            
+            p.style.textAlign = "center";
+            p.style.marginTop = "15px";
+            p.style.fontWeight = "bold";
+            message.appendChild(p);
+
+            
+            if (res.ok) {
+                name.value = "";
+                ptype.value = "";
+                address.value = "";
+                ptype.querySelector('option[disabled]').selected = true;
+            }
+
+        } catch (err) {
+            console.error(err);
+            message.innerHTML = `<p style="color:red; text-align:center; margin-top:10px; font-weight:bold;">Network or API error occurred!</p>`;
+        }
+    });
+</script>
+
+</html>

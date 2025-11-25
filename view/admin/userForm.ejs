@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Portal Registration Form</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/userForm.css">
+</head>
+
+<body>
+    <%- include('../partials/sidebar') %>
+
+    <div id="main-content-wrapper">
+        <div class="form-card">
+            <h2 class="form-title">Create New User Account</h2>
+
+            <form id="registration-form" action="/admin/user/create" method="post">
+
+                <div class="form-group">
+                    <label for="name" class="form-label">Full Name</label>
+                    <input type="text" id="name" name="name" required placeholder="Enter full name" class="form-input">
+                </div>
+
+                <div class="form-group">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input type="email" id="email" name="email" required placeholder="name@university.edu" class="form-input">
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" id="password" name="password" required placeholder="••••••••" class="form-input">
+                </div>
+
+                <div class="form-group">
+                    <label for="phone" class="form-label">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" placeholder="(555) 555-5555" class="form-input">
+                </div>
+
+                <div class="form-group">
+                    <label for="dob" class="form-label">Date of Birth</label>
+                    <input type="date" id="dob" name="dob" required class="form-input">
+                </div>
+
+                <div class="form-group">
+                    <label for="program" class="form-label">Program/Major</label>
+                    <input type="text" id="program" name="program" placeholder="e.g., Data Science, Literature, Pre-Med" class="form-input">
+                </div>
+
+                <div class="form-group">
+                    <label for="department" class="form-label">Department</label>
+                    <div class="select-wrapper">
+                        <select id="department" name="department" required class="form-input">
+                            <option value="" disabled selected>Select a department</option>
+                            <option value="CS">Computer Science</option>
+                            <option value="EE">Electrical Engineering</option>
+                            <option value="ME">Mechanical Engineering</option>
+                            <option value="PH">Physics</option>
+                            <option value="CH">Chemistry</option>
+                            <option value="AR">Architecture</option>
+                            <option value="HI">History</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="address" class="form-label">Mailing Address</label>
+                    <textarea id="address" name="address" rows="3" required placeholder="Enter full street address, city, and postal code" class="form-input"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Role</label>
+                    <div class="role-options">
+                        <label class="role-label">
+                            <input type="radio" name="role" value="Student" required class="role-input" id="role-student">
+                            <span class="role-span">Student</span>
+                        </label>
+
+                        <label class="role-label">
+                            <input type="radio" name="role" value="Professor" class="role-input" id="role-professor">
+                            <span class="role-span">Professor</span>
+                        </label>
+
+                        <label class="role-label">
+                            <input type="radio" name="role" value="HOD" class="role-input" id="role-hod">
+                            <span class="role-span">HOD</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="btn-container">
+                    <div id="message-box" style="--message-bg: #14532d; --message-text: #6ee7b7; background-color: var(--message-bg); color: var(--message-text);" role="alert"></div>
+
+                    <button type="submit" class="btn-primary">Register User</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        };
+
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            const form = event.target;
+            const data = Object.fromEntries(new FormData(form).entries());
+            const messageBox = document.getElementById('message-box');
+
+            messageBox.textContent = `User ${data.name} (${data.role}) registered successfully!`;
+            messageBox.style.setProperty('--message-bg', 'rgba(20, 83, 45, 0.5)');
+            messageBox.style.setProperty('--message-text', '#6ee7b7');
+            messageBox.style.display = 'block';
+
+            console.log(data);
+
+            setTimeout(() => {
+                messageBox.style.display = 'none';
+            }, 5000);
+        }
+
+        function active(link) {
+            document.querySelectorAll('.nav-link-top, .nav-link-mobile').forEach(el => {
+                el.classList.remove('active-link');
+            });
+            link.classList.add('active-link');
+        }
+
+        function toggleMobileMenu() {
+            const mobileNav = document.getElementById('mobile-nav');
+            const menuIcon = document.getElementById('menu-icon');
+            const closeIcon = document.getElementById('close-icon');
+
+            if (mobileNav.classList.contains('open')) {
+                mobileNav.classList.remove('open');
+                menuIcon.classList.remove('hidden');
+                closeIcon.classList.add('hidden');
+            } else {
+                mobileNav.classList.add('open');
+                menuIcon.classList.add('hidden');
+                closeIcon.classList.remove('hidden');
+            }
+        }
+    </script>
+
+    <script src="https://unpkg.com/lucide@latest"></script> 
+    <script src="/js/active.js"></script>
+
+</body>
+</html>

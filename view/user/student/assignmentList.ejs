@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Assignments</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/css/usercss/assignmentList.css">
+</head>
+
+<body>
+    <div class="container">
+
+        <div class="header-all-assignments">
+            <a href="/student/dashboard" class="back-btn" title="Go Back">
+                <i class="fa-solid fa-arrow-left"></i>
+            </a>
+            <h1 class="dashboard-title">All Assignments</h1>
+        </div>
+
+        <form action="/student/assignment/filter" method="post" class="filter-form">
+            <label for="statusFilter">Filter by Status:</label>
+            <select name="status" id="statusFilter">
+                <option value="all" selected>All Statuses</option>
+                <option value="draft">Draft</option>
+                <option value="submitted">Submitted</option>
+                <option value="approved">Approved</option>
+                <option value="rejected">Rejected</option>
+            </select>
+            <button type="submit">Apply</button>
+        </form>
+
+        <div class="table-responsive">
+            <table class="assignment-table">
+                <thead>
+                    <tr>
+                        <th>Assignment Title</th>
+                        <th>Category</th>
+                        <th>Status</th>
+                        <th>Submission Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (assignment && assignment.length > 0) { %>
+                        <% assignment.forEach(a => { %>
+                            <tr>
+                                <td data-label="Title">
+                                    <%= a.title %>
+                                </td>
+                                <td data-label="Category">
+                                    <%= a.category %>
+                                </td>
+                                <td data-label="Status">
+                                    <span class="status-badge <%= a.status %>">
+                                        <%= a.status %>
+                                    </span>
+                                </td>
+                                <td data-label="Submission Date">
+                                    <%= a.submit %>
+                                </td>
+                                <td data-label="Actions" class="actions-cell">
+                                    <a href="<%= a.upload_path %>" class="action-btn view-btn" title="View" target="_blank"
+                                        rel="noopener noreferrer">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </a>
+                                    <a href="/student/assignment/download/<%= a._id %>" class="action-btn download-btn"
+                                        title="Download">
+                                        <i class="fa-solid fa-download"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    <% } else { %>
+                        <tr class="empty-row">
+                            <td colspan="5">
+                                <i class="fa-solid fa-file-circle-xmark"></i> 
+                                You currently have no assignments listed. 
+                                <a href="/student/upload/assignment">Upload a new assignment</a> to get started!
+                            </td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+        </div>
+</body>
+
+</html>

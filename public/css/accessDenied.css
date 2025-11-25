@@ -1,0 +1,86 @@
+:root {
+    --bg-deep-dark: #171725;
+    --bg-surface-dark: #1F2937;
+    --text-light: #E5E7EB;
+    --text-gray: #9CA3AF;
+    --text-red: #F87171;
+    --accent-purple: #6366F1;
+    --accent-purple-hover: #4F46E5;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-deep-dark);
+    color: var(--text-light);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    text-align: center;
+}
+
+.error-container {
+    background-color: var(--bg-surface-dark);
+    padding: 3rem 4rem;
+    border-radius: 1rem;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+    max-width: 450px;
+    width: 90%;
+    animation: fadeIn 0.8s ease-out;
+}
+
+.error-icon {
+    color: var(--text-red);
+    margin-bottom: 1.5rem;
+    width: 4rem;
+    height: 4rem;
+    stroke-width: 1.5;
+}
+
+.error-code {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    color: white;
+}
+
+.error-message {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--text-light);
+}
+
+.error-description {
+    color: var(--text-gray);
+    margin-bottom: 2rem;
+    font-size: 1rem;
+}
+
+.action-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    background-color: var(--accent-purple);
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color 0.2s, transform 0.1s;
+    border: none;
+    cursor: pointer;
+    gap: 0.5rem;
+}
+
+.action-button:hover {
+    background-color: var(--accent-purple-hover);
+    transform: translateY(-1px);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}

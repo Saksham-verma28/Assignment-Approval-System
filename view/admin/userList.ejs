@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>All Users</title>
+
+	
+	<link rel="stylesheet" href="/css/sidebar.css">
+	<link rel="stylesheet" href="/css/userList.css">
+
+
+	<script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+	<%- include('../partials/sidebar') %>
+
+	<div id="main-content">
+		<h1 class="page-title">All Users</h1>
+
+	
+		<form action="/admin/user/search" method="GET" class="filter-form">
+			<input type="hidden" name="page" value="1">
+			<input type="hidden" name="limit" value="<%= locals.limit || 20 %>">
+
+			<div class="form-field-flex-1">
+				<label class="input-label">Search</label>
+				<input 
+					type="text" 
+					name="search"
+					placeholder="Search by name or email" 
+					class="input-style"
+					value="<%= locals.query?.search || '' %>"
+				>
+			</div>
+
+			<div class="form-field-quarter">
+				<label class="input-label">Role</label>
+				<select name="role" class="input-style">
+					<option value="">All</option>
+					<option value="Student" <%= locals.query?.role === 'Student' ? 'selected' : '' %>>Student</option>
+					<option value="Professor" <%= locals.query?.role === 'Professor' ? 'selected' : '' %>>Professor</option>
+					<option value="HOD" <%= locals.query?.role === 'HOD' ? 'selected' : '' %>>HOD</option>
+				</select>
+			</div>
+
+			<div class="form-field-quarter">
+				<label class="input-label">Department</label>
+				<select name="department" class="input-style">
+					<option value="">All</option>
+					<option value="CS">Computer Science</option>
+					<option value="EE">Electrical Engineering</option>
+					<option value="ME">Mechanical Engineering</option>
+					<option value="PH">Physics</option>
+					<option value="CH">Chemistry</option>
+					<option value="AR">Architecture</option>
+					<option value="HI">History</option>
+				</select>
+			</div>
+
+			<div class="mobile-submit-button">
+				<button type="submit" class="action-button edit-button">Apply</button>
+			</div>
+		</form>
+
+		<div class="table-card">
+			<div class="table-wrapper">
+				<table class="data-table">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Email</th>
+							<th>Role</th>
+							<th>Department</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% if (user && user.length > 0) { %>
+							<% user.forEach((u, index) => { %>
+								<tr class="<%= index % 2 === 0 ? 'dark-row-even' : 'dark-row-odd' %> table-row-hover">
+									<td data-label="Name"><%= u.name %></td>
+									<td data-label="Email"><%= u.email %></td>
+									<td data-label="Role"><%= u.role %></td>
+									<td data-label="Department"><%= u.department %></td>
+									<td data-label="Action">
+
+										
+										<button class="action-button edit-button" onclick='openEditModal(<%- JSON.stringify(u) %>)'>
+											Edit
+										</button>
+
+										
+										<button class="action-button delete-button" onclick="openDeleteModal('<%= u._id %>')">
+											Delete
+										</button>
+
+									</td>
+								</tr>
+							<% }) %>
+						<% } else { %>
+							<tr><td colspan="5" class="no-results">No users found.</td></tr>
+						<% } %>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<div id="edit-user-modal" class="modal">
+			<div class="modal-content">
+				<span class="close-button" onclick="closeEditModal()">&times;</span>
+				<h2>Edit User</h2>
+
+				<form id="edit-user-form" method="POST">
+					<input type="hidden" id="edit-user-id" name="id">
+
+					<div class="form-field">
+						<label class="input-label">Full Name</label>
+						<input type="text" id="edit-name" name="name" class="input-style" required>
+					</div>
+
+					<div class="form-field">
+						<label class="input-label">Email</label>
+						<input type="email" id="edit-email" name="email" class="input-style" required>
+					</div>
+
+					<div class="form-field">
+						<label class="input-label">Phone</label>
+						<input type="tel" id="edit-phone" name="phone" class="input-style">
+					</div>
+
+					<div class="form-field">
+						<label class="input-label">Department</label>
+						<select id="edit-department" name="department" class="input-style">
+							<option value="CS">Computer Science</option>
+							<option value="EE">Electrical Engineering</option>
+							<option value="ME">Mechanical Engineering</option>
+							<option value="PH">Physics</option>
+							<option value="CH">Chemistry</option>
+							<option value="AR">Architecture</option>
+							<option value="HI">History</option>
+						</select>
+					</div>
+
+					<div class="form-field">
+						<label class="input-label">Role</label>
+						<input type="text" id="edit-role" readonly class="input-style" style="background:#1e293b;">
+					</div>
+
+					<div class="modal-actions">
+						<button type="submit" class="action-button edit-button">Save</button>
+						<button type="button" class="action-button delete-button" onclick="closeEditModal()">Cancel</button>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		
+		<div id="delete-user-modal" class="modal">
+			<div class="modal-content small-modal">
+				<span class="close-button" onclick="closeDeleteModal()">&times;</span>
+				<h2>Delete User?</h2>
+
+				<p style="margin-bottom: 1.5rem; color: var(--text-gray);">
+					This action cannot be undone.
+				</p>
+
+				<form id="delete-user-form" method="POST">
+					<input type="hidden" name="_method" value="DELETE">
+
+					<div class="modal-actions">
+						<button type="button" class="action-button edit-button" onclick="closeDeleteModal()">
+							Cancel
+						</button>
+
+						<button type="submit" class="action-button delete-button">
+							Delete
+						</button>
+					</div>
+				</form>
+			</div>
+		</div>
+
+	</div>
+
+	
+	<script>
+	window.onload = () => {
+		if (typeof lucide !== "undefined") lucide.createIcons();
+	};
+
+	function openEditModal(user) {
+		const modal = document.getElementById("edit-user-modal");
+		const form = document.getElementById("edit-user-form");
+
+		form.action = `/admin/users/${user._id}/edit`;
+
+		document.getElementById("edit-user-id").value = user._id;
+		document.getElementById("edit-name").value = user.name;
+		document.getElementById("edit-email").value = user.email;
+		document.getElementById("edit-phone").value = user.phone;
+		document.getElementById("edit-department").value = user.department;
+		document.getElementById("edit-role").value = user.role;
+
+		modal.style.display = "block";
+	}
+
+	function closeEditModal() {
+		document.getElementById("edit-user-modal").style.display = "none";
+	}
+
+	function openDeleteModal(userId) {
+		const modal = document.getElementById("delete-user-modal");
+		const form = document.getElementById("delete-user-form");
+
+		form.action = `/admin/users/${userId}`;
+
+		modal.style.display = "block";
+	}
+
+	function closeDeleteModal() {
+		document.getElementById("delete-user-modal").style.display = "none";
+	}
+
+	window.onclick = function(event) {
+		const editModal = document.getElementById("edit-user-modal");
+		const delModal = document.getElementById("delete-user-modal");
+
+		if (event.target === editModal) closeEditModal();
+		if (event.target === delModal) closeDeleteModal();
+	};
+	</script>
+
+</body>
+</html>

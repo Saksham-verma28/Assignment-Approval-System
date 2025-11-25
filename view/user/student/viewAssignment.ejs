@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment Tracker Dashboard</title>
+    <link rel="stylesheet" href="/css/usercss/viewAssignment.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="header">
+            <div class="header-content">
+                <h1>📚 Assignment Tracker</h1>
+                <p>Track your assignments, submissions, and grades all in one place</p>
+            </div>
+        </div>
+
+        <div class="assignment-card">
+
+            <div class="assignment-header">
+                <div>
+                    <h3 class="assignment-title"><%= assignmentDetail.title %></h3>
+                    <p class="assignment-course"><%= assignmentDetail.category %></p>
+                </div>
+                <span class="status-badge status-submitted">Submitted</span>
+            </div>
+
+            <p class="assignment-description"><%= assignmentDetail.description %></p>
+
+            <div class="assignment-meta">
+                <div class="meta-item">
+                    <span class="meta-label">Submission Date:</span>
+                    <span class="meta-value"><%= assignmentDetail.submit %></span>
+                </div>
+
+                <div class="meta-item">
+                    <span class="meta-label">Status:</span>
+                    <span class="meta-value"><%= assignmentDetail.status %></span>
+                </div>
+            </div>
+
+            <div class="timeline">
+                <div class="timeline-title">PROGRESS</div>
+
+                <div class="timeline-items">
+
+                    <div class="timeline-item completed">
+                        <div class="timeline-dot completed">✔</div>
+                        <div class="timeline-label">Working</div>
+                    </div>
+
+                    <div class="timeline-line completed"></div>
+
+                    <div class="timeline-item completed">
+                        <div class="timeline-dot completed">✔</div>
+                        <div class="timeline-label">Submitted</div>
+                    </div>
+
+                    <div class="timeline-line"></div>
+
+                    <div class="timeline-item current">
+                        <div class="timeline-dot current">⏳</div>
+                        <div class="timeline-label">Grading</div>
+                    </div>
+
+                    <div class="timeline-line"></div>
+
+                    <div class="timeline-item pending">
+                        <div class="timeline-dot pending"></div>
+                        <div class="timeline-label">Complete</div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="assignment-actions">
+                <button class="btn btn-primary" onclick="window.location.href='/student/assignment/download/<%= assignmentDetail._id %>'">
+                    Download Submission
+                </button>
+
+                <button class="btn btn-secondary" onclick="window.location.href='<%= assignmentDetail.upload_path %>'">
+                    View Details
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

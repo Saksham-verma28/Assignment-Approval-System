@@ -18,9 +18,7 @@ function sendMail(to,sub,msg){
         subject: sub,
         html: msg
     })
-
-    console.log("Send!");
     
 }
 
-sendMail("saurav24gamer@gmail.com","Kiraya","130 nikal lode")
+module.exports = {sendMail}

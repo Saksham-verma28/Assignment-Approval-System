@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta-name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Reset</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --color-primary: #e68b74;
+            --color-primary-hover: #d17a65;
+            --color-background: #f8f0e9;
+            --color-text-dark: #1f2937;
+            --color-text-medium: #6b7280;
+            --color-text-light: #9ca3af;
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-background);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 1rem;
+        }
+
+        .reset-card {
+            background-color: white;
+            max-width: 24rem;
+            width: 100%;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: var(--shadow-2xl);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-text-dark);
+        }
+
+        .form-section {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 2px rgba(230, 139, 116, 0.4);
+        }
+
+        #otp {
+            text-align: center;
+            letter-spacing: 0.25rem;
+            font-size: 1.125rem;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--color-primary);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--color-primary-hover);
+        }
+
+        .hidden { display: none; }
+
+        .message-box-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .flex-display { display: flex; }
+
+        .message-box-content {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            max-width: 20rem;
+            text-align: center;
+        }
+
+        .btn-close {
+            padding: 0.5rem 1.5rem;
+            border: none;
+            background: var(--color-primary);
+            color: white;
+            border-radius: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="reset-card">
+
+        <div class="header">
+            <h1>Reset Your Password</h1>
+            <p>University Portal Access</p>
+        </div>
+
+        <div id="email-step" class="form-section">
+            <h2>Enter Your Email</h2>
+            <form id="email-form">
+                <label>Email</label>
+                <input type="email" id="email" required placeholder="your.name@university.edu">
+                <button type="submit" class="btn-primary">Send OTP</button>
+            </form>
+        </div>
+
+        <div id="otp-step" class="form-section hidden">
+            <h2>Verify OTP & Reset Password</h2>
+            <p id="otp-info"></p>
+
+            <form id="reset-form">
+                <label>OTP</label>
+                <input type="text" id="otp" maxlength="6" required placeholder="Enter OTP">
+
+                <label>New Password</label>
+                <input type="password" id="new-password" required>
+
+                <label>Confirm Password</label>
+                <input type="password" id="confirm-password" required>
+
+                <button type="submit" class="btn-primary">Reset Password</button>
+            </form>
+        </div>
+
+        <div id="message-box" class="message-box-overlay">
+            <div class="message-box-content">
+                <h3 id="msg-title"></h3>
+                <p id="msg-body"></p>
+                <button class="btn-close" onclick="hideMessage()">Close</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const emailStep = document.getElementById("email-step");
+        const otpStep = document.getElementById("otp-step");
+        const otpInfo = document.getElementById("otp-info");
+        const msgBox = document.getElementById("message-box");
+        const msgTitle = document.getElementById("msg-title");
+        const msgBody = document.getElementById("msg-body");
+        const closeBtn = document.querySelector(".btn-close");
+
+        function showMessage(title, body) {
+            msgTitle.textContent = title;
+            msgBody.textContent = body;
+            msgBox.classList.add("flex-display");
+        }
+
+        function hideMessage() {
+            msgBox.classList.remove("flex-display");
+            closeBtn.textContent = "Close";
+            closeBtn.onclick = hideMessage;
+        }
+
+        function showOtpStep(email) {
+            emailStep.classList.add("hidden");
+            otpStep.classList.remove("hidden");
+            otpInfo.innerHTML = `OTP sent to <b>${email}</b>`;
+        }
+
+        document.getElementById("email-form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById("email").value;
+
+            const res = await fetch("/user/send-otp", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email })
+            });
+
+            const data = await res.json();
+
+            if (data.success) {
+                showOtpStep(email);
+                showMessage("OTP Sent", "A 6-digit OTP has been sent to your email.");
+            } else {
+                showMessage("Error", data.message);
+            }
+        });
+
+        document.getElementById("reset-form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const payload = {
+                otp: document.getElementById("otp").value,
+                newPassword: document.getElementById("new-password").value,
+                confirmPassword: document.getElementById("confirm-password").value
+            };
+
+            const res = await fetch("/user/reset-password", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await res.json();
+
+            if (data.success) {
+                msgTitle.textContent = "Success";
+                msgBody.textContent = data.message;
+                msgBox.classList.add("flex-display");
+                closeBtn.textContent = "Back to Login";
+                closeBtn.onclick = () => { window.location.href = "/user/login"; };
+            } else {
+                showMessage("Error", data.message);
+            }
+        });
+    </script>
+
+</body>
+</html>

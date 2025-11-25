@@ -102,14 +102,26 @@
                                 <td data-label="Actions" class="actions-cell">
 
                                     <a href="<%= assignment.upload_path %>" 
-                                       class="action-btn view-btn"
-                                       target="_blank" rel="noopener noreferrer">
+                                        class="action-btn view-btn"
+                                        target="_blank" rel="noopener noreferrer">
                                         <i class="fa-solid fa-eye"></i>
                                     </a>
 
                                     <a href="/student/assignment/download/<%= assignment._id %>"
-                                       class="action-btn download-btn">
+                                        class="action-btn download-btn">
                                         <i class="fa-solid fa-download"></i>
+                                    </a>
+                                    
+                                    <% if (assignment.status === 'draft') { %>
+                                        <a href="/student/assignment/edit/<%= assignment._id %>" 
+                                            class="action-btn edit-btn">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                        </a>
+                                    <% } %>
+
+                                    <a href="/student/assignment/delete/<%= assignment._id %>" 
+                                        class="action-btn delete-btn">
+                                        <i class="fa-solid fa-trash-can"></i>
                                     </a>
 
                                 </td>

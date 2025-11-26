@@ -132,7 +132,6 @@
     const confirmDelete = document.getElementById('confirmDelete');
     let deleteId = "";
 
-    // 🟣 Edit Popup
     editBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         document.getElementById('editId').value = btn.dataset.id;
@@ -147,7 +146,7 @@
       popupEdit.style.display = 'none';
     });
 
-    // 🗑️ Delete Popup
+  
     deleteBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         deleteId = btn.dataset.id;

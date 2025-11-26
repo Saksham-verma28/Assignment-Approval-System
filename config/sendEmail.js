@@ -12,7 +12,7 @@ const transport = nodemailer.createTransport({
 
 // this is for sending mail
 
-function sendMail(to,sub,msg){
+async function sendMail(to,sub,msg){
     transport.sendMail({
         to: to,
         subject: sub,

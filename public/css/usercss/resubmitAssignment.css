@@ -1,0 +1,272 @@
+:root {
+    /* Color Palette from Dashboard Theme */
+    --color-cream: #fdf8f4;
+    --color-dark-brown: #5d4037;
+    --color-light-brown: #8d6e63;
+    --color-terracotta: #e07a5f;
+    --color-light-terracotta: #d4bba2;
+    --color-rust-hover: #bf4d28;
+    --color-white: #ffffff;
+    --color-status-rejected: #dc3545; /* Used for rejection box border/icon */
+    --color-status-rejected-bg: #dc35451a; /* Very light background for rejection box */
+    --color-resubmit-btn: #28a745; /* Green for submission action */
+    --color-resubmit-hover: #1e7e34;
+    --color-file-btn-bg: var(--color-light-brown); /* Custom for file button */
+    --color-file-btn-hover: var(--color-dark-brown); /* Custom for file button hover */
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Georgia', serif;
+    background-color: var(--color-cream);
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    color: var(--color-dark-brown);
+}
+
+.resubmit-container {
+    width: 100%;
+    max-width: 800px;
+    background-color: var(--color-white);
+    padding: 2.5rem;
+    border-radius: 14px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+    border-top: 6px solid var(--color-terracotta);
+}
+
+.header-section {
+    border-bottom: 1px solid var(--color-light-terracotta);
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.back-link {
+    color: var(--color-light-brown);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+    display: inline-block;
+    margin-bottom: 15px;
+}
+
+.back-link:hover {
+    color: var(--color-dark-brown);
+}
+
+.header-section h1 {
+    font-size: 2rem;
+    font-weight: 900;
+    margin: 0;
+}
+
+hr {
+    border: 0;
+    height: 1px;
+    background-color: var(--color-light-terracotta);
+    margin: 2rem 0;
+}
+
+/* --- Rejection Remarks Section --- */
+.rejection-remarks {
+    background-color: var(--color-status-rejected-bg);
+    border: 1px solid var(--color-status-rejected);
+    border-left: 5px solid var(--color-status-rejected);
+    padding: 18px 25px;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+}
+
+.remarks-title {
+    color: var(--color-status-rejected);
+    font-size: 1.3rem;
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+
+.rejection-remarks i {
+    margin-right: 10px;
+}
+
+.rejection-remarks p {
+    margin: 10px 0;
+    padding-left: 30px; /* Aligns paragraph under the title text */
+    font-style: italic;
+    line-height: 1.6;
+}
+
+.rejection-date {
+    font-size: 0.9rem;
+    color: var(--color-light-brown);
+    text-align: right;
+    margin-top: 10px;
+}
+/* ----------------------------------- */
+
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+    font-size: 1.1rem;
+}
+
+.form-group input[type="text"][disabled],
+.form-group textarea { /* Removed input[type="file"] from here */
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid var(--color-light-terracotta);
+    border-radius: 8px;
+    background-color: var(--color-cream);
+    font-size: 1rem;
+    color: var(--color-dark-brown);
+    transition: border-color 0.2s;
+}
+
+.form-group input[type="text"][disabled] {
+    background-color: #eee;
+    color: var(--color-light-brown);
+    cursor: not-allowed;
+}
+
+.form-group textarea:focus {
+    border-color: var(--color-terracotta);
+    outline: none;
+}
+
+/* New File Input Styling */
+.custom-file-input-wrapper {
+    display: flex;
+    align-items: stretch; /* Make children fill height */
+    width: 100%;
+    border: 2px solid var(--color-light-terracotta);
+    border-radius: 8px;
+    overflow: hidden; /* Ensures border-radius applies to children */
+    background-color: var(--color-cream);
+    transition: border-color 0.2s;
+}
+
+.custom-file-input-wrapper:focus-within { /* When any child within gets focus */
+    border-color: var(--color-terracotta);
+    outline: none;
+}
+
+.custom-file-button {
+    background-color: var(--color-file-btn-bg);
+    color: var(--color-white);
+    padding: 12px 18px;
+    cursor: pointer;
+    border: none;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    white-space: nowrap; /* Prevent button text from wrapping */
+}
+
+.custom-file-button:hover {
+    background-color: var(--color-file-btn-hover);
+}
+
+.custom-file-text {
+    flex-grow: 1; /* Take up remaining space */
+    padding: 12px 15px;
+    color: var(--color-dark-brown);
+    font-size: 1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Add ellipsis for long file names */
+    background-color: var(--color-cream);
+    display: flex; /* For vertical centering */
+    align-items: center; /* Vertically center "No file chosen" */
+}
+
+/* Hide the actual file input */
+.hidden-file-input {
+    display: none;
+}
+
+
+.form-group small {
+    display: block;
+    margin-top: 5px;
+    color: var(--color-light-brown);
+}
+
+.current-file-info {
+    margin-bottom: 30px;
+    padding: 15px;
+    background-color: #f7f3f0;
+    border-radius: 8px;
+    border: 1px solid var(--color-light-terracotta);
+    display: flex;
+    align-items: center;
+}
+
+.current-file-info i {
+    color: var(--color-terracotta);
+    margin-right: 8px;
+}
+
+.current-file-info a {
+    color: var(--color-terracotta);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.current-file-info a:hover {
+    text-decoration: underline;
+}
+
+
+.resubmit-btn {
+    width: 100%;
+    padding: 14px 20px;
+    background-color: var(--color-resubmit-btn);
+    color: var(--color-white);
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: 0.3s ease;
+    box-shadow: 0 4px 10px rgba(40, 167, 69, 0.2);
+}
+
+.resubmit-btn:hover {
+    background-color: var(--color-resubmit-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(40, 167, 69, 0.3);
+}
+
+.resubmit-btn i {
+    margin-right: 10px;
+}
+
+/* Mobile Adjustments */
+@media (max-width: 600px) {
+    .resubmit-container {
+        padding: 1.5rem;
+    }
+    
+    .header-section h1 {
+        font-size: 1.5rem;
+    }
+    
+    .rejection-remarks p {
+        padding-left: 0;
+    }
+}

@@ -6,8 +6,10 @@ const hashPass = require('../hashPassword');
 
 async function home(req, res) {
   let countdept = await Department.countDocuments();
-  let countUser = await User.countDocuments();
-  res.render("admin/adminHome", { dept: countdept, user: countUser });
+  let countStudent = await User.countDocuments({role: "Student"});
+  let countProfessor = await User.countDocuments({role: "Professor"});
+
+  res.render("admin/adminHome", { dept: countdept, student: countStudent, professor: countProfessor });
 }
 
 

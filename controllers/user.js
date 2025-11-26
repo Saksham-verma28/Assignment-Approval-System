@@ -30,7 +30,7 @@ async function moveToDashboard(req, res){
         res.redirect('/student/dashboard')
     }
     else if(userExist.role=="Professor"){
-        res.send("Professor Dashboard");
+        res.redirect('/professor/dashboard')
     }
     else{
         res.send("HOD dashboard")

@@ -1,4 +1,5 @@
 :root {
+    /* Color Palette Matching Student Dashboard */
     --color-cream: #fdf8f4;
     --color-dark-brown: #5d4037;
     --color-light-brown: #8d6e63;
@@ -6,10 +7,14 @@
     --color-light-terracotta: #d4bba2;
     --color-rust-hover: #bf4d28;
     --color-white: #ffffff;
-    --color-status-draft: #e07a5f33;
-    --color-status-submitted: #f5b40033;
-    --color-status-approved: #28a74533;
-    --color-status-rejected: #dc354533;
+    
+    /* Status Card Backgrounds (Transparent versions) */
+    --color-status-draft: #e07a5f33; /* Light Red/Pink */
+    --color-status-submitted: #f5b40033; /* Light Yellow/Amber */
+    --color-status-approved: #28a74533; /* Light Green */
+    --color-status-rejected: #dc354533; /* Light Red/Crimson */
+    
+    /* Button and Accent Colors */
     --color-delete: #dc3545;
     --color-delete-hover: #c82333;
 }
@@ -46,6 +51,8 @@ body {
     from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: translateY(0); }
 }
+
+/* --- Header Section --- */
 
 .header-top {
     display: flex;
@@ -91,21 +98,7 @@ body {
     align-items: center;
 }
 
-.upload-button { /* This style is kept but the button is removed in HTML */
-    padding: 10px 20px;
-    background-color: var(--color-terracotta);
-    color: #fff;
-    border-radius: 8px;
-    font-weight: bold;
-    transition: 0.3s ease;
-    text-decoration: none;
-    box-shadow: 0 3px 8px rgba(224,122,95,0.3);
-}
-
-.upload-button:hover {
-    background-color: var(--color-rust-hover);
-    transform: translateY(-3px);
-}
+/* --- Metrics Grid --- */
 
 .metrics-grid {
     display: grid;
@@ -144,6 +137,8 @@ body {
 .approved { border-color: #28a745; background-color: var(--color-status-approved); }
 .rejected { border-color: #dc3545; background-color: var(--color-status-rejected); }
 
+/* --- Recent Section (Assignments) --- */
+
 .recent-section-header {
     display: flex;
     justify-content: space-between;
@@ -171,6 +166,8 @@ body {
     color: white;
     transform: translateY(-2px);
 }
+
+/* --- Filter Controls --- */
 
 .filter-controls {
     display: flex;
@@ -202,12 +199,15 @@ body {
     border-radius: 8px;
     font-weight: bold;
     transition: 0.3s ease;
+    border: none;
 }
 
 .apply-btn:hover {
     background-color: var(--color-rust-hover);
     transform: translateY(-3px);
 }
+
+/* --- Table Styles --- */
 
 .submission-table {
     width: 100%;
@@ -234,6 +234,7 @@ body {
     background-color: #fff2ea;
 }
 
+/* Status Badges */
 .status-badge {
     padding: 7px 12px;
     border-radius: 6px;
@@ -242,55 +243,43 @@ body {
     cursor: pointer;
 }
 
-.badge-draft { background-color: var(--color-terracotta); }
 .badge-submitted { background-color: #f5b400; color: #4a3d00; }
-.badge-approved { background-color: #28a745; }
 .badge-rejected { background-color: #dc3545; }
 
-.actions-cell {
+/* Action Buttons Cell (Review & Details) */
+.action-buttons-cell {
     display: flex;
     justify-content: center;
-    gap: 18px;
+    gap: 10px;
 }
 
-.action-btn i {
-    font-size: 20px;
-    color: var(--color-dark-brown);
-    transition: 0.25s;
-}
-
-.action-btn:hover i {
-    transform: scale(1.22);
-    color: var(--color-rust-hover);
-}
-
-.action-btn.edit-btn i {
-    color: var(--color-light-brown);
-}
-
-.action-btn.delete-btn i {
-    color: var(--color-delete);
-}
-
-.action-btn.delete-btn:hover i {
-    color: var(--color-delete-hover);
-}
-
-/* --- Styles for Professor Actions (View, Download) --- */
-.history-btn {
-    padding: 8px 16px;
-    background-color: var(--color-light-brown);
-    color: white;
+.review-btn, .details-btn {
+    padding: 8px 14px;
     font-size: 0.95rem;
-    font-weight: bold;
-    border-radius: 8px;
+    font-weight: 500;
+    border-radius: 6px;
     text-decoration: none;
-    transition: 0.25s ease;
+    transition: 0.2s ease;
 }
 
-.history-btn:hover {
+/* Review Button (Terracotta Primary) */
+.review-btn {
+    background-color: var(--color-terracotta);
+    color: var(--color-white);
+    border: 1px solid var(--color-terracotta);
+}
+
+.review-btn:hover {
+    background-color: var(--color-rust-hover);
+}
+
+/* Details Button (Light Brown Secondary) */
+.details-btn {
+    background-color: var(--color-light-brown);
+    color: var(--color-white);
+    border: 1px solid var(--color-light-brown);
+}
+
+.details-btn:hover {
     background-color: var(--color-dark-brown);
-    transform: translateY(-2px);
 }
-
-/* Modal styles are removed as they are not relevant to the dashboard display */

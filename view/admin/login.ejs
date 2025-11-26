@@ -15,9 +15,11 @@
     <h1 class="card-title">Admin Portal Login</h1>
 
     <div id="message-box" class="message-box hidden" role="alert">
-      <% if (typeof err !== 'undefined') { %>
-        <h3 style="color:red; margin-bottom:10px;"><%= err %></h3>
-      <% } %>
+      <% if (typeof err !=='undefined' ) { %>
+        <h3 style="color:red; margin-bottom:10px;">
+          <%= err %>
+        </h3>
+        <% } %>
     </div>
 
     <form id="login-form" action="/auth/login" method="post">

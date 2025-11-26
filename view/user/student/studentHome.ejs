@@ -59,7 +59,7 @@
                     <div class="filter-group">
                         <label for="statusFilter">Filter by Status:</label>
                         <select name="status" id="statusFilter">
-                            <option value="all">All Statuses</option>
+                            <option value="all">All Status</option>
                             <option value="draft">Draft</option>
                             <option value="submitted">Submitted</option>
                             <option value="approved">Approved</option>
@@ -88,7 +88,6 @@
                             <tr data-status="<%= assignment.status %>" data-id="<%= assignment._id %>"> 
                                 
                                 <td data-label="Title"><%= assignment.title %></td>
-
                                 <td data-label="Category"><%= assignment.category %></td>
 
                                 <td data-label="Status">
@@ -101,26 +100,26 @@
 
                                 <td data-label="Actions" class="actions-cell">
 
-                                    <a href="<%= assignment.upload_path %>" 
-                                        class="action-btn view-btn"
-                                        target="_blank" rel="noopener noreferrer">
+                                    <a href="<%= assignment.upload_path %>" class="action-btn view-btn" target="_blank">
                                         <i class="fa-solid fa-eye"></i>
                                     </a>
 
-                                    <a href="/student/assignment/download/<%= assignment._id %>"
-                                        class="action-btn download-btn">
+                                    <a href="/student/assignment/download/<%= assignment._id %>" class="action-btn download-btn">
                                         <i class="fa-solid fa-download"></i>
                                     </a>
                                     
-                                    <% if (assignment.status === 'draft') { %>
-                                        <a href="/student/assignment/edit/<%= assignment._id %>" 
-                                            class="action-btn edit-btn">
-                                            <i class="fa-solid fa-pen-to-square"></i>
+                                    <% if (assignment.status === 'draft' || assignment.status === 'rejected') { %>
+                                        <a href="/student/assignment/edit/<%= assignment._id %>" class="action-btn edit-btn"
+                                            title="<%= assignment.status === 'rejected' ? 'Resubmit Assignment' : 'Edit Assignment' %>">
+                                            <% if (assignment.status === 'rejected') { %>
+                                                <i class="fa-solid fa-arrow-up-from-bracket"></i>
+                                            <% } else { %>
+                                                <i class="fa-solid fa-pen-to-square"></i>
+                                            <% } %>
                                         </a>
                                     <% } %>
 
-                                    <a href="/student/assignment/delete/<%= assignment._id %>" 
-                                        class="action-btn delete-btn">
+                                    <a href="/student/assignment/delete/<%= assignment._id %>" class="action-btn delete-btn">
                                         <i class="fa-solid fa-trash-can"></i>
                                     </a>
 

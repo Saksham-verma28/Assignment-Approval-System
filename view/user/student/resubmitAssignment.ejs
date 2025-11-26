@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resubmit Assignment: <%= assignment.title %></title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet" href="/css/usercss/resubmitAssignment.css"> 
+</head>
+
+<body>
+    <div class="resubmit-container">
+
+        <div class="header-section">
+            <a href="/student/dashboard" class="back-link">
+                <i class="fa-solid fa-arrow-left"></i> Back to Dashboard
+            </a>
+            <h1>Resubmit Assignment: <%= assignment.title %></h1>
+        </div>
+
+        <div class="rejection-remarks">
+            <h2 class="remarks-title">
+                <i class="fa-solid fa-triangle-exclamation"></i> Submission Rejected
+            </h2>
+            
+            <% if (assignment.rejection_remarks && assignment.rejection_remarks.length > 0) { %>
+                <p><%= assignment.rejection_remarks %></p>
+            <% } else { %>
+                <p>No specific rejection remarks were provided for this submission. Please check the assignment details for general feedback.</p>
+            <% } %>
+
+            <div class="rejection-date">Rejected on: <%= assignment.rejection_date || 'N/A' %></div>
+        </div>
+        
+        <hr>
+
+        <form action="/student/assignment/resubmit/<%= assignment._id %>" method="POST" enctype="multipart/form-data" class="resubmit-form">
+            
+            <input type="hidden" name="_method" value="PUT"> 
+            
+            <div class="form-group">
+                <label for="assignmentTitle">Assignment Title (Read-Only)</label>
+                <input type="text" id="assignmentTitle" value="<%= assignment.title %>" disabled>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Assignment Description / Notes for Reviewer</label>
+                <textarea id="description" name="description" rows="6" required><%= assignment.description %></textarea>
+                <small>Update this description to explain the corrections you have made based on the rejection remarks.</small>
+            </div>
+            
+            <div class="current-file-info">
+                <i class="fa-solid fa-file"></i> Original Submission: 
+                <a href="<%= assignment.upload_path %>" target="_blank" rel="noopener noreferrer">
+                    <%= assignment.original_file_name || 'View current file' %>
+                </a>
+            </div>
+            
+            <div class="form-group file-group">
+                <label for="newFile">Upload New File (Required for Resubmission)</label>
+                
+                <div class="custom-file-input-wrapper">
+                    <input type="file" id="newFile" name="newFile" accept=".pdf,.doc,.docx,.zip" class="hidden-file-input">
+                    
+                    <button type="button" class="custom-file-button" onclick="document.getElementById('newFile').click();">
+                        <i class="fa-solid fa-folder-open"></i> Choose File
+                    </button>
+                    
+                    <div class="custom-file-text" id="fileChosenText">No file chosen</div>
+                </div>
+                
+                <small>Select the corrected file. This will replace your previous upload.</small>
+            </div>
+            <button type="submit" class="resubmit-btn">
+                <i class="fa-solid fa-upload"></i> Confirm Resubmission
+            </button>
+        </form>
+
+    </div>
+
+    <script>
+        // JavaScript to update the file name display
+        document.getElementById('newFile').addEventListener('change', function() {
+            const fileName = this.files.length > 0 ? this.files[0].name : 'No file chosen';
+            document.getElementById('fileChosenText').textContent = fileName;
+        });
+    </script>
+</body>
+</html>

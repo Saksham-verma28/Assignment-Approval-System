@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professor Review Dashboard</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet" href="/css/professorcss/dashboard.css"> 
+</head>
+
+<body>
+    <div class="dashboard-container">
+
+        <div class="dashboard-header">
+            <div class="header-top">
+                <h1>Professor Review Dashboard</h1>
+                <button class="logout-button">Logout</button>
+            </div>
+
+            <div class="header-content">
+                <p>Welcome back, <strong>Professor Rao</strong></p>
+            </div>
+        </div>
+
+        <div class="metrics-grid">
+            <div class="metric-card draft">
+                <div class="count">7</div>
+                <div class="label">Pending Reviews</div>
+            </div>
+            <div class="metric-card submitted">
+                <div class="count">35</div>
+                <div class="label">Graded (Approved)</div>
+            </div>
+            <div class="metric-card approved">
+                <div class="count">3</div>
+                <div class="label">Needs Re-Review (Rejected)</div>
+            </div>
+            <div class="metric-card rejected">
+                <div class="count">45</div>
+                <div class="label">Total Assignments</div>
+            </div>
+        </div>
+
+        <div class="recent-section">
+
+            <div class="recent-section-header">
+                <h2>Assignments Awaiting Review</h2>
+                <a href="/professor/assignment/all" class="view-all-link">View All →</a>
+            </div>
+
+            <form action="/professor/status/filter" method="post">
+                <div class="filter-controls">
+                    <div class="filter-group">
+                        <label for="statusFilter">Filter by Status:</label>
+                        <select name="status" id="statusFilter">
+                            <option value="all">All Assignments</option>
+                            <option value="pending">Pending Review</option>
+                            <option value="revision">Needs Re-Review</option>
+                            <option value="graded">Graded</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="apply-btn">Apply</button>
+                </div>
+            </form>
+
+            <table class="submission-table" id="assignmentTable">
+                <thead>
+                    <tr>
+                        <th>Assignment Title</th>
+                        <th>Student Name</th>
+                        <th>Status</th>
+                        <th>Submitted On</th>
+                        <th>Days Pending</th>
+                        <th>Review Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td data-label="Title">Database Design Project</td>
+                        <td data-label="Student">Rajat Singh</td>
+                        <td data-label="Status">
+                            <span class="status-badge badge-submitted">Submitted</span>
+                        </td>
+                        <td data-label="Submitted">Wed Nov 26 2025</td>
+                        <td data-label="Pending">0 days</td>
+                        <td data-label="Review Actions" class="action-buttons-cell">
+                            <a href="/professor/review/123" class="review-btn">Review</a>
+                            <a href="/professor/details/123" class="details-btn">Details</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td data-label="Title">Operating Systems Case Study</td>
+                        <td data-label="Student">Priya Sharma</td>
+                        <td data-label="Status">
+                            <span class="status-badge badge-submitted">Submitted</span>
+                        </td>
+                        <td data-label="Submitted">Tue Nov 25 2025</td>
+                        <td data-label="Pending">1 day</td>
+                        <td data-label="Review Actions" class="action-buttons-cell">
+                            <a href="/professor/review/456" class="review-btn">Review</a>
+                            <a href="/professor/details/456" class="details-btn">Details</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td data-label="Title">Thermodynamics Report</td>
+                        <td data-label="Student">Mohit Kumar</td>
+                        <td data-label="Status">
+                            <span class="status-badge badge-rejected">Rejected</span>
+                        </td>
+                        <td data-label="Submitted">Mon Nov 24 2025</td>
+                        <td data-label="Pending">2 days</td>
+                        <td data-label="Review Actions" class="action-buttons-cell">
+                            <a href="/professor/review/789" class="review-btn">Review</a>
+                            <a href="/professor/details/789" class="details-btn">Details</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</body>
+</html>

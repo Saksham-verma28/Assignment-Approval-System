@@ -15,6 +15,9 @@ const authRoute = require('./route/authRoute');
 const adminRoute = require('./route/adminRoute');
 const userRoute = require('./route/userRoute')
 const studentRoute = require('./route/studentRoute')
+const professorRoute = require('./route/pofessorRoute')
+
+
 const {login} = require('./controllers/serveLogin')
 const {createdepartment} = require('./controllers/department')
 
@@ -32,6 +35,8 @@ app.use('/student/uploads', express.static('uploads'));
 app.use('/student/status/uploads', express.static('uploads'));
 app.use('/student/assignment/uploads', express.static('uploads'));
 app.use('/student/assignment/history/uploads', express.static('uploads'));
+app.use('/student/assignment/edit/uploads', express.static('uploads'));
+app.use('/student/assignment/resubmit/uploads', express.static('uploads'));
 
 
 app.use(express.json());
@@ -43,6 +48,7 @@ app.use('/auth',authRoute)
 app.use('/admin',adminRoute)
 app.use('/user',userRoute)
 app.use('/student',studentRoute)
+app.use('/professor',professorRoute)
 
 app.get('/',login)
 app.get('/department/form',createdepartment)

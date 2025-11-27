@@ -25,6 +25,10 @@ const assignmentSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  download: {
+    type: String,
+    require: true
+  },
   submit:{
     type: String,
     default: new Date().toDateString()

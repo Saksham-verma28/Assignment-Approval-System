@@ -11,8 +11,13 @@
     --color-status-rejected-bg: #dc35451a; /* Very light background for rejection box */
     --color-resubmit-btn: #28a745; /* Green for submission action */
     --color-resubmit-hover: #1e7e34;
-    --color-file-btn-bg: var(--color-light-brown); /* Custom for file button */
-    --color-file-btn-hover: var(--color-dark-brown); /* Custom for file button hover */
+    
+    /* Custom File Input Variables */
+    --color-file-btn-bg: var(--color-light-brown);
+    --color-file-btn-hover: var(--color-dark-brown);
+    --color-file-text: var(--color-dark-brown);
+    --color-file-border: var(--color-light-terracotta);
+    --color-file-focus-border: var(--color-terracotta);
 }
 
 *,
@@ -100,7 +105,7 @@ hr {
 
 .rejection-remarks p {
     margin: 10px 0;
-    padding-left: 30px; /* Aligns paragraph under the title text */
+    padding-left: 30px; 
     font-style: italic;
     line-height: 1.6;
 }
@@ -126,7 +131,7 @@ hr {
 }
 
 .form-group input[type="text"][disabled],
-.form-group textarea { /* Removed input[type="file"] from here */
+.form-group textarea { 
     width: 100%;
     padding: 12px 15px;
     border: 2px solid var(--color-light-terracotta);
@@ -148,56 +153,68 @@ hr {
     outline: none;
 }
 
-/* New File Input Styling */
+/* --- Custom File Input Styling --- */
 .custom-file-input-wrapper {
-    display: flex;
-    align-items: stretch; /* Make children fill height */
+    display: flex; 
+    align-items: center; 
     width: 100%;
-    border: 2px solid var(--color-light-terracotta);
+    border: 2px solid var(--color-file-border); 
     border-radius: 8px;
-    overflow: hidden; /* Ensures border-radius applies to children */
-    background-color: var(--color-cream);
-    transition: border-color 0.2s;
+    background-color: var(--color-cream); 
+    transition: border-color 0.2s ease-in-out; 
+    overflow: hidden; 
+    min-height: 48px; 
 }
 
-.custom-file-input-wrapper:focus-within { /* When any child within gets focus */
-    border-color: var(--color-terracotta);
+.custom-file-input-wrapper:focus-within {
+    border-color: var(--color-file-focus-border);
     outline: none;
 }
 
 .custom-file-button {
-    background-color: var(--color-file-btn-bg);
+    flex-shrink: 0; 
+    background-color: var(--color-file-btn-bg); 
     color: var(--color-white);
     padding: 12px 18px;
     cursor: pointer;
-    border: none;
+    border: none; 
     font-size: 1rem;
     font-weight: bold;
     transition: background-color 0.2s ease, transform 0.1s ease;
-    white-space: nowrap; /* Prevent button text from wrapping */
+    white-space: nowrap; 
+    height: 100%; 
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+}
+
+.custom-file-button i {
+    margin-right: 8px;
 }
 
 .custom-file-button:hover {
-    background-color: var(--color-file-btn-hover);
+    background-color: var(--color-file-btn-hover); 
+    transform: translateY(-1px); 
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
 }
 
 .custom-file-text {
-    flex-grow: 1; /* Take up remaining space */
+    flex-grow: 1; 
     padding: 12px 15px;
-    color: var(--color-dark-brown);
+    color: var(--color-file-text); 
     font-size: 1rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis; /* Add ellipsis for long file names */
-    background-color: var(--color-cream);
-    display: flex; /* For vertical centering */
-    align-items: center; /* Vertically center "No file chosen" */
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    display: flex; 
+    align-items: center; 
 }
 
-/* Hide the actual file input */
+/* Crucial: Hide the actual file input */
 .hidden-file-input {
-    display: none;
+    display: none !important; 
 }
+/* ------------------------------------- */
 
 
 .form-group small {

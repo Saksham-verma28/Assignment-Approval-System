@@ -1,11 +1,21 @@
 const jwt = require('jsonwebtoken')
 const path = require('path')
 const Assignment = require('../models/assignment')
+const cloudinary = require("cloudinary").v2;
+const fs = require('fs')
+
+
+cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.CLOUD_KEY,
+    api_secret: process.env.CLOUD_SECRET
+});
+
 
 async function studentHome(req, res) {
     const token = req.cookies["User"]
     let name;
-    
+
 
     jwt.verify(token, process.env.JWT_KEY, (err, decoded) => {
         if (err) {
@@ -15,8 +25,8 @@ async function studentHome(req, res) {
 
     })
 
-    const assignmentDetails = await Assignment.find({ student_name: name}).sort({ _id: -1 }).limit(5);
-    const totalDrafts = await Assignment.countDocuments({  student_name: name,status: 'draft' });
+    const assignmentDetails = await Assignment.find({ student_name: name }).sort({ _id: -1 }).limit(5);
+    const totalDrafts = await Assignment.countDocuments({ student_name: name, status: 'draft' });
     const totalSubmitted = await Assignment.countDocuments({ student_name: name, status: 'submitted' });
 
     const contextData = {
@@ -41,27 +51,33 @@ async function uploadAssignment(req, res) {
         name = decoded.name
     })
 
+
+    const filePath = req.file.path;
+
+    const result = await cloudinary.uploader.upload(filePath, {
+        resource_type: "raw",
+        format: "pdf"
+    });
+
+    const previewUrl = result.secure_url
+    const downloadUrl = previewUrl.replace("/upload/", `/upload/fl_attachment/`)
+
+
+    fs.unlinkSync(filePath);
+
     await Assignment.create({
         student_name: name,
         title: req.body.title,
         category: req.body.category,
         description: req.body.description,
-        upload_path: `uploads/${name}/${req.file.filename}`
-
+        upload_path: previewUrl,
+        download: downloadUrl
     })
 
 
     res.render("user/student/uploadAssignment", { success: "Assignment upload Successfully!" })
 }
 
-
-async function downloadAssignment(req, res) {
-    const file = await Assignment.findById(req.params.id);
-    const filePath = path.join(__dirname, '../', file.upload_path);
-
-
-    res.download(filePath)
-}
 
 
 async function statusFilter(req, res) {
@@ -106,10 +122,10 @@ async function assignmentFilter(req, res) {
 
     let status;
     if (req.body.status == 'all') {
-        status = await Assignment.find({student_name: name});
+        status = await Assignment.find({ student_name: name });
     }
     else {
-        status = await Assignment.find({ student_name: name,status: req.body.status });
+        status = await Assignment.find({ student_name: name, status: req.body.status });
     }
 
     res.render("user/student/assignmentList", { assignment: status });
@@ -123,8 +139,8 @@ async function allAssignment(req, res) {
         name = decoded.name
     })
 
-    
-    let allAssignment = await Assignment.find({student_name: name});
+
+    let allAssignment = await Assignment.find({ student_name: name });
 
     res.render("user/student/assignmentList", { assignment: allAssignment })
 }
@@ -139,8 +155,8 @@ async function submitAssignment(req, res) {
 
     let submitted = await Assignment.findByIdAndUpdate(id, { status: "submitted" });
 
-    let assignment = await Assignment.find({ student_name: submitted.student_name});
-    const totalDrafts = await Assignment.countDocuments({  student_name: submitted.student_name,status: 'draft' });
+    let assignment = await Assignment.find({ student_name: submitted.student_name });
+    const totalDrafts = await Assignment.countDocuments({ student_name: submitted.student_name, status: 'draft' });
     const totalSubmitted = await Assignment.countDocuments({ student_name: submitted.student_name, status: 'submitted' });
 
     const contextData = {
@@ -151,4 +167,4 @@ async function submitAssignment(req, res) {
     };
     res.render("user/student/studentHome", contextData);
 }
-module.exports = { studentHome, studentDashboard, uploadAssignment, downloadAssignment, statusFilter, assignmentFilter, allAssignment, renderAssignment, submitAssignment }
+module.exports = { studentHome, studentDashboard, uploadAssignment, statusFilter, assignmentFilter, allAssignment, renderAssignment, submitAssignment }

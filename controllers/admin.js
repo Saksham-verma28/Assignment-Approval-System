@@ -176,13 +176,11 @@ async function updateUser(req, res){
     const { id } = req.params;
     const { name, email, phone, department } = req.body;
 
-    const updated = await User.findByIdAndUpdate(
+    await User.findByIdAndUpdate(
       id,
-      { name, email, phone, department },
+      { name: name, email: email, phone: phone, department: department },
       { new: true, runValidators: true }
     );
-
-    if (!updated) return res.status(404).send("User not found");
 
     res.redirect("/admin/users");
   } catch (err) {

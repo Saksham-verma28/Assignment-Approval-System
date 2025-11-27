@@ -1,24 +1,24 @@
 :root {
-    --bg-deep-dark: #171725;
-    --bg-nav-dark: #0F172A;
-    --bg-surface-dark: #1F2937;
-    --text-light: #E5E7EB;
-    --text-gray: #9CA3AF;
-    --accent-purple: #6366F1;
-    --accent-purple-hover: #4F46E5;
-    --text-accent-light: #A78BFA;
-    --border-sky: #0EA5E9;
-    --border-emerald: #10B981;
-    --border-orange: #F97316;
-    --border-fuchsia: #D946EF;
-    --text-red: #F87171;
-    --bg-red-hover: #DC2626;
+    --bg-deep-dark: #0F172A;
+    --bg-nav-dark: #1E293B;
+    --bg-surface-dark: #1E293B;
+    --text-light: #E2E8F0;
+    --text-gray: #94A3B8;
+    --accent-purple: #8B5CF6;
+    --accent-purple-hover: #7C3AED;
+    --text-accent-light: #C4B5FD;
+    --color-sky: #0EA5E9;
+    --color-emerald: #10B981;
+    --color-orange: #F97316;
+    --color-fuchsia: #D946EF;
+    --text-red: #FCA5A5;
+    --bg-red-hover: #B91C1C;
 }
 
 ::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: var(--bg-surface-dark); }
-::-webkit-scrollbar-thumb { background: #4B5563; border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: #6B7280; }
+::-webkit-scrollbar-track { background: var(--bg-deep-dark); }
+::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #475569; }
 
 body {
     font-family: 'Inter', sans-serif;
@@ -32,17 +32,20 @@ body {
 
 .dashboard-header {
     margin-top: 0;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--bg-nav-dark);
 }
 
 .dashboard-header h2 {
-    font-size: 1.875rem;
-    font-weight: 700;
-    color: white;
-    margin-bottom: 0.5rem;
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--text-light);
+    margin-bottom: 0.25rem;
 }
 
 .dashboard-header p {
     color: var(--text-gray);
+    font-size: 1rem;
 }
 
 .card-grid {
@@ -52,7 +55,7 @@ body {
     margin-top: 2rem;
 }
 
-@media (min-width: 640px) { 
+@media (min-width: 640px) {
     .card-grid {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -67,82 +70,86 @@ body {
 .card {
     background-color: var(--bg-surface-dark);
     padding: 1.5rem;
-    border-radius: 0.75rem;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
     position: relative;
     overflow: hidden;
-    transition: transform 0.3s ease-in-out;
-    cursor: default;
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .card:hover {
-    transform: scale(1.02);
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
 }
 
 .card-title {
-    font-size: 0.875rem;
-    font-weight: 600;
+    font-size: 0.8rem;
+    font-weight: 700;
     color: var(--text-gray);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.1em;
     margin-bottom: 0.5rem;
 }
 
 .card-value {
-    font-size: 3rem;
-    font-weight: 800;
-    color: white;
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: var(--text-light);
     line-height: 1;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .card i[data-lucide] {
     position: absolute;
-    top: 1rem;
+    bottom: 1rem;
     right: 1rem;
-    opacity: 0.3;
-    width: 2.5rem;
-    height: 2.5rem;
+    opacity: 0.1;
+    width: 3rem;
+    height: 3rem;
 }
 
 .card-border {
     position: absolute;
-    bottom: 0;
+    top: 0;
     left: 0;
-    width: 100%;
-    height: 4px;
+    width: 4px;
+    height: 100%;
 }
 
-.card.departments { border-bottom-color: var(--border-sky); }
-.card.departments i { color: var(--border-sky); }
-.card.departments .card-border { background-color: var(--border-sky); }
+.card.departments { border-left-color: var(--color-sky); }
+.card.departments i { color: var(--color-sky); }
+.card.departments .card-border { background-color: var(--color-sky); }
 
-.card.students { border-bottom-color: var(--border-emerald); }
-.card.students i { color: var(--border-emerald); }
-.card.students .card-border { background-color: var(--border-emerald); }
+.card.students { border-left-color: var(--color-emerald); }
+.card.students i { color: var(--color-emerald); }
+.card.students .card-border { background-color: var(--color-emerald); }
 
-.card.professors { border-bottom-color: var(--border-orange); }
-.card.professors i { color: var(--border-orange); }
-.card.professors .card-border { background-color: var(--border-orange); }
+.card.professors { border-left-color: var(--color-orange); }
+.card.professors i { color: var(--color-orange); }
+.card.professors .card-border { background-color: var(--color-orange); }
 
-.card.hods { border-bottom-color: var(--border-fuchsia); }
-.card.hods i { color: var(--border-fuchsia); }
-.card.hods .card-border { background-color: var(--border-fuchsia); }
+.card.hods { border-left-color: var(--color-fuchsia); }
+.card.hods i { color: var(--color-fuchsia); }
+.card.hods .card-border { background-color: var(--color-fuchsia); }
 
 .activity-section {
-    height: 16rem;
-    margin-top: 2rem;
+    height: 18rem;
+    margin-top: 2.5rem;
     padding: 1.5rem;
     background-color: var(--bg-surface-dark);
-    border-radius: 0.75rem;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .activity-section h3 {
-    font-size: 1.25rem;
-    font-weight: 600;
+    font-size: 1.5rem;
+    font-weight: 700;
     margin-bottom: 1rem;
-    color: white;
+    color: var(--text-light);
 }
 
 .activity-section p {

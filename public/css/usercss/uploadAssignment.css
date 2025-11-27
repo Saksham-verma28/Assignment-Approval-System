@@ -1,242 +1,174 @@
 :root {
-    --cream: #fdf8f4;
-    --white: #ffffff;
-    --dark-brown: #5d4037;
-    --light-brown: #8d6e63;
-    --terracotta: #e07a5f;
-    --terracotta-hover: #bf4d28;
-    --border-color: #e8dcd0;
-    --focus-color: #d8967e;
-    --success-bg: #e6f3e7;
-    --success-text: #2c6e49;
-    --custom-subtitle-color: #7b5b4f;
-    --custom-placeholder-color: #9c8a7e;
+    --color-cream: #fdf8f4;
+    --color-dark-brown: #5d4037;
+    --color-light-brown: #8d6e63;
+    --color-terracotta: #e07a5f;
+    --color-light-terracotta: #d4bba2;
+    --color-rust-hover: #bf4d28;
+    --color-white: #ffffff;
 }
 
-*, *::before, *::after {
-    box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
     margin: 0;
     padding: 0;
-    background: var(--cream);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    color: var(--dark-brown);
+    background: var(--color-cream);
+    font-family: 'Georgia', serif;
+    height: 100vh;
+    overflow: hidden;
     display: flex;
     justify-content: center;
-    align-items: flex-start;
-    padding: 30px 20px;
-    min-height: 100vh;
+    align-items: center;
 }
 
+/* FORM BOX */
 .form-container {
-    width: 100%;
-    max-width: 650px;
-    background: var(--white);
-    padding: 35px;
+    background: var(--color-white);
+    width: 95%;
+    max-width: 640px;
+    padding: 30px 34px;
     border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 10px 28px rgba(0,0,0,0.18);
+    max-height: 92vh;
+    overflow-y: auto;
 }
 
-.form-container h2 {
-    margin-top: 0;
-    font-size: 28px;
-    font-weight: 700;
-    color: var(--dark-brown);
+h2 {
+    margin: 0 0 18px 0;
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--color-dark-brown);
 }
 
-.subtitle {
-    margin-top: -8px;
-    margin-bottom: 25px;
-    font-size: 16px;
-    color: var(--custom-subtitle-color);
+.success-message {
+    background: #e8f8ec;
+    color: green;
+    padding: 10px 12px;
+    font-size: 0.9rem;
+    border-radius: 6px;
+    margin-bottom: 12px;
 }
 
 .input-group {
-    margin-top: 25px;
+    margin-bottom: 20px;
 }
 
 .input-group label {
-    display: block;
-    font-weight: 600;
-    font-size: 15px;
-    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 1rem;
 }
 
 .input-group input,
 .input-group select,
 .input-group textarea {
     width: 100%;
-    padding: 14px 12px;
+    padding: 14px;
+    margin-top: 6px;
+    border: 1px solid var(--color-light-terracotta);
     border-radius: 10px;
-    border: 1px solid var(--border-color);
-    font-size: 16px;
-    color: var(--dark-brown);
-    background-color: var(--white);
-    outline: none;
-    transition: border 0.2s, box-shadow 0.2s;
-    appearance: none;
-}
-
-.input-group input:focus,
-.input-group select:focus,
-.input-group textarea:focus {
-    border-color: var(--terracotta);
-    box-shadow: 0 0 0 3px rgba(224, 122, 95, 0.2);
-}
-
-.input-group input::placeholder,
-.input-group textarea::placeholder {
-    color: var(--custom-placeholder-color);
-    opacity: 1;
-}
-
-.select-wrapper {
-    position: relative;
-}
-
-.select-wrapper select {
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><path fill="%238d6e63" d="M4.516 7.548c0.436-0.446 1.043-0.67 1.656-0.67s1.22 0.224 1.656 0.67l3.858 3.931 3.858-3.931c0.436-0.446 1.043-0.67 1.656-0.67s1.22 0.224 1.656 0.67l0.583 0.583c0.44 0.448 0.44 1.182 0 1.629l-5.61 5.717c-0.436 0.446-1.043 0.67-1.656 0.67s-1.22-0.224-1.656-0.67l-5.61-5.717c-0.44-0.448-0.44-1.182 0-1.629l0.583-0.583z"/></svg>');
-    background-repeat: no-repeat;
-    background-position: right 12px top 50%;
-    padding-right: 35px;
+    background: var(--color-cream);
+    font-size: 1rem;
 }
 
 textarea {
-    min-height: 120px;
-    resize: vertical;
+    height: 90px;
+    resize: none;
 }
 
-.file-input-wrapper {
-    margin-top: 15px;
-    padding: 30px 20px;
-    background: var(--cream);
-    border: 2px dashed var(--focus-color);
-    text-align: center;
+/* FILE UPLOAD BOX */
+.file-upload-box {
+    background: #fff4ed;
+    border: 1.5px solid var(--color-light-terracotta);
     border-radius: 12px;
+    padding: 22px;
+    text-align: center;
 }
 
-.file-upload-label {
-    display: inline-block;
-    background: var(--terracotta);
-    color: var(--white);
-    padding: 12px 25px;
+.file-btn {
+    display: block;
+    background: var(--color-terracotta);
+    color: white;
+    padding: 12px 20px;
     border-radius: 8px;
+    font-weight: bold;
+    font-size: 1rem;
     cursor: pointer;
-    font-weight: 600;
-    margin-bottom: 12px;
-    transition: background 0.2s, box-shadow 0.2s;
-    font-size: 15px;
-    border: 2px solid transparent;
+    width: 100%;
+    transition: 0.3s ease;
 }
 
-.file-upload-label:hover {
-    background: var(--terracotta-hover);
-    box-shadow: 0 4px 10px rgba(224, 122, 95, 0.3);
+.file-btn:hover {
+    background: var(--color-rust-hover);
 }
 
-.file-upload-info {
-    font-size: 14px;
-    color: var(--light-brown);
-    line-height: 1.4;
-}
-
-#file_upload {
+input[type="file"] {
     display: none;
 }
 
+.file-name {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    font-style: italic;
+    color: var(--color-light-brown);
+}
+
+/* BUTTONS IN ONE ROW */
 .button-group {
+    margin-top: 20px;
     display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    margin-top: 30px;
+    flex-direction: row;
+    gap: 12px;
 }
 
 .submit-button,
 .cancel-button {
-    flex-grow: 1;
-    padding: 14px 25px;
+    width: 33%;
+    padding: 14px;
+    font-size: 1rem;
+    font-weight: bold;
     border-radius: 10px;
-    font-size: 16px;
-    font-weight: 600;
     cursor: pointer;
-    transition: 0.2s;
-    min-width: 120px;
+    border: none;
+    text-align: center;
 }
 
+/* Submit */
 .submit-button {
-    background: var(--terracotta);
-    color: var(--white);
-    border: none;
+    background: var(--color-terracotta);
+    color: white;
 }
 
 .submit-button:hover {
-    background: var(--terracotta-hover);
-    box-shadow: 0 4px 10px rgba(224, 122, 95, 0.3);
+    background: var(--color-rust-hover);
 }
 
+/* Cancel + Home */
 .cancel-button {
-    background: var(--white);
-    color: var(--dark-brown);
-    border: 1px solid var(--border-color);
+    background: transparent;
+    border: 2px solid var(--color-terracotta);
+    color: var(--color-terracotta);
 }
 
 .cancel-button:hover {
-    background: var(--cream);
-    border-color: var(--light-brown);
+    background: var(--color-terracotta);
+    color: white;
 }
 
-.success-message {
-    background: var(--success-bg);
-    color: var(--success-text);
-    padding: 12px 18px;
-    border-radius: 10px;
-    margin-bottom: 25px;
-    font-weight: 600;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border: 1px solid #c3e6cb;
-}
-
-.success-message-close {
-    background: none;
-    border: none;
-    color: var(--success-text);
-    font-size: 18px;
-    cursor: pointer;
-    margin-left: 15px;
-    opacity: 0.8;
-    transition: opacity 0.2s;
-}
-
-.success-message-close:hover {
-    opacity: 1;
-}
-
-@media (max-width: 600px) {
-    body {
-        padding: 0;
-        align-items: stretch;
-    }
-
+/* MOBILE FIX */
+@media (max-width: 480px) {
     .form-container {
-        max-width: 100%;
-        padding: 25px 18px;
-        border-radius: 0;
-        box-shadow: none;
-        min-height: 100vh;
+        padding: 22px;
     }
 
-    .button-group {
-        flex-direction: column;
-        gap: 10px;
+    h2 {
+        font-size: 1.6rem;
     }
 
     .submit-button,
     .cancel-button {
-        width: 100%;
-        flex-grow: unset;
+        width: 33%;
+        padding: 16px;
+        font-size: 1rem;
     }
 }

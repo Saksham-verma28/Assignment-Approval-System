@@ -21,7 +21,9 @@
 
             <div class="header-content">
                 <p>Welcome back, <strong><%= name %></strong></p>
-                <a href="/student/upload/assignment" class="upload-button">Upload New Assignment</a>
+                <a href="/student/upload/assignment" class="upload-button">
+                    <span style="font-size: x-large;">+ </span> Upload New Assignment
+                </a>
             </div>
         </div>
 
@@ -85,8 +87,8 @@
                 <tbody>
                     <% if (assignments && assignments.length > 0) { %>
                         <% assignments.forEach(function(assignment) { %>
-                            <tr data-status="<%= assignment.status %>" data-id="<%= assignment._id %>"> 
-                                
+                            <tr data-status="<%= assignment.status %>" data-id="<%= assignment._id %>">
+
                                 <td data-label="Title"><%= assignment.title %></td>
                                 <td data-label="Category"><%= assignment.category %></td>
 
@@ -100,17 +102,18 @@
 
                                 <td data-label="Actions" class="actions-cell">
 
-                                    <a href="<%= assignment.upload_path %>" class="action-btn view-btn" target="_blank">
-                                        <i class="fa-solid fa-eye"></i>
-                                    </a>
+                                    <% if (assignment.status !== 'rejected') { %>
+                                        <a href="<%= assignment.upload_path %>" class="action-btn view-btn" target="_blank">
+                                            <i class="fa-solid fa-eye"></i>
+                                        </a>
 
-                                    <a href="<%= assignment.download %>" class="action-btn download-btn">
-                                        <i class="fa-solid fa-download"></i>
-                                    </a>
-                                    
+                                        <a href="<%= assignment.download %>" class="action-btn download-btn">
+                                            <i class="fa-solid fa-download"></i>
+                                        </a>
+                                    <% } %>
+
                                     <% if (assignment.status === 'draft' || assignment.status === 'rejected') { %>
-                                        <a href="/student/assignment/edit/<%= assignment._id %>" class="action-btn edit-btn"
-                                            title="<%= assignment.status === 'rejected' ? 'Resubmit Assignment' : 'Edit Assignment' %>">
+                                        <a href="/student/assignment/edit/<%= assignment._id %>" class="action-btn edit-btn">
                                             <% if (assignment.status === 'rejected') { %>
                                                 <i class="fa-solid fa-arrow-up-from-bracket"></i>
                                             <% } else { %>
@@ -119,9 +122,11 @@
                                         </a>
                                     <% } %>
 
-                                    <a href="/student/assignment/delete/<%= assignment._id %>" class="action-btn delete-btn">
-                                        <i class="fa-solid fa-trash-can"></i>
-                                    </a>
+                                    <% if (assignment.status !== 'rejected') { %>
+                                        <a href="/student/assignment/delete/<%= assignment._id %>" class="action-btn delete-btn">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                        </a>
+                                    <% } %>
 
                                 </td>
 
@@ -141,17 +146,20 @@
 
         </div>
     </div>
-    
+
+    <!-- ===================== MODAL ========================= -->
     <div id="submissionModal" class="modal">
         <div class="modal-content">
             <span class="close-button">&times;</span>
             <h2>Confirm Submission & Select Reviewer</h2>
-            
-            <form id="submissionForm" method="POST"> 
+
+            <form id="submissionForm" method="POST">
                 <input type="hidden" id="assignmentId" name="assignmentId">
-                
-                <p>You are about to submit: <span id="assignmentTitleDisplay" style="font-weight: bold;"></span></p>
-                
+
+                <p>You are about to submit:
+                    <span id="assignmentTitleDisplay" style="font-weight:bold;"></span>
+                </p>
+
                 <div class="form-group">
                     <label for="professorSelect">Select Target Professor:</label>
                     <select id="professorSelect" name="professorId" required>
@@ -161,11 +169,13 @@
                         <option value="prof789">Prof. Sara Lee (Math Dept)</option>
                     </select>
                 </div>
+
                 <button type="submit" class="confirm-submit-btn">Confirm & Submit</button>
             </form>
         </div>
     </div>
 
+    <!-- ===================== SCRIPT ========================= -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const modal = document.getElementById('submissionModal');
@@ -173,34 +183,30 @@
             const assignmentTitleDisplay = document.getElementById('assignmentTitleDisplay');
             const assignmentIdInput = document.getElementById('assignmentId');
             const submissionForm = document.getElementById('submissionForm');
+
             const draftStatusBadges = document.querySelectorAll('.badge-draft');
 
             draftStatusBadges.forEach(badge => {
-                if (badge.textContent.trim().toLowerCase() === 'draft') {
-                    badge.style.cursor = 'pointer'; 
-                    badge.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        const row = badge.closest('tr');
-                        if (!row) return;
-                        const title = row.querySelector('[data-label="Title"]').textContent;
-                        const assignmentId = row.getAttribute('data-id');
-                        assignmentTitleDisplay.textContent = title;
-                        assignmentIdInput.value = assignmentId;
-                        submissionForm.action = `/student/assignment/submit/${assignmentId}`;
-                        modal.style.display = 'block';
-                    });
-                }
+                badge.style.cursor = 'pointer';
+
+                badge.addEventListener('click', () => {
+                    const row = badge.closest('tr');
+                    const title = row.querySelector('[data-label="Title"]').textContent;
+                    const assignmentId = row.getAttribute('data-id');
+
+                    assignmentTitleDisplay.textContent = title;
+                    assignmentIdInput.value = assignmentId;
+                    submissionForm.action = `/student/assignment/submit/${assignmentId}`;
+
+                    modal.style.display = 'block';
+                });
             });
 
-            closeButton.onclick = function() {
-                modal.style.display = 'none';
-            }
+            closeButton.onclick = () => modal.style.display = 'none';
 
-            window.onclick = function(event) {
-                if (event.target == modal) {
-                    modal.style.display = 'none';
-                }
-            }
+            window.onclick = (event) => {
+                if (event.target === modal) modal.style.display = 'none';
+            };
         });
     </script>
 

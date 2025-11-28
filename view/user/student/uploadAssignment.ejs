@@ -1,77 +1,73 @@
-<!DOCTYPE html>
-<html lang="en">
+<header class="header">
+    <div class="header-inner">
+        <h1 class="logo">
+            <span class="logo-accent">Admin</span> Portal
+        </h1>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload Assignment</title>
-    <link rel="stylesheet" href="/css/usercss/uploadAssignment.css">
-</head>
+        <nav class="nav-desktop">
+            <a href="/admin/home" class="nav-link-top">
+                <i data-lucide="layout-dashboard"></i>
+                <span>Dashboard</span>
+            </a>
 
-<body>
+            <a href="/admin/department/list" class="nav-link-top">
+                <i data-lucide="building-2"></i>
+                <span>Department</span>
+            </a>
 
-    <div class="form-container">
+            <a href="/admin/user/list" class="nav-link-top">
+                <i data-lucide="users"></i>
+                <span>User</span>
+            </a>
 
-        <h2>Submit New Assignment</h2>
+            <a href="/admin/user-form" class="nav-link-top">
+                <i data-lucide="user-plus"></i>
+                <span>Add User</span>
+            </a>
 
-        <form action="/student/assignment/upload" method="POST" enctype="multipart/form-data">
+            <a href="/department/form" class="nav-link-top">
+                <i data-lucide="hard-hat"></i>
+                <span>Create Department</span>
+            </a>
+        </nav>
 
-            <% if(success){ %>
-                <div class="success-message"><%= success %></div>
-            <% } %>
+        <div class="user-controls">
+            <button id="logout-btn" onclick="window.location.href='/auth/admin/logout'">
+                <i data-lucide="log-out"></i>
+                <span>Logout</span>
+            </button>
 
-            <div class="input-group">
-                <label>Assignment Title</label>
-                <input type="text" name="title" required placeholder="Enter assignment title">
-            </div>
-
-            <div class="input-group">
-                <label>Submission Category</label>
-                <select name="category" required>
-                    <option disabled selected>Select category</option>
-                    <option value="assignment">Course Assignment</option>
-                    <option value="report">Lab Report / Technical Report</option>
-                    <option value="thesis">Thesis / Dissertation</option>
-                    <option value="presentation">Presentation Slides</option>
-                </select>
-            </div>
-
-            <div class="input-group">
-                <label>Description / Notes</label>
-                <textarea name="description" placeholder="Add notes or instructions"></textarea>
-            </div>
-
-            <!-- IMPROVED UPLOAD SECTION -->
-            <div class="input-group">
-                <label>Upload File (PDF only)</label>
-
-                <div class="file-upload-box">
-                    <input type="file" id="file_upload" name="file" accept=".pdf" required>
-                    <label for="file_upload" class="file-btn">Choose PDF</label>
-                    <p class="file-name">No file selected</p>
-                </div>
-            </div>
-
-            <div class="button-group">
-                <button type="submit" class="submit-button">Submit</button>
-                <button type="button" class="cancel-button" onclick="history.back()">Cancel</button>
-                <button type="button" class="cancel-button" onclick="window.location.href='/student/dashboard'">Home</button>
-            </div>
-
-        </form>
-
+            <button class="menu-toggle" onclick="toggleMobileMenu()">
+                <i id="menu-icon" data-lucide="menu"></i>
+                <i id="close-icon" data-lucide="x" class="hidden"></i>
+            </button>
+        </div>
     </div>
 
-<script>
-const fileInput = document.getElementById("file_upload");
-const fileName = document.querySelector(".file-name");
+    <nav id="mobile-nav">
+        <a href="/admin/home" class="nav-link-mobile">
+            <i data-lucide="layout-dashboard"></i>
+            <span>Dashboard</span>
+        </a>
 
-fileInput.addEventListener("change", () => {
-    fileName.textContent = fileInput.files.length > 0
-        ? fileInput.files[0].name
-        : "No file selected";
-});
-</script>
+        <a href="/admin/department/list" class="nav-link-mobile">
+            <i data-lucide="building-2"></i>
+            <span>Department</span>
+        </a>
 
-</body>
-</html>
+        <a href="/admin/user/list" class="nav-link-mobile">
+            <i data-lucide="users"></i>
+            <span>User</span>
+        </a>
+
+        <a href="/admin/user-form" class="nav-link-mobile">
+            <i data-lucide="user-plus"></i>
+            <span>Add User</span>
+        </a>
+
+        <a href="/department/form" class="nav-link-mobile">
+            <i data-lucide="hard-hat"></i>
+            <span>Create Department</span>
+        </a>
+    </nav>
+</header>

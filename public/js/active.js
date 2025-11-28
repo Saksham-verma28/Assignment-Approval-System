@@ -1,27 +1,30 @@
+document.addEventListener("DOMContentLoaded", function () {
+    const currentPath = window.location.pathname.replace(/\/$/, "");
+
+    const allLinks = document.querySelectorAll(".nav-link-top, .nav-link-mobile");
+
+    // Remove any old active before adding new
+    allLinks.forEach(l => l.classList.remove("active-link"));
+
+    allLinks.forEach(link => {
+        let href = link.getAttribute("href").replace(/\/$/, "");
+
+        if (href === currentPath) {
+            link.classList.add("active-link");
+        }
+    });
+});
+
 function toggleMobileMenu() {
-  const mobileNav = document.getElementById('mobile-nav');
-  const menuIcon = document.getElementById('menu-icon');
-  const closeIcon = document.getElementById('close-icon');
+    const mobileNav = document.getElementById("mobile-nav");
+    const menuIcon = document.getElementById("menu-icon");
+    const closeIcon = document.getElementById("close-icon");
 
-  if (mobileNav.classList.contains('open')) {
-    mobileNav.classList.remove('open');
-    menuIcon.classList.remove('hidden');
-    closeIcon.classList.add('hidden');
-    document.body.style.overflow = '';
-  } else {
-    mobileNav.classList.add('open');
-    menuIcon.classList.add('hidden');
-    closeIcon.classList.remove('hidden');
-    document.body.style.overflow = 'hidden';
-  }
-}
+    mobileNav.classList.toggle("open");
+    menuIcon.classList.toggle("hidden");
+    closeIcon.classList.toggle("hidden");
 
-function active(clickedElement) {
-  const navItems = document.querySelectorAll('.nav-link-top, .nav-link-mobile');
-  navItems.forEach(item => {
-    item.classList.remove('active-link');
-  });
-  clickedElement.classList.add('active-link');
+    document.body.style.overflow = mobileNav.classList.contains("open") ? "hidden" : "";
 }
 
 lucide.createIcons();

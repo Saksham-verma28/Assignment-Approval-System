@@ -24,14 +24,14 @@ router.post('/department/search',auth.auth, searchDept);
 router.post('/department/update',auth.auth, updateDept);
 
 router.get('/user-form',auth.auth, async (req, res) => {
-  res.render("admin/userForm")
+  res.render("admin/userForm",{msg: ''})
 })
 
 router.post('/user/create',auth.auth,createUser)
 
 router.get("/users",auth.auth, userList);
 
-router.post("/users/:id/edit",auth.auth, updateDept);
+router.post("/users/:id/edit",auth.auth, updateUser);
 
 router.post("/users/:id",auth.auth, deleteUser);
 

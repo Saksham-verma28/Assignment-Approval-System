@@ -16,7 +16,7 @@ router.get('/logout', (req, res) => {
 
 router.get('/admin/logout', (req, res) => {
     res.clearCookie("admin");
-    return res.redirect("/s");
+    return res.redirect("/");
 });
 
 

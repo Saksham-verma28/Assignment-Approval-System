@@ -15,20 +15,15 @@
   <main id="main-content">
     <h1>All Departments</h1>
 
-    <% if (typeof success !== 'undefined' && success === 'updated') { %>
-      <div class="success-msg">✅ Department updated successfully!</div>
-    <% } else if (typeof success !== 'undefined' && success === 'deleted') { %>
-      <div class="success-msg" style="background:#EF4444;">🗑️ Department deleted successfully!</div>
-    <% } %>
-
     <form id="department-filters-form" class="controls-bar" method="post" action="/admin/department/search">
+
       <div class="search-container">
-        <label for="search-input" class="control-label">Search</label>
+        <label class="control-label">Search</label>
         <input type="text" id="search-input" name="search" placeholder="Search by department name">
       </div>
 
       <div class="filter-container">
-        <label for="filter-select" class="control-label">Filter by Type</label>
+        <label class="control-label">Filter by Type</label>
         <div class="select-wrapper">
           <select id="filter-select" name="program_type">
             <option value="all">All</option>
@@ -38,6 +33,8 @@
           </select>
         </div>
       </div>
+
+      <button type="submit" id="mobile-search-btn" class="mobile-search-btn">Search</button>
     </form>
 
     <table>
@@ -49,24 +46,24 @@
           <th>Action</th>
         </tr>
       </thead>
+
       <tbody>
         <% if (department && department.length > 0) { %>
           <% department.forEach(d => { %>
             <tr>
-              <td><%= d.department_name %></td>
-              <td><%= d.program_type %></td>
-              <td><%= d.department_address %></td>
-              <td>
-                <button 
-                  class="edit-btn" 
+              <td data-label="Department Name"><%= d.department_name %></td>
+              <td data-label="Program Type"><%= d.program_type %></td>
+              <td data-label="Department Address"><%= d.department_address %></td>
+              <td data-label="Action">
+                <button class="edit-btn"
                   data-id="<%= d._id %>"
-                  data-name="<%= d.department_name %>" 
-                  data-type="<%= d.program_type %>" 
+                  data-name="<%= d.department_name %>"
+                  data-type="<%= d.program_type %>"
                   data-address="<%= d.department_address %>">
                   Edit
                 </button>
-                <button 
-                  class="delete-btn"
+
+                <button class="delete-btn"
                   data-id="<%= d._id %>"
                   data-name="<%= d.department_name %>">
                   Delete
@@ -83,7 +80,6 @@
     </table>
   </main>
 
-  <!-- ✅ Edit Popup -->
   <div class="popup-overlay" id="editPopup">
     <div class="popup">
       <h2>Edit Department</h2>
@@ -114,7 +110,7 @@
   <div class="popup-overlay" id="deletePopup">
     <div class="popup">
       <h2>Confirm Deletion</h2>
-      <p id="deleteMessage" style="text-align:center;">Are you sure you want to delete this department?</p>
+      <p id="deleteMessage" style="text-align:center;"></p>
       <div class="btn-row">
         <button class="delete-confirm" id="confirmDelete">Delete Department</button>
         <button class="cancel-btn" id="cancelDelete">Cancel</button>
@@ -123,52 +119,46 @@
   </div>
 
   <script>
-    const editBtns = document.querySelectorAll('.edit-btn');
-    const deleteBtns = document.querySelectorAll('.delete-btn');
-    const popupEdit = document.getElementById('editPopup');
-    const popupDelete = document.getElementById('deletePopup');
-    const cancelEdit = document.getElementById('cancelEdit');
-    const cancelDelete = document.getElementById('cancelDelete');
-    const confirmDelete = document.getElementById('confirmDelete');
-    let deleteId = "";
+    const editBtns = document.querySelectorAll('.edit-btn')
+    const deleteBtns = document.querySelectorAll('.delete-btn')
+    const popupEdit = document.getElementById('editPopup')
+    const popupDelete = document.getElementById('deletePopup')
+    const cancelEdit = document.getElementById('cancelEdit')
+    const cancelDelete = document.getElementById('cancelDelete')
+    const confirmDelete = document.getElementById('confirmDelete')
+    let deleteId = ""
 
     editBtns.forEach(btn => {
       btn.addEventListener('click', () => {
-        document.getElementById('editId').value = btn.dataset.id;
-        document.getElementById('editName').value = btn.dataset.name;
-        document.getElementById('editType').value = btn.dataset.type;
-        document.getElementById('editAddress').value = btn.dataset.address;
-        popupEdit.style.display = 'flex';
-      });
-    });
+        document.getElementById('editId').value = btn.dataset.id
+        document.getElementById('editName').value = btn.dataset.name
+        document.getElementById('editType').value = btn.dataset.type
+        document.getElementById('editAddress').value = btn.dataset.address
+        popupEdit.style.display = 'flex'
+      })
+    })
 
-    cancelEdit.addEventListener('click', () => {
-      popupEdit.style.display = 'none';
-    });
+    cancelEdit.addEventListener('click', () => popupEdit.style.display = 'none')
 
-  
     deleteBtns.forEach(btn => {
       btn.addEventListener('click', () => {
-        deleteId = btn.dataset.id;
-        document.getElementById('deleteMessage').innerText = 
-          `Are you sure you want to delete the "${btn.dataset.name}" department?`;
-        popupDelete.style.display = 'flex';
-      });
-    });
+        deleteId = btn.dataset.id
+        document.getElementById('deleteMessage').innerText =
+        `Are you sure you want to delete "${btn.dataset.name}"?`
+        popupDelete.style.display = 'flex'
+      })
+    })
 
-    cancelDelete.addEventListener('click', () => {
-      popupDelete.style.display = 'none';
-    });
+    cancelDelete.addEventListener('click', () => popupDelete.style.display = 'none')
 
     confirmDelete.addEventListener('click', () => {
-      window.location.href = `/admin/department/delete?id=${deleteId}`;
-    });
+      window.location.href = `/admin/department/delete?id=${deleteId}`
+    })
 
-    // Close popups on outside click
-    window.addEventListener('click', (e) => {
-      if (e.target === popupEdit) popupEdit.style.display = 'none';
-      if (e.target === popupDelete) popupDelete.style.display = 'none';
-    });
+    window.addEventListener('click', e => {
+      if (e.target === popupEdit) popupEdit.style.display = 'none'
+      if (e.target === popupDelete) popupDelete.style.display = 'none'
+    })
   </script>
 
   <script src="/js/active.js"></script>

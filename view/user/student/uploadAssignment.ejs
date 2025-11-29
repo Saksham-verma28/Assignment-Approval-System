@@ -1,73 +1,82 @@
-<header class="header">
-    <div class="header-inner">
-        <h1 class="logo">
-            <span class="logo-accent">Admin</span> Portal
-        </h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Assignment</title>
+    <link rel="stylesheet" href="/css/usercss/uploadAssignment.css">
+</head>
+<body>
+    <div class="form-container">
+        <h2>Submit New Assignment</h2>
+        <p class="subtitle">Please provide all necessary details and upload your file.</p>
 
-        <nav class="nav-desktop">
-            <a href="/admin/home" class="nav-link-top">
-                <i data-lucide="layout-dashboard"></i>
-                <span>Dashboard</span>
-            </a>
+        <% if (locals.success_message) { %>
+            <div class="success-message">
+                <%= success_message %>
+            </div>
+        <% } %>
 
-            <a href="/admin/department/list" class="nav-link-top">
-                <i data-lucide="building-2"></i>
-                <span>Department</span>
-            </a>
+        <form action="/student/assignment/upload" method="POST" enctype="multipart/form-data">
+           
+            <div class="input-group">
+                <label for="title">Assignment Title</label>
+                <input type="text" id="title" name="title" required placeholder="e.g., Final Project Report: Quantum Computing">
+            </div>
 
-            <a href="/admin/user/list" class="nav-link-top">
-                <i data-lucide="users"></i>
-                <span>User</span>
-            </a>
+            <div class="input-group">
+                <label for="category">Submission Category</label>
+                <select id="category" name="category" required>
+                    <option value="" disabled selected>Select the type of submission</option>
+                    <option value="assignment">Course Assignment</option>
+                    <option value="report">Lab Report / Technical Report</option>
+                    <option value="thesis">Thesis / Dissertation</option>
+                    <option value="presentation">Presentation Slides</option>
+                </select>
+            </div>
 
-            <a href="/admin/user-form" class="nav-link-top">
-                <i data-lucide="user-plus"></i>
-                <span>Add User</span>
-            </a>
+            <div class="input-group">
+                <label for="description">Description / Notes</label>
+                <textarea id="description" name="description" placeholder="Add any relevant instructions, notes for the professor, or comments about late submission."></textarea>
+            </div>
 
-            <a href="/department/form" class="nav-link-top">
-                <i data-lucide="hard-hat"></i>
-                <span>Create Department</span>
-            </a>
-        </nav>
+            <div class="input-group">
+                <label for="file_upload">Upload File</label>
+                <div class="file-input-wrapper">
+                    <label for="file_upload" class="file-upload-label">Click here to browse files</label>
+                    <span id="selected_file_name" class="file-name">No file selected.</span>
+                    <p class="file-upload-info">Max file size 10MB. Accepted formats: PDF.</p>
+                    <input type="file" id="file_upload" name="file" required accept=".pdf">
+                </div>
+            </div>
 
-        <div class="user-controls">
-            <button id="logout-btn" onclick="window.location.href='/auth/admin/logout'">
-                <i data-lucide="log-out"></i>
-                <span>Logout</span>
-            </button>
-
-            <button class="menu-toggle" onclick="toggleMobileMenu()">
-                <i id="menu-icon" data-lucide="menu"></i>
-                <i id="close-icon" data-lucide="x" class="hidden"></i>
-            </button>
-        </div>
+            <div class="button-group">
+                <button type="submit" class="submit-button">Submit Assignment</button>
+                <button type="button" class="cancel-button" onclick="history.back()">Cancel</button>
+            </div>
+        </form>
     </div>
 
-    <nav id="mobile-nav">
-        <a href="/admin/home" class="nav-link-mobile">
-            <i data-lucide="layout-dashboard"></i>
-            <span>Dashboard</span>
-        </a>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const fileInput = document.getElementById('file_upload');
+            const fileNameDisplay = document.getElementById('selected_file_name');
+            const fileLabel = document.querySelector('.file-upload-label');
 
-        <a href="/admin/department/list" class="nav-link-mobile">
-            <i data-lucide="building-2"></i>
-            <span>Department</span>
-        </a>
+            fileNameDisplay.textContent = 'No file selected.';
+            fileLabel.style.display = 'block';
 
-        <a href="/admin/user/list" class="nav-link-mobile">
-            <i data-lucide="users"></i>
-            <span>User</span>
-        </a>
-
-        <a href="/admin/user-form" class="nav-link-mobile">
-            <i data-lucide="user-plus"></i>
-            <span>Add User</span>
-        </a>
-
-        <a href="/department/form" class="nav-link-mobile">
-            <i data-lucide="hard-hat"></i>
-            <span>Create Department</span>
-        </a>
-    </nav>
-</header>
+            fileInput.addEventListener('change', function() {
+                if (fileInput.files.length > 0) {
+                    const fileName = fileInput.files[0].name;
+                    fileNameDisplay.textContent = 'Selected: ' + fileName;
+                    fileLabel.style.display = 'none';
+                } else {
+                    fileNameDisplay.textContent = 'No file selected.';
+                    fileLabel.style.display = 'block';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

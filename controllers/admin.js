@@ -1,6 +1,7 @@
 const Department = require('../models/department')
 const User = require('../models/user')
 const hashPass = require('../hashPassword');
+const { sendMail } = require('../config/sendEmail')
 
 
 
@@ -120,7 +121,58 @@ async function createUser(req, res) {
         role
     });
 
-    res.render("admin/userForm");
+    const html = `
+        <div style="font-family: Arial, sans-serif; background-color:#0F172A; padding:20px; color:white;">
+            <div style="max-width:600px; margin:0 auto; background:#1F2937; padding:25px; border-radius:10px;">
+                
+                <h2 style="color:#8B5CF6; text-align:center; margin-bottom:20px;">
+                    User Account Created Successfully
+                </h2>
+
+                <p style="font-size:16px; color:#E5E7EB;">
+                    Hello <strong>${name}</strong>,
+                </p>
+
+                <p style="font-size:15px; color:#CBD5E1;">
+                    Your account is now active and ready to use.
+                </p>
+
+                <div style="background:#111827; padding:15px; border-radius:8px; margin-top:20px;">
+                    <p style="margin:0; color:#A78BFA; font-size:14px;"><strong>Login Email:</strong></p>
+                    <p style="margin:5px 0 15px 0; color:white;">${email}</p>
+
+                    <p style="margin:0; color:#A78BFA; font-size:14px;"><strong>Password:</strong></p>
+                    <p style="margin:5px 0; color:white;">${password}</p>
+                </div>
+
+                <p style="margin-top:25px; color:#E5E7EB; font-size:14px;">
+                    You can now log in to your portal using the above details.
+                </p>
+
+                <a href="http://localhost:3000/user/login"
+                    style="
+                        display:inline-block;
+                        margin-top:20px;
+                        background:#8B5CF6;
+                        padding:10px 20px;
+                        color:white;
+                        text-decoration:none;
+                        border-radius:5px;
+                        font-weight:bold;
+                    ">
+                    Login Now
+                </a>
+
+                <p style="margin-top:25px; color:#64748B; font-size:12px; text-align:center;">
+                    © ${new Date().getFullYear()} University Student Portal
+                </p>
+
+            </div>
+        </div>
+        `;
+    sendMail(email,"User created successfully",html)
+
+    res.render("admin/userForm", {msg: "User Created successfully"});
 }
 
 

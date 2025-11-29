@@ -15,14 +15,13 @@ body {
     padding: 0;
     background: var(--color-cream);
     font-family: 'Georgia', serif;
-    height: 100vh;
-    overflow: hidden;
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 40px 0;
 }
 
-/* FORM BOX */
 .form-container {
     background: var(--color-white);
     width: 95%;
@@ -30,15 +29,21 @@ body {
     padding: 30px 34px;
     border-radius: 16px;
     box-shadow: 0 10px 28px rgba(0,0,0,0.18);
-    max-height: 92vh;
-    overflow-y: auto;
+    /* Removed max-height and overflow-y to prevent internal scrollbar */
 }
 
 h2 {
-    margin: 0 0 18px 0;
+    margin: 0 0 8px 0;
     font-size: 2rem;
     font-weight: 900;
     color: var(--color-dark-brown);
+}
+
+.subtitle {
+    margin-top: 0;
+    margin-bottom: 24px;
+    color: var(--color-light-brown);
+    font-size: 1rem;
 }
 
 .success-message {
@@ -57,6 +62,8 @@ h2 {
 .input-group label {
     font-weight: bold;
     font-size: 1rem;
+    color: var(--color-dark-brown);
+    display: block; 
 }
 
 .input-group input,
@@ -69,26 +76,43 @@ h2 {
     border-radius: 10px;
     background: var(--color-cream);
     font-size: 1rem;
+    color: var(--color-dark-brown);
+    font-family: inherit;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.input-group select {
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2012%2012%22%3E%3Cpath%20fill%3D%22%238d6e63%22%20d%3D%22M4.17%205.83l3.66%203.66c.2.2.5.2.7%200l.07-.07c.2-.2.2-.5%200-.7L6%205.5l2.6-2.6c.2-.2.2-.5%200-.7l-.07-.07c-.2-.2-.5-.2-.7%200L4.17%205.13c-.2.2-.2.5%200%20.7z%22%2F%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 30px; 
+}
+
+.input-group select:required:invalid {
+    color: var(--color-light-brown);
 }
 
 textarea {
-    height: 90px;
-    resize: none;
+    min-height: 90px;
+    resize: vertical;
 }
 
-/* FILE UPLOAD BOX */
-.file-upload-box {
+.file-input-wrapper {
     background: #fff4ed;
     border: 1.5px solid var(--color-light-terracotta);
-    border-radius: 12px;
-    padding: 22px;
+    border-radius: 10px;
+    padding: 18px; 
     text-align: center;
+    margin-top: 6px;
+    cursor: pointer;
 }
 
-.file-btn {
+.file-upload-label {
     display: block;
     background: var(--color-terracotta);
-    color: white;
+    color: var(--color-white);
     padding: 12px 20px;
     border-radius: 8px;
     font-weight: bold;
@@ -96,26 +120,36 @@ textarea {
     cursor: pointer;
     width: 100%;
     transition: 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
-.file-btn:hover {
+.file-upload-label:hover {
     background: var(--color-rust-hover);
+}
+
+.file-name {
+    display: block; 
+    margin: 10px 0;
+    font-size: 0.95rem;
+    font-style: italic;
+    color: var(--color-dark-brown);
+    word-break: break-all;
+}
+
+.file-upload-info {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--color-light-brown);
+    font-style: italic;
 }
 
 input[type="file"] {
     display: none;
 }
 
-.file-name {
-    margin-top: 10px;
-    font-size: 0.9rem;
-    font-style: italic;
-    color: var(--color-light-brown);
-}
-
-/* BUTTONS IN ONE ROW */
 .button-group {
-    margin-top: 20px;
+    margin-top: 30px; 
     display: flex;
     flex-direction: row;
     gap: 12px;
@@ -123,7 +157,8 @@ input[type="file"] {
 
 .submit-button,
 .cancel-button {
-    width: 33%;
+    flex-grow: 1; 
+    width: 50%;
     padding: 14px;
     font-size: 1rem;
     font-weight: bold;
@@ -131,19 +166,18 @@ input[type="file"] {
     cursor: pointer;
     border: none;
     text-align: center;
+    transition: 0.3s ease;
 }
 
-/* Submit */
 .submit-button {
     background: var(--color-terracotta);
-    color: white;
+    color: var(--color-white);
 }
 
 .submit-button:hover {
     background: var(--color-rust-hover);
 }
 
-/* Cancel + Home */
 .cancel-button {
     background: transparent;
     border: 2px solid var(--color-terracotta);
@@ -152,10 +186,9 @@ input[type="file"] {
 
 .cancel-button:hover {
     background: var(--color-terracotta);
-    color: white;
+    color: var(--color-white);
 }
 
-/* MOBILE FIX */
 @media (max-width: 480px) {
     .form-container {
         padding: 22px;
@@ -164,11 +197,15 @@ input[type="file"] {
     h2 {
         font-size: 1.6rem;
     }
+    
+    .button-group {
+        flex-direction: column; 
+    }
 
     .submit-button,
     .cancel-button {
-        width: 33%;
-        padding: 16px;
+        width: 100%; 
+        padding: 14px;
         font-size: 1rem;
     }
 }

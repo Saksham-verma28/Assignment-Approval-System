@@ -28,12 +28,16 @@ async function studentHome(req, res) {
     const assignmentDetails = await Assignment.find({ student_name: name }).sort({ _id: -1 }).limit(5);
     const totalDrafts = await Assignment.countDocuments({ student_name: name, status: 'draft' });
     const totalSubmitted = await Assignment.countDocuments({ student_name: name, status: 'submitted' });
+    const totalApproved = await Assignment.countDocuments({ student_name: name, status: 'approved' });
+    const totalRejected = await Assignment.countDocuments({ student_name: name, status: 'rejected' });
 
     const contextData = {
         assignments: assignmentDetails,
         name: name,
         totalDrafts: totalDrafts,
-        totalSubmitted: totalSubmitted
+        totalSubmitted: totalSubmitted,
+        totalApproved: totalApproved,
+        totalRejected: totalRejected
     };
     res.render("user/student/studentHome", contextData);
 }
@@ -100,12 +104,16 @@ async function statusFilter(req, res) {
 
     const totalDrafts = await Assignment.countDocuments({ student_name: name, status: 'draft' });
     const totalSubmitted = await Assignment.countDocuments({ student_name: name, status: 'submitted' });
+    const totalApproved = await Assignment.countDocuments({ student_name: name, status: 'approved' });
+    const totalRejected = await Assignment.countDocuments({ student_name: name, status: 'rejected' });
 
     const contextData = {
         assignments: status,
         name: name,
         totalDrafts: totalDrafts,
-        totalSubmitted: totalSubmitted
+        totalSubmitted: totalSubmitted,
+        totalApproved: totalApproved,
+        totalRejected: totalRejected
     };
     res.render("user/student/studentHome", contextData);
 }
@@ -158,12 +166,16 @@ async function submitAssignment(req, res) {
     let assignment = await Assignment.find({ student_name: submitted.student_name });
     const totalDrafts = await Assignment.countDocuments({ student_name: submitted.student_name, status: 'draft' });
     const totalSubmitted = await Assignment.countDocuments({ student_name: submitted.student_name, status: 'submitted' });
+    const totalApproved = await Assignment.countDocuments({ student_name: name, status: 'approved' });
+    const totalRejected = await Assignment.countDocuments({ student_name: name, status: 'rejected' });
 
     const contextData = {
         assignments: assignment,
         name: submitted.student_name,
         totalDrafts: totalDrafts,
-        totalSubmitted: totalSubmitted
+        totalSubmitted: totalSubmitted,
+        totalApproved: totalApproved,
+        totalRejected: totalRejected
     };
     res.render("user/student/studentHome", contextData);
 }

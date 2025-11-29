@@ -1,69 +1,72 @@
-    <header class="header">
-        <div class="header-inner">
-            <h1 class="logo">
-                <span class="logo-accent">Admin</span> Portal
-            </h1>
+<header class="header">
+    <div class="header-inner">
 
-            <nav class="nav-desktop">
-                <a href="/admin/home" class="nav-link-top active-link" onclick="active(this)">
-                    <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
-                    <span class="hidden-lg">Dashboard Overview</span>
-                    <span class="visible-lg">Dashboard</span>
-                </a>
-                <a href="/admin/department/list" class="nav-link-top" onclick="active(this)">
-                    <i data-lucide="building-2" class="w-5 h-5"></i>
-                    <span>Department</span>
-                </a>
-                <a href="/admin/user/list" class="nav-link-top"  onclick="active(this)">
-                    <i data-lucide="users" class="w-5 h-5"></i>
-                    <span>User</span>
-                </a>
-                <a href="/admin/user-form" class="nav-link-top"  onclick="active(this)">
-                    <i data-lucide="user-plus" class="w-5 h-5"></i>
-                    <span class="hidden-lg">Add User</span>
-                    <span class="visible-lg">Add</span>
-                </a>
-                <a href="/department/form" class="nav-link-top" onclick="active(this)">
-                    <i data-lucide="hard-hat" class="w-5 h-5"></i>
-                    <span class="hidden-lg">Create Department</span>
-                    <span class="visible-lg">Create Dept</span>
-                </a>
-            </nav>
+        <h1 class="logo">
+            <span class="logo-accent">Admin</span> Portal
+        </h1>
 
-            <div class="user-controls">
-                <p id="user-id-display"></p>
-                <button id="logout-btn">
-                    <i data-lucide="log-out" class="w-5 h-5"></i>
-                    <span onclick="window.location.href='/auth/admin/logout'">Logout</span>
-                </button>
-                
-                <button class="menu-toggle" onclick="toggleMobileMenu()">
-                    <i id="menu-icon" data-lucide="menu"></i>
-                    <i id="close-icon" data-lucide="x" class="hidden"></i>
-                </button>
-            </div>
-        </div>
-        
-        <nav id="mobile-nav">
-            <a href="/admin/home" class="nav-link-mobile active-link">
-                <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
-                <span>Dashboard Overview</span>
+        <nav class="nav-desktop">
+            <a href="/admin/home" class="nav-link-top" onclick="active(this)">
+                <i data-lucide="layout-dashboard"></i>
+                <span class="hidden-lg">Dashboard Overview</span>
+                <span class="visible-lg">Dashboard</span>
             </a>
-            <a href="/admin/department/list" class="nav-link-mobile">
-                <i data-lucide="building-2" class="w-5 h-5"></i>
+
+            <a href="/admin/department/list" class="nav-link-top" onclick="active(this)">
+                <i data-lucide="building-2"></i>
                 <span>Department</span>
             </a>
-            <a href="/admin/user/list" class="nav-link-mobile">
-                <i data-lucide="users" class="w-5 h-5"></i>
+
+            <a href="/admin/users" class="nav-link-top" onclick="active(this)">
+                <i data-lucide="users"></i>
                 <span>User</span>
             </a>
-            <a href="/admin/user-form" class="nav-link-mobile">
-                <i data-lucide="user-plus" class="w-5 h-5"></i>
-                <span>Add User</span>
+
+            <a href="/admin/user-form" class="nav-link-top" onclick="active(this)">
+                <i data-lucide="user-plus"></i>
+                <span class="hidden-lg">Add User</span>
+                <span class="visible-lg">Add</span>
             </a>
-            <a href="/department/form" class="nav-link-mobile">
-                <i data-lucide="hard-hat" class="w-5 h-5"></i>
-                <span>Create Department</span>
+
+            <a href="/department/form" class="nav-link-top" onclick="active(this)">
+                <i data-lucide="hard-hat"></i>
+                <span class="hidden-lg">Create Department</span>
+                <span class="visible-lg">Create Dept</span>
             </a>
         </nav>
-    </header>
+
+        <div class="user-controls">
+            <a id="logout-btn" href="/auth/admin/logout">
+                <i data-lucide="log-out"></i>
+                <span>Logout</span>
+            </a>
+
+            <button class="menu-toggle" onclick="toggleMobileMenu()">
+                <i id="menu-icon" data-lucide="menu"></i>
+                <i id="close-icon" data-lucide="x" style="display:none;"></i>
+            </button>
+        </div>
+    </div>
+
+    <nav id="mobile-nav">
+        <a href="/admin/home" class="nav-link-mobile">
+            <i data-lucide="layout-dashboard"></i><span>Dashboard Overview</span>
+        </a>
+
+        <a href="/admin/department/list" class="nav-link-mobile">
+            <i data-lucide="building-2"></i><span>Department</span>
+        </a>
+
+        <a href="/admin/users" class="nav-link-mobile">
+            <i data-lucide="users"></i><span>User</span>
+        </a>
+
+        <a href="/admin/user-form" class="nav-link-mobile">
+            <i data-lucide="user-plus"></i><span>Add User</span>
+        </a>
+
+        <a href="/department/form" class="nav-link-mobile">
+            <i data-lucide="hard-hat"></i><span>Create Department</span>
+        </a>
+    </nav>
+</header>

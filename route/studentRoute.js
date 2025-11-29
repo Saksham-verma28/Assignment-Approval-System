@@ -34,12 +34,16 @@ router.get('/assignment/delete/:id',async (req,res)=>{
 
     const totalDrafts = await Assignment.countDocuments({ student_name: name, status: 'draft' });
     const totalSubmitted = await Assignment.countDocuments({ student_name: name, status: 'submitted' });
+    const totalApproved = await Assignment.countDocuments({ student_name: name, status: 'approved' });
+    const totalRejected = await Assignment.countDocuments({ student_name: name, status: 'rejected' });
 
     const contextData = {
         assignments: assignment,
         name: name,
         totalDrafts: totalDrafts,
-        totalSubmitted: totalSubmitted
+        totalSubmitted: totalSubmitted,
+        totalApproved: totalApproved,
+        totalRejected: totalRejected
     };
     res.render("user/student/studentHome", contextData);
 })

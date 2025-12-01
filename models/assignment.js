@@ -6,6 +6,9 @@ const assignmentSchema = new mongoose.Schema({
   student_name: {
     type: String
   },
+  email: {
+    type: String
+  },
   title: {
     type: String,
     required: true,
@@ -33,10 +36,22 @@ const assignmentSchema = new mongoose.Schema({
     type: String,
     default: new Date().toDateString()
   },
+  professor: {
+    type: String,
+    default: ""
+  },
   status:{
     type: String,
     enum: ["draft","submitted","approved","rejected"],
     default: "draft"
+  },
+  remark: {
+    type: String,
+    default: ""
+  },
+  history: {
+    type: [String],
+    default: ["draft"]
   }
 });
 

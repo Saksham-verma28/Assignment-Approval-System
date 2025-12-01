@@ -52,9 +52,9 @@
             </div>
             
             <div class="current-file-info">
-                <i class="fa-solid fa-file"></i> Original Submission: 
+                <i class="fa-solid fa-file"></i> Original Submission:  
                 <a href="<%= assignment.upload_path %>" target="_blank" rel="noopener noreferrer">
-                    <%= assignment.original_file_name || 'View current file' %>
+                    <%= assignment.upload_path ? assignment.upload_path.split('/').pop() : 'N/A' %>
                 </a>
             </div>
             

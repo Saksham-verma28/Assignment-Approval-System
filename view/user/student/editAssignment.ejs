@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Assignment</title>
+    <link rel="stylesheet" href="/css/usercss/editAssignment.css"> 
+    <style>
+        :root {
+            --color-cream: #fdf8f4;
+            --color-dark-brown: #5d4037;
+            --color-light-brown: #8d6e63;
+            --color-terracotta: #e07a5f;
+            --color-light-terracotta: #d4bba2;
+            --color-rust-hover: #bf4d28;
+            --color-white: #ffffff;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: var(--color-cream);
+            font-family: 'Georgia', serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 0;
+        }
+
+        .form-container {
+            background: var(--color-white);
+            width: 95%;
+            max-width: 640px;
+            padding: 30px 34px;
+            border-radius: 16px;
+            box-shadow: 0 10px 28px rgba(0,0,0,0.18);
+        }
+
+        h2 {
+            margin: 0 0 8px 0;
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--color-dark-brown);
+        }
+
+        .subtitle {
+            margin-top: 0;
+            margin-bottom: 24px;
+            color: var(--color-light-brown);
+            font-size: 1rem;
+        }
+
+        .success-message, .error-message {
+            padding: 10px 12px;
+            font-size: 0.9rem;
+            border-radius: 6px;
+            margin-bottom: 12px;
+        }
+        
+        .success-message {
+            background: #e8f8ec;
+            color: green;
+        }
+        
+        .error-message {
+            background: #ffe8e8;
+            color: #d9534f;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            font-weight: bold;
+            font-size: 1rem;
+            color: var(--color-dark-brown);
+            display: block; 
+        }
+
+        .input-group input,
+        .input-group select,
+        .input-group textarea {
+            width: 100%;
+            padding: 14px;
+            margin-top: 6px;
+            border: 1px solid var(--color-light-terracotta);
+            border-radius: 10px;
+            background: var(--color-cream);
+            font-size: 1rem;
+            color: var(--color-dark-brown);
+            font-family: inherit;
+            appearance: none;
+        }
+
+        .input-group select {
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2012%2012%22%3E%3Cpath%20fill%3D%22%238d6e63%22%20d%3D%22M4.17%205.83l3.66%203.66c.2.2.5.2.7%200l.07-.07c.2-.2.2-.5%200-.7L6%205.5l2.6-2.6c.2-.2.2-.5%200-.7l-.07-.07c-.2-.2-.5-.2-.7%200L4.17%205.13c-.2.2-.2.5%200%20.7z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 30px; 
+        }
+
+        .input-group select:required:invalid {
+            color: var(--color-light-brown);
+        }
+
+        textarea {
+            min-height: 90px;
+            resize: vertical;
+        }
+
+        .file-input-wrapper {
+            background: #fff4ed;
+            border: 1.5px solid var(--color-light-terracotta);
+            border-radius: 10px;
+            padding: 18px; 
+            text-align: center;
+            margin-top: 6px;
+            cursor: pointer;
+        }
+
+        .file-upload-label {
+            display: block;
+            background: var(--color-terracotta);
+            color: var(--color-white);
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .file-upload-label:hover {
+            background: var(--color-rust-hover);
+        }
+
+        .file-name {
+            display: block; 
+            margin: 10px 0;
+            font-size: 0.95rem;
+            font-style: italic;
+            color: var(--color-dark-brown);
+            word-break: break-all;
+        }
+        
+        .current-file-info {
+            display: block;
+            margin: 10px 0 15px 0;
+            font-size: 0.95rem;
+            color: var(--color-dark-brown);
+            padding: 8px;
+            background: var(--color-cream);
+            border: 1px dashed var(--color-light-brown);
+            border-radius: 6px;
+        }
+        
+        .current-file-info strong {
+            color: var(--color-terracotta);
+        }
+
+        .file-upload-info {
+            margin: 0;
+            font-size: 0.85rem;
+            color: var(--color-light-brown);
+            font-style: italic;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .button-group {
+            margin-top: 30px; 
+            display: flex;
+            flex-direction: row;
+            gap: 12px;
+        }
+
+        .submit-button,
+        .cancel-button {
+            flex-grow: 1; 
+            width: 50%;
+            padding: 14px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            border: none;
+            text-align: center;
+            transition: 0.3s ease;
+        }
+
+        .submit-button {
+            background: var(--color-terracotta);
+            color: var(--color-white);
+        }
+
+        .submit-button:hover {
+            background: var(--color-rust-hover);
+        }
+
+        .cancel-button {
+            background: transparent;
+            border: 2px solid var(--color-terracotta);
+            color: var(--color-terracotta);
+        }
+
+        .cancel-button:hover {
+            background: var(--color-terracotta);
+            color: var(--color-white);
+        }
+        
+        .delete-button {
+            flex-grow: 1; 
+            padding: 14px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            border: none;
+            text-align: center;
+            transition: 0.3s ease;
+            background: #cc4d4d;
+            color: var(--color-white);
+        }
+        
+        .delete-button:hover {
+            background: #a33b3b;
+        }
+
+        @media (max-width: 480px) {
+            .form-container {
+                padding: 22px;
+            }
+
+            h2 {
+                font-size: 1.6rem;
+            }
+
+            .button-group {
+                flex-direction: column; 
+            }
+
+            .submit-button,
+            .cancel-button {
+                width: 100%; 
+                padding: 14px;
+                font-size: 1rem;
+            }
+            
+            .delete-button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Edit Your Assignment</h2>
+        <p class="subtitle">Update the details or replace the submitted file for your assignment.</p>
+
+        <% if (msg) { %>
+            <div class="success-message"><%= msg %></div>
+        <% } %>
+
+        <form action="/student/assignment/editAssignment/<%= assignment.id %>/" method="POST" enctype="multipart/form-data">
+           
+            <input type="hidden" name="_method" value="PUT">
+
+            <div class="input-group">
+                <label for="title">Assignment Title</label>
+                <input type="text" id="title" name="title" required value="<%= assignment.title %>">
+            </div>
+
+            <div class="input-group">
+                <label for="category">Submission Category</label>
+                <select id="category" name="category" required>
+                    <option value="" disabled>Select the type of submission</option>
+                    <option value="assignment" <%= assignment.category === 'assignment' ? 'selected' : '' %>>Course Assignment</option>
+                    <option value="report" <%= assignment.category === 'report' ? 'selected' : '' %>>Lab Report / Technical Report</option>
+                    <option value="thesis" <%= assignment.category === 'thesis' ? 'selected' : '' %>>Thesis / Dissertation</option>
+                    <option value="presentation" <%= assignment.category === 'presentation' ? 'selected' : '' %>>Presentation Slides</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="description">Description / Notes</label>
+                <textarea id="description" name="description"><%= assignment.description || '' %></textarea>
+            </div>
+
+            <div class="input-group">
+                <label>Current Uploaded File</label>
+                <div class="current-file-info">
+                    File: <strong><%= assignment.upload_path ? assignment.upload_path.split('/').pop() : 'N/A' %></strong><br>
+                    Uploaded On: <%= assignment.submit || 'N/A' %>
+                </div>
+                
+                <label for="file_upload">Upload New File (Optional)</label>
+                <div class="file-input-wrapper">
+                    <label for="file_upload" class="file-upload-label">Click here to replace the file</label>
+                    <span id="selected_file_name" class="file-name">No new file selected.</span>
+                    <p class="file-upload-info">Max file size 10MB. Accepted formats: PDF. Leave blank to keep existing file.</p>
+                    <input type="file" id="file_upload" name="file" accept=".pdf">
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button type="submit" class="submit-button">Update Assignment</button>
+                <button type="button" class="cancel-button" onclick="window.location.href='/student/dashboard'">Home</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const fileInput = document.getElementById('file_upload');
+            const fileNameDisplay = document.getElementById('selected_file_name');
+            const fileLabel = document.querySelector('.file-upload-label');
+
+            fileNameDisplay.textContent = 'No new file selected.';
+            fileLabel.style.display = 'block';
+
+            fileInput.addEventListener('change', function() {
+                if (fileInput.files.length > 0) {
+                    const fileName = fileInput.files[0].name;
+                    fileNameDisplay.textContent = 'Selected: ' + fileName;
+                    fileLabel.style.display = 'none';
+                } else {
+                    fileNameDisplay.textContent = 'No new file selected.';
+                    fileLabel.style.display = 'block';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assignment Tracker - Welcome</title>
+
+    <style>
+        :root {
+            --bg-deep-dark: #0F172A;
+            --bg-nav-dark: #1E293B;
+            --bg-surface-dark: #1E293B;
+            --text-light: #E2E8F0;
+            --text-gray: #94A3B8;
+            --accent-purple: #8B5CF6;
+            --accent-purple-hover: #7C3AED;
+            --text-accent-light: #C4B5FD;
+            --color-sky: #0EA5E9;
+            --color-emerald: #10B981;
+            --color-orange: #F97316;
+            --color-fuchsia: #D946EF;
+            --text-red: #FCA5A5;
+            --bg-red-hover: #B91C1C;
+            --border-light: rgba(255,255,255,0.08);
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-deep-dark);
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .welcome-container {
+            background: var(--bg-surface-dark);
+            padding: 3rem 2rem;
+            border-radius: 1rem;
+            width: 100%;
+            max-width: 650px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            border: 1px solid var(--border-light);
+            animation: fadeInUp .6s ease-out;
+        }
+
+        .logo-circle {
+            width: 95px;
+            height: 95px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-purple-hover));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 8px 22px rgba(139,92,246,0.3);
+        }
+
+        .logo-circle svg {
+            width: 48px;
+            height: 48px;
+            color: white;
+        }
+
+        .welcome-title {
+            font-size: 2.3rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-subtitle {
+            color: var(--text-gray);
+            font-size: 1.1rem;
+            margin-bottom: .5rem;
+        }
+
+        .welcome-description {
+            color: var(--text-gray);
+            font-size: 0.95rem;
+            max-width: 450px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .divider {
+            height: 1px;
+            background: var(--border-light);
+            margin: 2rem 0;
+        }
+
+        .login-options {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 640px) {
+            .login-options {
+                grid-template-columns: repeat(2,1fr);
+            }
+        }
+
+        .login-card {
+            background: var(--bg-nav-dark);
+            padding: 1.8rem 1.5rem;
+            border-radius: .8rem;
+            text-decoration: none;
+            color: var(--text-light);
+            border: 1px solid var(--border-light);
+            transition: .25s;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.35);
+        }
+
+        .login-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.45);
+        }
+
+        .card-icon {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-card .card-icon {
+            background: var(--color-sky);
+            box-shadow: 0 0 18px rgba(14,165,233,0.45);
+        }
+
+        .admin-card .card-icon {
+            background: var(--color-orange);
+            box-shadow: 0 0 18px rgba(249,115,22,0.45);
+        }
+
+        .card-icon svg {
+            width: 32px;
+            height: 32px;
+            color: white;
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: .4rem;
+        }
+
+        .card-description {
+            font-size: .9rem;
+            color: var(--text-gray);
+        }
+
+        .card-arrow {
+            width: 26px;
+            height: 26px;
+            margin-top: 1rem;
+            transition: .3s;
+        }
+
+        .login-card:hover .card-arrow {
+            transform: translateX(6px);
+        }
+
+        .footer-text {
+            margin-top: 2.2rem;
+            font-size: .9rem;
+            color: var(--text-gray);
+        }
+
+        .footer-link {
+            color: var(--accent-purple);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer-link:hover {
+            text-decoration: underline;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity:0; transform: translateY(25px); }
+            to { opacity:1; transform: translateY(0); }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="welcome-container">
+
+        <h1 class="welcome-title">Assignment Tracker</h1>
+        <p class="welcome-subtitle">Welcome Back!</p>
+        <p class="welcome-description">
+            Track your assignments, submissions, and progress in one dashboard.
+        </p>
+
+        <div class="divider"></div>
+
+        <div class="login-options">
+
+            <a href="/user/login" class="login-card user-card">
+                <div class="card-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                </div>
+                <h2 class="card-title">User Login</h2>
+                <p class="card-description">Access your dashboard and assignments.</p>
+                <svg class="card-arrow" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+            </a>
+
+            <a href="/admin/login" class="login-card admin-card">
+                <div class="card-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                </div>
+                <h2 class="card-title">Admin Access</h2>
+                <p class="card-description">Manage system and oversee assignments.</p>
+                <svg class="card-arrow" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+            </a>
+
+        </div>
+
+        <p class="footer-text">
+            Need help? <a href="#" class="footer-link">Contact Support</a>
+        </p>
+    </div>
+
+</body>
+</html>

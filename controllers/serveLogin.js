@@ -1,28 +1,53 @@
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt');
+const ActivityLog = require('../models/ActivityLog');
+
+const ADMIN_STATIC_ID = '60f8c3c1b4f4c20015b3c4f5';
 
 function login(req, res) {
-    res.render("admin/login", { err: '' })
+    res.render('login_portal');
 }
-
 
 async function adminLogin(req, res) {
     const { username, password } = req.body;
 
-    if (username !== process.env.ADMIN_USERNAME) {
-        return res.render("admin/login", { err: "Username invalid!" });
+    try {
+        if (username !== process.env.ADMIN_USERNAME) {
+            return res.render("admin/login", { err: "Username invalid!" });
+        }
+
+        const match = await bcrypt.compare(password, process.env.ADMIN_PASSWORD);
+
+        if (!match) {
+            return res.render("admin/login", { err: "Password invalid!" });
+        }
+
+        const token = jwt.sign(
+            { _id: ADMIN_STATIC_ID, username, role: "Admin" },
+            process.env.JWT_KEY,
+            { expiresIn: "1h" }
+        );
+
+        res.cookie("admin", token, {
+            httpOnly: true,
+            secure: false,
+            sameSite: "lax"
+        });
+
+        await ActivityLog.create({
+            actionType: 'LOGIN',
+            entityType: 'System',
+            description: `${username} logged in.`,
+            performedBy: ADMIN_STATIC_ID,
+            icon: 'log-in',
+            color: 'var(--border-emerald)'
+        });
+
+        res.redirect('/admin/home');
+
+    } catch (err) {
+        res.render("admin/login", { err: "Server Error!" });
     }
-
-    const match = await bcrypt.compare(password, process.env.ADMIN_PASSWORD);
-    if (!match) {
-        return res.render("admin/login", { err: "Password invalid!" });
-    }
-
-    const token = jwt.sign({ username }, process.env.JWT_KEY, { expiresIn: "1h" });
-    res.cookie("admin", token, { httpOnly: true });
-
-    res.redirect('/admin/home')
 }
 
-
-module.exports = { login, adminLogin }
+module.exports = { login, adminLogin };

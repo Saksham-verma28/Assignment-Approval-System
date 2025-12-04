@@ -11,13 +11,11 @@ router.post('/login',adminLogin)
 
 router.get('/logout', (req, res) => {
     res.clearCookie("User");
-    return res.redirect("/user/login");
-});
-
-router.get('/admin/logout', (req, res) => {
-    res.clearCookie("admin");
     return res.redirect("/");
 });
+
+
+
 
 
 module.exports = router;

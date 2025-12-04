@@ -4,7 +4,7 @@ const departmentSchema = new mongoose.Schema({
   department_name: {
     type: String,
     required: true,
-    trim: true
+    enum: ["CS","EE","ME","PH","CH","AR","HI"]
   },
   program_type: {
     type: String,

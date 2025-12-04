@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,223 +17,239 @@
 
 <body>
 
-<div class="review-container">
+    <div class="review-container">
 
-    <header>
-        <!-- BACK TO HOME BUTTON -->
-        <a href="/professor/dashboard" class="back-home-btn">← Back to Home</a>
+        <header>
+            <!-- BACK TO HOME BUTTON -->
+            <a href="/professor/dashboard" class="back-home-btn">← Back to Home</a>
 
-        <h2 class="page-title">Review Assignment</h2>
-        <h3 id="msg"></h3>
-    </header>
+            <h2 class="page-title">Review Assignment</h2>
+            <h3 id="msg"></h3>
+        </header>
 
-    <div class="header-details">
+        <div class="header-details">
 
-        <div class="detail-box">
-            <p class="label">Student Name</p>
-            <p class="value"><%= assignment.student_name %></p>
-        </div>
-
-        <div class="detail-box">
-            <p class="label">Assignment Title</p>
-            <p class="value"><%= assignment.title %></p>
-        </div>
-
-        <div class="detail-box">
-            <p class="label">Status</p>
-            <span class="status-badge badge-<%= assignment.status %>"><%= assignment.status %></span>
-        </div>
-
-        <div class="detail-box">
-            <p class="label">Submitted On</p>
-            <p class="value"><%= assignment.submit %></p>
-        </div>
-
-    </div>
-
-    <div class="main-content">
-
-        <div class="review-area">
-            <h3 class="section-heading">Assignment File Preview:</h3>
-            <div class="preview-content">
-                <div id="pdf-container"></div>
+            <div class="detail-box">
+                <p class="label">Student Name</p>
+                <p class="value">
+                    <%= assignment.student_name %>
+                </p>
             </div>
+
+            <div class="detail-box">
+                <p class="label">Assignment Title</p>
+                <p class="value">
+                    <%= assignment.title %>
+                </p>
+            </div>
+
+            <div class="detail-box">
+                <p class="label">Status</p>
+                <span class="status-badge badge-<%= assignment.status %>">
+                    <%= assignment.status %>
+                </span>
+            </div>
+
+            <div class="detail-box">
+                <p class="label">Submitted On</p>
+                <p class="value">
+                    <%= assignment.submit %>
+                </p>
+            </div>
+
         </div>
 
-        <div class="assignment-info">
+        <div class="main-content">
 
-            <section class="info-section">
-                <h3 class="section-heading">Description</h3>
-                <p><%= assignment.description %></p>
-            </section>
+            <div class="review-area">
+                <h3 class="section-heading">Assignment File Preview:</h3>
+                <div class="preview-content">
+                    <div id="pdf-container"></div>
+                </div>
+            </div>
 
-            <section class="info-section">
-                <h3 class="section-heading">Submit Date</h3>
-                <p><%= assignment.submit %></p>
-            </section>
+            <div class="assignment-info">
 
-            <section class="info-section">
-                <h3 class="section-heading">Submission File</h3>
-                <p class="submission-file"><%= assignment.upload_path.split('/').pop() %></p>
-            </section>
+                <section class="info-section">
+                    <h3 class="section-heading">Description</h3>
+                    <p>
+                        <%= assignment.description %>
+                    </p>
+                </section>
 
+                <section class="info-section">
+                    <h3 class="section-heading">Submit Date</h3>
+                    <p>
+                        <%= assignment.submit %>
+                    </p>
+                </section>
+
+                <section class="info-section">
+                    <h3 class="section-heading">Submission File</h3>
+                    <p class="submission-file">
+                        <%= assignment.upload_path.split('/').pop() %>
+                    </p>
+                </section>
+
+            </div>
+
+        </div>
+        <br>
+
+        <div class="remarks-section">
+            <h3 class="section-heading">Remarks</h3>
+            <textarea id="remarks-input" placeholder="Enter remarks for student..." required></textarea>
+        </div>
+
+        <br>
+
+        <div class="signature-section">
+            <button class="signature-btn" onclick="document.getElementById('signature-file').click()">Upload
+                Signature</button>
+            <input type="file" id="signature-file" style="display:none;">
+            <span id="file-text">No file chosen</span>
+        </div>
+
+        <br>
+
+        <div class="actions">
+            <button class="btn btn-approve">✓ Approve Assignment</button>
+            <button class="btn btn-reject">X Reject Assignment</button>
         </div>
 
     </div>
-    <br>
 
-    <div class="remarks-section">
-        <h3 class="section-heading">Remarks</h3>
-        <textarea id="remarks-input" placeholder="Enter remarks for student..." required></textarea>
+    <!-- OTP MODAL -->
+    <div id="otp-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h3>Confirm Action with OTP</h3>
+            <p id="modal-message"></p>
+            <form id="otp-form">
+                <input type="text" id="otp-input" placeholder="Enter OTP" maxlength="6" required>
+                <button type="submit" class="btn-confirm">Verify & Confirm</button>
+            </form>
+        </div>
     </div>
 
-    <br>
+    <script>
 
-    <div class="signature-section">
-        <button class="signature-btn" onclick="document.getElementById('signature-file').click()">Upload Signature</button>
-        <input type="file" id="signature-file" style="display:none;">
-        <span id="file-text">No file chosen</span>
-    </div>
+        // SIGNATURE FILE UPDATE
+        document.getElementById("signature-file").addEventListener("change", function () {
+            document.getElementById("file-text").textContent =
+                this.files.length ? this.files[0].name : "No file chosen";
+        });
 
-    <br>
+        // PDF PREVIEW
+        const url = "<%= assignment.upload_path %>";
+        const container = document.getElementById("pdf-container");
 
-    <div class="actions">
-        <button class="btn btn-approve">✓ Approve Assignment</button>
-        <button class="btn btn-reject">X Reject Assignment</button>
-    </div>
-
-</div>
-
-<!-- OTP MODAL -->
-<div id="otp-modal" class="modal">
-    <div class="modal-content">
-        <span class="close-btn">&times;</span>
-        <h3>Confirm Action with OTP</h3>
-        <p id="modal-message"></p>
-        <form id="otp-form">
-            <input type="text" id="otp-input" placeholder="Enter OTP" maxlength="6" required>
-            <button type="submit" class="btn-confirm">Verify & Confirm</button>
-        </form>
-    </div>
-</div>
-
-<script>
-
-// SIGNATURE FILE UPDATE
-document.getElementById("signature-file").addEventListener("change", function () {
-    document.getElementById("file-text").textContent =
-        this.files.length ? this.files[0].name : "No file chosen";
-});
-
-// PDF PREVIEW
-const url = "<%= assignment.upload_path %>";
-const container = document.getElementById("pdf-container");
-
-if (url) {
-    pdfjsLib.getDocument(url).promise.then(pdf => {
-        for (let page = 1; page <= pdf.numPages; page++) {
-            pdf.getPage(page).then(pg => {
-                const vp = pg.getViewport({ scale: 1.1 });
-                const canvas = document.createElement("canvas");
-                const ctx = canvas.getContext("2d");
-                canvas.width = vp.width;
-                canvas.height = vp.height;
-                container.appendChild(canvas);
-                pg.render({ canvasContext: ctx, viewport: vp });
+        if (url) {
+            pdfjsLib.getDocument(url).promise.then(pdf => {
+                for (let page = 1; page <= pdf.numPages; page++) {
+                    pdf.getPage(page).then(pg => {
+                        const vp = pg.getViewport({ scale: 1.1 });
+                        const canvas = document.createElement("canvas");
+                        const ctx = canvas.getContext("2d");
+                        canvas.width = vp.width;
+                        canvas.height = vp.height;
+                        container.appendChild(canvas);
+                        pg.render({ canvasContext: ctx, viewport: vp });
+                    });
+                }
             });
         }
-    });
-}
 
-// ELEMENTS
-const approveBtn = document.querySelector('.btn-approve');
-const rejectBtn = document.querySelector('.btn-reject');
-const modal = document.getElementById('otp-modal');
-const closeBtn = document.querySelector('.close-btn');
-const otpForm = document.getElementById('otp-form');
-const modalMessage = document.getElementById('modal-message');
+        // ELEMENTS
+        const approveBtn = document.querySelector('.btn-approve');
+        const rejectBtn = document.querySelector('.btn-reject');
+        const modal = document.getElementById('otp-modal');
+        const closeBtn = document.querySelector('.close-btn');
+        const otpForm = document.getElementById('otp-form');
+        const modalMessage = document.getElementById('modal-message');
 
-let currentAction = "";
+        let currentAction = "";
 
-// OPEN MODAL + SEND OTP
-async function openModal(action) {
-    currentAction = action;
-    const assignmentId = "<%= assignment._id %>";
+        // OPEN MODAL + SEND OTP
+        async function openModal(action) {
+            currentAction = action;
+            const assignmentId = "<%= assignment._id %>";
 
-    try {
-        const sendResponse = await fetch(`/professor/send-otp/${action}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ assignmentId })
-        });
+            try {
+                const sendResponse = await fetch(`/professor/send-otp/${action}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ assignmentId })
+                });
 
-        const result = await sendResponse.json();
+                const result = await sendResponse.json();
 
-        if (result.success) {
-            modalMessage.innerHTML = `OTP sent to your email to confirm <b>${action} Assignment</b>`;
-            modalMessage.style.color = "#5d4037";
-            modal.style.display = "block";
+                if (result.success) {
+                    modalMessage.innerHTML = `OTP sent to your email to confirm <b>${action} Assignment</b>`;
+                    modalMessage.style.color = "#5d4037";
+                    modal.style.display = "block";
+                }
+            } catch (err) {
+                alert("Error sending OTP");
+            }
         }
-    } catch (err) {
-        alert("Error sending OTP");
-    }
-}
 
-approveBtn.addEventListener("click", () => openModal("Approve"));
-rejectBtn.addEventListener("click", () => openModal("Reject"));
+        approveBtn.addEventListener("click", () => openModal("Approve"));
+        rejectBtn.addEventListener("click", () => openModal("Reject"));
 
-closeBtn.addEventListener("click", () => {
-    modal.style.display = "none";
-});
-
-// OTP VERIFICATION + SEND REMARKS
-otpForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const otp = document.getElementById("otp-input").value;
-    const remarks = document.getElementById("remarks-input").value;
-    const assignmentId = "<%= assignment._id %>";
-    const msg = document.getElementById("msg");
-
-    if (otp.length !== 6) {
-        alert("Enter 6-digit OTP");
-        return;
-    }
-
-    try {
-        const response = await fetch(`/professor/verify-otp/${assignmentId}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                otp,
-                remarks,
-                action: currentAction
-            }),
-        });
-
-        const result = await response.json();
-
-        if (result.success) {
-            msg.innerHTML = `Assignment ${currentAction}d`;
-            msg.style.color = "green";
+        closeBtn.addEventListener("click", () => {
             modal.style.display = "none";
+        });
 
-            window.location.href = '/professor/dashboard'
-        } else {
-            modalMessage.innerHTML = "Incorrect OTP";
-            modalMessage.style.color = "red";
-        }
+        // OTP VERIFICATION + SEND REMARKS
+        otpForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
 
-        
-    } catch (error) {
-        console.log(error)
-        alert("Error verifying OTP");
-    }
-});
+            const otp = document.getElementById("otp-input").value;
+            const remarks = document.getElementById("remarks-input").value;
+            const assignmentId = "<%= assignment._id %>";
+            const msg = document.getElementById("msg");
 
-</script>
+            if (otp.length !== 6) {
+                alert("Enter 6-digit OTP");
+                return;
+            }
+
+            try {
+                const response = await fetch(`/professor/verify-otp/${assignmentId}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        otp,
+                        remarks,
+                        action: currentAction
+                    }),
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    msg.innerHTML = `Assignment ${currentAction}d`;
+                    msg.style.color = "green";
+                    modal.style.display = "none";
+
+                    // window.location.href = '/professor/dashboard'
+                } else {
+                    modalMessage.innerHTML = "Incorrect OTP";
+                    modalMessage.style.color = "red";
+                }
+
+
+            } catch (error) {
+                console.log(error)
+                alert("Error verifying OTP");
+            }
+        });
+
+    </script>
 
 </body>
+
 </html>

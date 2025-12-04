@@ -22,17 +22,17 @@ async function professorDashboard(req, res) {
 }
 
 
-async function reviewAssignment(req,res){
+async function reviewAssignment(req, res) {
 
 
     let id = req.params.id;
 
     let assignment = await Assignment.findById(id);
-    res.render('user/professor/reviewAssignment',{assignment: assignment})
+    res.render('user/professor/reviewAssignment', { assignment: assignment })
 }
 
 let genratedOTP
-async function sendOTP(req, res){
+async function sendOTP(req, res) {
     try {
         const token = req.cookies['User'];
         const action = req.params.action;
@@ -48,10 +48,10 @@ async function sendOTP(req, res){
         });
 
 
-        
+
         genratedOTP = generateSecureOTP();
 
-        
+
 
         sendMail(
             "2006sakshamchd@gmail.com",
@@ -124,27 +124,27 @@ async function sendOTP(req, res){
 }
 
 
-async function verifyOTP(req,res){
-    let {otp, remarks, action} = req.body;
+async function verifyOTP(req, res) {
+    let { otp, remarks, action } = req.body;
 
-    let id =  req.params.id
+    let id = req.params.id
 
 
-    if(genratedOTP==otp){
+    if (genratedOTP == otp) {
 
-        if(action=='Approve'){
-            await Assignment.findByIdAndUpdate(id,{status: "approved", remark: remarks});
+        if (action == 'Approve') {
+            await Assignment.findByIdAndUpdate(id, { status: "approved", remark: remarks });
         }
-        else{
-            await Assignment.findByIdAndUpdate(id,{status: "rejected", remark: remarks});
+        else {
+            await Assignment.findByIdAndUpdate(id, { status: "rejected", remark: remarks });
         }
 
         let assignment = await Assignment.findById(id)
 
-      sendMail(
-    assignment.email,
-    `Assignment Update: ${assignment.title} has been ${assignment.status}`,
-    `
+        sendMail(
+            assignment.email,
+            `Assignment Update: ${assignment.title} has been ${assignment.status}`,
+            `
     <div style="
         font-family: 'Segoe UI', Arial, sans-serif;
         background:#fdf8f4;
@@ -165,15 +165,14 @@ async function verifyOTP(req,res){
             Your assignment titled 
             <b style="color:#e07a5f;">"${assignment.title}"</b> 
             has been 
-            <b style="color:${action === "Approved" ? "#28a745" : "#dc3545"};">
+            <b style="color:${action === "Approve" ? "#28a745" : "#dc3545"};">
                 ${assignment.status}
             </b><br>
             by Dr. ${assignment.professor}.
         </p>
 
-        ${
-            remarks
-            ? `
+        ${remarks
+                ? `
             <div style="
                 background:#ffffff;
                 padding:18px;
@@ -187,8 +186,8 @@ async function verifyOTP(req,res){
                 </p>
             </div>
             `
-            : ""
-        }
+                : ""
+            }
 
         <p style="font-size:15px; color:#5d4037;">
             If you have any questions, feel free to reply to this email.
@@ -200,16 +199,16 @@ async function verifyOTP(req,res){
 
     </div>
     `
-);
+        );
 
 
 
-    res.json({success: true})
+        res.json({ success: true })
     }
-    else{
-        res.json({success: false})
+    else {
+        res.json({ success: false })
     }
 }
 
 
-module.exports = {professorDashboard, reviewAssignment, sendOTP, verifyOTP}
+module.exports = { professorDashboard, reviewAssignment, sendOTP, verifyOTP }

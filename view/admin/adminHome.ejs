@@ -1,138 +1,212 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Portal Dashboard</title>
-    <script type="module" src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
-      <script src="https://unpkg.com/lucide@latest"></script> 
-    <link rel="stylesheet" href="/css/adminDashboard.css">
-    <link rel="stylesheet" href="/css/sidebar.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Portal Dashboard</title>
+
+  <script type="module" src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/adminDashboard.css">
+  <link rel="stylesheet" href="/css/sidebar.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body class="antialiased">
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, addDoc, setDoc, onSnapshot, collection, query, where } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+<%- include('../partials/sidebar') %>
 
-        setLogLevel('debug');
+<div id="main-content">
 
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+  <div class="dashboard-header">
+    <h2>Dashboard Overview</h2>
+    <p>Quick summary of the academic portal statistics.</p>
+  </div>
 
-        let db = null;
-        let auth = null;
-        let userId = null;
+  <div class="card-grid">
 
-        if (firebaseConfig) {
-            try {
-                const app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-                auth = getAuth(app);
+    <div class="card departments">
+      <div class="card-title">TOTAL DEPARTMENTS</div>
+      <div class="card-value"><%= dept %></div>
+      <i data-lucide="building-2"></i>
+      <div class="card-border"></div>
+    </div>
 
-                onAuthStateChanged(auth, async (user) => {
-                    if (user) {
-                        userId = user.uid;
-                        document.getElementById('user-id-display').textContent = `User ID: ${userId}`;
-                        console.log("Authenticated with UID:", userId);
-                    } else {
-                        if (initialAuthToken) {
-                            await signInWithCustomToken(auth, initialAuthToken);
-                        } else {
-                            await signInAnonymously(auth);
-                        }
-                    }
-                });
+    <div class="card students">
+      <div class="card-title">TOTAL STUDENTS</div>
+      <div class="card-value"><%= student %></div>
+      <i data-lucide="user-check"></i>
+      <div class="card-border"></div>
+    </div>
 
-                document.getElementById('logout-btn').addEventListener('click', async () => {
-                    try {
-                        await signOut(auth);
-                        console.log("User signed out.");
-                        const mainContent = document.getElementById('main-content');
-                        if (mainContent) {
-                            mainContent.innerHTML = '<div style="text-align: center; padding: 3rem; font-size: 1.5rem; font-weight: 600; color: rgba(255,255,255,0.8);">You have been logged out.</div>';
-                        }
-                    } catch (error) {
-                        console.error("Error signing out:", error);
-                    }
-                });
-                
-                window.toggleMobileMenu = () => {
-                    document.getElementById('mobile-nav').classList.toggle('open');
-                    document.getElementById('menu-icon').classList.toggle('hidden');
-                    document.getElementById('close-icon').classList.toggle('hidden');
-                };
+    <div class="card professors">
+      <div class="card-title">TOTAL PROFESSORS</div>
+      <div class="card-value"><%= professor %></div>
+      <i data-lucide="graduation-cap"></i>
+      <div class="card-border"></div>
+    </div>
 
-            } catch (e) {
-                console.error("Firebase initialization failed:", e);
-            }
-        } else {
-            console.warn("Firebase configuration not available. Running in UI mode only.");
-            document.getElementById('user-id-display').textContent = `User ID: UNAUTHENTICATED (UI only)`;
-            window.toggleMobileMenu = () => {
-                document.getElementById('mobile-nav').classList.toggle('open');
-                document.getElementById('menu-icon').classList.toggle('hidden');
-                document.getElementById('close-icon').classList.toggle('hidden');
-            };
-        }
-    </script>
+    <div class="card hods">
+      <div class="card-title">TOTAL HODs</div>
+      <div class="card-value"><%= hod %></div>
+      <i data-lucide="briefcase"></i>
+      <div class="card-border"></div>
+    </div>
 
+  </div>
 
-         <%- include('../partials/sidebar') %>
+  <div class="activity-section">
 
-    <div id="main-content">
-        
-        <div class="dashboard-header">
-            <h2>Dashboard Overview</h2>
-            <p>Quick summary of the academic portal statistics.</p>
+    <h3>Portal Resource Distribution</h3>
+
+    <div class="chart-container">
+
+      <!-- Doughnut Chart -->
+      <div id="chart-wrapper">
+        <canvas id="activityPieChart"></canvas>
+      </div>
+
+      <!-- Statistical Legend -->
+      <div class="chart-data-legend">
+
+        <div class="legend-item">
+          <span class="legend-color sky"></span>
+          <span class="legend-label">Departments</span>
+          <span class="legend-value"><%= dept %></span>
         </div>
 
-        <div class="card-grid">
-
-            <div class="card departments">
-                <div class="card-title">TOTAL DEPARTMENTS</div>
-                <div class="card-value"><%= dept %></div>
-                <i data-lucide="building-2"></i>
-                <div class="card-border"></div>
-            </div>
-
-            <div class="card students">
-                <div class="card-title">TOTAL STUDENTS</div>
-                <div class="card-value"><%= student %></div>
-                <i data-lucide="user-check"></i>
-                <div class="card-border"></div>
-            </div>
-
-            <div class="card professors">
-                <div class="card-title">TOTAL PROFESSORS</div>
-                <div class="card-value"><%= professor %></div>
-                <i data-lucide="graduation-cap"></i>
-                <div class="card-border"></div>
-            </div>
-
-            <div class="card hods">
-                <div class="card-title">TOTAL HODs</div>
-                <div class="card-value">0</div>
-                <i data-lucide="briefcase"></i>
-                <div class="card-border"></div>
-            </div>
-
+        <div class="legend-item">
+          <span class="legend-color emerald"></span>
+          <span class="legend-label">Students</span>
+          <span class="legend-value"><%= student %></span>
         </div>
-        <div class="activity-section">
-            <h3>Recent Activity (Placeholder)</h3>
-            <p>This area is reserved for charts, logs, or recent administrative actions.</p>
+
+        <div class="legend-item">
+          <span class="legend-color orange"></span>
+          <span class="legend-label">Professors</span>
+          <span class="legend-value"><%= professor %></span>
         </div>
+
+        <div class="legend-item">
+          <span class="legend-color fuchsia"></span>
+          <span class="legend-label">HODs</span>
+          <span class="legend-value"><%= hod %></span>
+        </div>
+
+      </div>
+
+      <!-- Right Side Summary -->
+      <div class="chart-legend-summary">
+
+        <h4>Key Performance Indicators</h4>
+
+        <div class="kpi-grid">
+          <div>
+            <span class="kpi-value"><%= dept + student + professor + hod %></span>
+            <span class="kpi-label">Total Entities</span>
+          </div>
+
+          <div>
+            <span class="kpi-value">
+              <%= professor > 0 ? (student / professor).toFixed(0) : 'N/A' %>:1
+            </span>
+            <span class="kpi-label">Student : Faculty Ratio</span>
+          </div>
+        </div>
+
+        <h4>Quick Actions</h4>
+
+        <div class="action-buttons">
+          <a href="/admin/user-form" class="btn btn-primary">
+            <i data-lucide="user-plus"></i> Add New User
+          </a>
+
+          <a href="/department/form" class="btn btn-secondary">
+            <i data-lucide="building-2"></i> Create Department
+          </a>
+        </div>
+
+        <div class="action-buttons">
+          <a href="/admin/users" class="btn btn-tertiary">Manage Users</a>
+          <a href="/admin/department/list" class="btn btn-tertiary">Manage Departments</a>
+        </div>
+
+        <h4>Latest System Activity</h4>
+
+        <ul id="activity-log-list">
+
+          <% if (recentActivities && recentActivities.length > 0) { %>
+
+            <% recentActivities.forEach(activity => { %>
+              <li>
+                <i data-lucide="<%= activity.icon %>" style="color:<%= activity.color %>;"></i>
+                <span><%= activity.description %></span>
+                <span class="time"><%= activity.timeAgo %></span>
+              </li>
+            <% }) %>
+
+          <% } else { %>
+
+            <li class="no-activity">No recent administrative activity found.</li>
+
+          <% } %>
+
+        </ul>
+
+      </div>
 
     </div>
-    <script src="/js/active.js"></script>
-    <script>
-        
-        lucide.createIcons();
-    </script>
+
+  </div>
+
+</div>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const pieCtx = document.getElementById('activityPieChart');
+
+  const values = [<%= dept %>, <%= student %>, <%= professor %>, <%= hod %>];
+  const labels = ["Departments", "Students", "Professors", "HODs"];
+
+  const colors = [
+    getComputedStyle(document.documentElement).getPropertyValue('--border-sky'),
+    getComputedStyle(document.documentElement).getPropertyValue('--border-emerald'),
+    getComputedStyle(document.documentElement).getPropertyValue('--border-orange'),
+    getComputedStyle(document.documentElement).getPropertyValue('--border-fuchsia')
+  ];
+
+  new Chart(pieCtx, {
+    type: "doughnut",
+    data: {
+      labels: labels,
+      datasets: [{
+        data: values,
+        backgroundColor: colors,
+        borderColor: getComputedStyle(document.documentElement).getPropertyValue('--bg-surface-dark'),
+        borderWidth: 4,
+        hoverOffset: 8
+      }]
+    },
+    options: {
+      cutout: "75%",
+      plugins: {
+        legend: { display: false }
+      },
+      responsive: true,
+      maintainAspectRatio: false
+    }
+  });
+
+});
+</script>
+
+<script src="/js/active.js"></script>
+<script> lucide.createIcons(); </script>
+
 </body>
 </html>

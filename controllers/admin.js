@@ -1,4 +1,3 @@
-// controllers/adminController.js
 const Department = require('../models/department');
 const User = require('../models/user');
 const ActivityLog = require('../models/ActivityLog');
@@ -6,7 +5,7 @@ const hashPass = require('../hashPassword');
 const { sendMail } = require('../config/sendEmail');
 const moment = require('moment');
 
-const ADMIN_STATIC_ID = '60f8c3c1b4f4c20015b3c4f5';
+const ADMIN_STATIC_ID = process.env.ADMIN_STATIC_ID;
 
 const logActivity = async (actionType, entityType, description, performedBy, icon, color, entityId = null) => {
   try {

@@ -3,93 +3,676 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assignment Tracker Dashboard</title>
-    <link rel="stylesheet" href="/css/usercss/viewAssignment.css">
+    <title>Assignment Tracker</title>
+
+    <style>
+        :root {
+            --color-primary: #D26A33;
+            --color-primary-light: #FCE9E2;
+            --color-primary-hover: #B25528;
+            --color-accent: #fbbf24;
+            --color-text-main: #1f2937;
+            --color-border: #e5e7eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Georgia, serif;
+            background: #fafafa;
+            padding: 1rem;
+            color: var(--color-text-main);
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
+            color: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            animation: slideDown 0.5s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header h1 {
+            margin-bottom: 0.5rem;
+            font-size: 2rem;
+        }
+
+        .header p {
+            opacity: 0.95;
+            font-size: 1.1rem;
+        }
+
+        /* Card */
+        .assignment-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            border-top: 4px solid var(--color-primary);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            animation: scaleIn 0.5s ease-out 0.2s backwards;
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .assignment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .assignment-title {
+            font-size: 1.8rem;
+            color: var(--color-text-main);
+        }
+
+        .status-badge {
+            background: var(--color-primary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.85rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.8;
+            }
+        }
+
+        .assignment-description {
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            color: #4b5563;
+        }
+
+        /* Meta */
+        .assignment-meta {
+            background: var(--color-primary-light);
+            padding: 1.2rem;
+            border-radius: 0.5rem;
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .meta-label {
+            font-weight: bold;
+            font-size: 0.9rem;
+            color: var(--color-primary-hover);
+        }
+
+        .meta-value {
+            color: var(--color-text-main);
+        }
+
+        /* Timeline */
+        .timeline-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+            color: var(--color-text-main);
+        }
+
+        .timeline-container {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            gap: 0;
+            margin-bottom: 2rem;
+        }
+
+        .timeline-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            animation: fadeInUp 0.6s ease-out backwards;
+        }
+
+        .timeline-step:nth-child(2) { animation-delay: 0.1s; }
+        .timeline-step:nth-child(4) { animation-delay: 0.2s; }
+        .timeline-step:nth-child(6) { animation-delay: 0.3s; }
+        .timeline-step:nth-child(8) { animation-delay: 0.4s; }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .timeline-dot {
+            width: 2.8rem;
+            height: 2.8rem;
+            border-radius: 50%;
+            font-size: 1.3rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: white;
+            border: 3px solid var(--color-border);
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+
+        .timeline-dot:hover {
+            transform: scale(1.1);
+        }
+
+        .timeline-dot.completed {
+            background: var(--color-primary);
+            border-color: var(--color-primary);
+            color: white;
+            animation: checkmark 0.5s ease-out;
+        }
+
+        @keyframes checkmark {
+            0% {
+                transform: scale(0);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .timeline-dot.current {
+            background: var(--color-accent);
+            border-color: var(--color-accent);
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .timeline-dot.pending {
+            background: white;
+            border-color: var(--color-border);
+            animation: rotate 2s linear infinite;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .timeline-label {
+            margin-top: 0.5rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--color-text-main);
+        }
+
+        .timeline-details {
+            margin-top: 0.25rem;
+            font-size: 0.85rem;
+            color: #6b7280;
+        }
+
+        /* Connector line */
+        .timeline-line {
+            flex: 1;
+            height: 3px;
+            background: var(--color-border);
+            margin: 0 -0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .timeline-line.completed {
+            background: var(--color-primary);
+        }
+
+        .timeline-line.completed::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: shimmer 2s ease-in-out;
+        }
+
+        @keyframes shimmer {
+            to {
+                left: 100%;
+            }
+        }
+
+        .timeline-line.pending-line {
+            background: repeating-linear-gradient(
+                90deg,
+                var(--color-border),
+                var(--color-border) 10px,
+                transparent 10px,
+                transparent 20px
+            );
+        }
+
+        /* Buttons */
+        .assignment-actions {
+            margin-top: 2rem;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+            font-family: Georgia, serif;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--color-primary-hover);
+        }
+
+        .btn-secondary {
+            background: white;
+            border: 2px solid var(--color-primary);
+            color: var(--color-primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--color-primary-light);
+        }
+
+        .btn-back {
+            border-color: #6b7280 !important;
+            color: #6b7280 !important;
+        }
+
+        .btn-back:hover {
+            background: #f3f4f6 !important;
+        }
+
+        /* Mobile View */
+        @media (max-width: 768px) {
+            body {
+                padding: 0.5rem;
+            }
+
+            .header {
+                padding: 1.5rem;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .header p {
+                font-size: 0.95rem;
+            }
+
+            .assignment-card {
+                padding: 1.5rem;
+            }
+
+            .assignment-title {
+                font-size: 1.4rem;
+            }
+
+            .assignment-meta {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .timeline-container {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0;
+                padding-left: 0;
+                position: relative;
+            }
+
+            /* Vertical line connecting dots */
+            .timeline-container::before {
+                content: "";
+                position: absolute;
+                left: 1.4rem;
+                top: 2.8rem;
+                width: 4px;
+                height: calc(100% - 5.6rem);
+                background: var(--color-border);
+                z-index: 1;
+            }
+
+            .timeline-step {
+                flex-direction: row;
+                align-items: flex-start;
+                text-align: left;
+                width: 100%;
+                padding: 0;
+                margin-bottom: 2.5rem;
+                position: relative;
+                gap: 1rem;
+            }
+
+            .timeline-step:last-child {
+                margin-bottom: 0;
+            }
+
+            .timeline-step-content {
+                flex: 1;
+                padding-top: 0.3rem;
+            }
+
+            .timeline-dot {
+                width: 2.8rem;
+                height: 2.8rem;
+                font-size: 1.2rem;
+                flex-shrink: 0;
+            }
+
+            .timeline-label {
+                margin: 0;
+                font-size: 1.1rem;
+                font-weight: bold;
+                margin-bottom: 0.4rem;
+                color: var(--color-text-main);
+            }
+
+            .timeline-details {
+                font-size: 0.9rem;
+                color: #6b7280;
+                line-height: 1.5;
+                margin-top: 0.2rem;
+            }
+
+            .timeline-line {
+                display: none;
+            }
+
+            /* Color the vertical line based on progress */
+            .timeline-container.progress-1::before {
+                background: linear-gradient(
+                    to bottom,
+                    var(--color-primary) 0%,
+                    var(--color-primary) 33.33%,
+                    var(--color-border) 33.33%,
+                    var(--color-border) 100%
+                );
+            }
+
+            .timeline-container.progress-2::before {
+                background: linear-gradient(
+                    to bottom,
+                    var(--color-primary) 0%,
+                    var(--color-primary) 66.66%,
+                    var(--color-border) 66.66%,
+                    var(--color-border) 100%
+                );
+            }
+
+            .timeline-container.progress-3::before {
+                background: var(--color-primary);
+            }
+
+            .assignment-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-    <div class="container">
+<div class="container">
 
-        <div class="header">
-            <div class="header-content">
-                <h1>📚 Assignment Tracker</h1>
-                <p>Track your assignments, submissions, and grades all in one place</p>
+    <div class="header">
+        <h1>📚 Assignment Tracker</h1>
+        <p>Track your assignments, submissions, and progress all in one place</p>
+    </div>
+
+    <div class="assignment-card">
+
+        <div class="assignment-header">
+            <div>
+                <h3 class="assignment-title"><%= assignmentDetail.title %></h3>
+            </div>
+            <span class="status-badge"><%= assignmentDetail.status %></span>
+        </div>
+
+        <p class="assignment-description"><%= assignmentDetail.description %></p>
+
+        <div class="assignment-meta">
+            <div class="meta-item">
+                <span class="meta-label">Submission Date:</span>
+                <span class="meta-value"><%= assignmentDetail.submit %></span>
+            </div>
+
+            <div class="meta-item">
+                <span class="meta-label">Current Status:</span>
+                <span class="meta-value"><%= assignmentDetail.status %></span>
             </div>
         </div>
 
-        <div class="assignment-card">
+        <div class="timeline-title">Progress</div>
 
-            <div class="assignment-header">
-                <div>
-                    <h3 class="assignment-title"><%= assignmentDetail.title %></h3>
-                    <p class="assignment-course"><%= assignmentDetail.category %></p>
-                </div>
-                <span class="status-badge status-submitted">Submitted</span>
-            </div>
+        <% 
+            // Calculate progress based on status
+            const status = assignmentDetail.status.toLowerCase();
+            const isDraftDone = true;
+            const isSubmittedDone = status === 'submitted' || status === 'approved';
+            const isApprovedDone = status === 'approved';
+            const isRejected = status === 'rejected';
+            
+            // Determine progress class for mobile view
+            let progressClass = 'progress-1';
+            if (isApprovedDone) {
+                progressClass = 'progress-3';
+            } else if (isSubmittedDone || isRejected) {
+                progressClass = 'progress-2';
+            }
+        %>
 
-            <p class="assignment-description"><%= assignmentDetail.description %></p>
+        <div class="timeline-container <%= progressClass %>">
 
-            <div class="assignment-meta">
-                <div class="meta-item">
-                    <span class="meta-label">Submission Date:</span>
-                    <span class="meta-value"><%= assignmentDetail.submit %></span>
-                </div>
-
-                <div class="meta-item">
-                    <span class="meta-label">Status:</span>
-                    <span class="meta-value"><%= assignmentDetail.status %></span>
-                </div>
-            </div>
-
-            <div class="timeline">
-                <div class="timeline-title">PROGRESS</div>
-
-                <div class="timeline-items">
-
-                    <div class="timeline-item completed">
-                        <div class="timeline-dot completed">✔</div>
-                        <div class="timeline-label">Working</div>
+            <!-- Draft Step -->
+            <div class="timeline-step">
+                <div class="timeline-dot completed">✔</div>
+                <div class="timeline-step-content">
+                    <div class="timeline-label">Draft</div>
+                    <div class="timeline-details">
+                        <%= assignmentDetail.createdAt ? new Date(assignmentDetail.createdAt).toLocaleDateString() : 'Assignment created' %>
                     </div>
-
-                    <div class="timeline-line completed"></div>
-
-                    <div class="timeline-item completed">
-                        <div class="timeline-dot completed">✔</div>
-                        <div class="timeline-label">Submitted</div>
-                    </div>
-
-                    <div class="timeline-line"></div>
-
-                    <div class="timeline-item current">
-                        <div class="timeline-dot current">⏳</div>
-                        <div class="timeline-label">Grading</div>
-                    </div>
-
-                    <div class="timeline-line"></div>
-
-                    <div class="timeline-item pending">
-                        <div class="timeline-dot pending"></div>
-                        <div class="timeline-label">Complete</div>
-                    </div>
-
                 </div>
             </div>
 
-            <div class="assignment-actions">
+            <div class="timeline-line completed"></div>
+
+            <!-- Submitted Step -->
+            <div class="timeline-step">
+                <div class="timeline-dot <%= (isSubmittedDone || isRejected) ? 'completed' : '' %>">
+                    <%= (isSubmittedDone || isRejected) ? '✔' : '' %>
+                </div>
+                <div class="timeline-step-content">
+                    <div class="timeline-label">Submitted</div>
+                    <div class="timeline-details">
+                        <%= (isSubmittedDone || isRejected) ? assignmentDetail.submit : 'Awaiting submission' %>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline-line <%= (isSubmittedDone || isRejected) ? 'completed' : '' %>"></div>
+
+            <% if (isRejected) { %>
+                <!-- Rejected Step -->
+                <div class="timeline-step">
+                    <div class="timeline-dot" style="background: #ef4444; border-color: #ef4444; color: white;">✖</div>
+                    <div class="timeline-step-content">
+                        <div class="timeline-label">Rejected</div>
+                        <div class="timeline-details">
+                            <%= assignmentDetail.remark || 'Please resubmit your assignment' %>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-line"></div>
+
+                <!-- Resubmit Step -->
+                <div class="timeline-step">
+                    <div class="timeline-dot pending">📝</div>
+                    <div class="timeline-step-content">
+                        <div class="timeline-label">Resubmit</div>
+                        <div class="timeline-details">Click below to resubmit your work</div>
+                    </div>
+                </div>
+            <% } else { %>
+                <!-- Approved Step -->
+                <div class="timeline-step">
+                    <div class="timeline-dot <%= isApprovedDone ? 'completed' : (isSubmittedDone ? 'current' : '') %>">
+                        <%= isApprovedDone ? '✔' : '' %>
+                    </div>
+                    <div class="timeline-step-content">
+                        <div class="timeline-label">Approved</div>
+                        <div class="timeline-details">
+                            <%= isApprovedDone ? (assignmentDetail.remark || 'Approved by instructor') : 'Under review' %>
+                        </div>
+                    </div>
+                </div>
+
+                <% if (isApprovedDone) { %>
+                    <div class="timeline-line pending-line"></div>
+
+                    <!-- Final Step -->
+                    <div class="timeline-step">
+                        <div class="timeline-dot pending">⏳</div>
+                        <div class="timeline-step-content">
+                            <div class="timeline-label">Forward to HOD</div>
+                            <div class="timeline-details">Awaiting HOD review</div>
+                        </div>
+                    </div>
+                <% } %>
+            <% } %>
+
+        </div>
+
+        <div class="assignment-actions">
+            <% if (isRejected) { %>
+                <button class="btn btn-primary" onclick="window.location.href='/student/assignment/resubmit/<%= assignmentDetail._id %>'">
+                    Resubmit Assignment
+                </button>
+                <button class="btn btn-secondary" onclick="window.location.href='<%= assignmentDetail.download %>'">
+                    Download Previous Submission
+                </button>
+            <% } else { %>
                 <button class="btn btn-primary" onclick="window.location.href='<%= assignmentDetail.download %>'">
                     Download Submission
                 </button>
-
                 <button class="btn btn-secondary" onclick="window.location.href='<%= assignmentDetail.upload_path %>'">
-                    View Details
+                    View File Details
                 </button>
-            </div>
-
+            <% } %>
+            <button class="btn btn-secondary btn-back" onclick="window.location.href='/student/dashboard'">
+                ← Back to Home
+            </button>
         </div>
 
     </div>
 
-    
+</div>
+
 </body>
 </html>

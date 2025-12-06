@@ -26,12 +26,12 @@
             </h2>
             
             <% if (assignment.rejection_remarks && assignment.rejection_remarks.length > 0) { %>
-                <p><%= assignment.rejection_remarks %></p>
+                <p><%= assignment.remark %></p>
             <% } else { %>
-                <p>No specific rejection remarks were provided for this submission. Please check the assignment details for general feedback.</p>
+                <p><%= assignment.remark %></p>
             <% } %>
 
-            <div class="rejection-date">Rejected on: <%= assignment.rejection_date || 'N/A' %></div>
+            <div class="rejection-date">Rejected by: Dr. <%= assignment.professor %> %></div>
         </div>
         
         <hr>

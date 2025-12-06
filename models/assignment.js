@@ -48,13 +48,9 @@ const assignmentSchema = new mongoose.Schema({
   remark: {
     type: String,
     default: ""
-  },
-  history: {
-    type: [String],
-    default: ["draft"]
   }
 });
 
-const Assignment = mongoose.model("assignment", assignmentSchema);
+const Assignment = mongoose.model("assignments", assignmentSchema);
 
 module.exports = Assignment;

@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const ActivityLog = require('../models/ActivityLog');
 
-const ADMIN_STATIC_ID = '60f8c3c1b4f4c20015b3c4f5';
+const ADMIN_STATIC_ID = process.env.ADMIN_STATIC_ID;
 
 function login(req, res) {
     res.render('login_portal');

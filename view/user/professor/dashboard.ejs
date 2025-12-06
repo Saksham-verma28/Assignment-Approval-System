@@ -16,7 +16,7 @@
         <div class="dashboard-header">
             <div class="header-top">
                 <h1>Professor Review Dashboard</h1>
-                <button class="logout-button">Logout</button>
+                <button class="logout-button" onclick="window.location.href='/auth/logout'">Logout</button>
             </div>
 
             <div class="header-content">
@@ -29,10 +29,12 @@
                 <div class="count">0</div>
                 <div class="label">Pending Reviews</div>
             </div>
+
             <div class="metric-card submitted">
                 <div class="count">0</div>
                 <div class="label">Total Submitted</div>
             </div>
+
             <div class="metric-card approved">
                 <div class="count">0</div>
                 <div class="label">Already Approved</div>
@@ -46,7 +48,7 @@
                 <a href="/professor/assignment/all" class="view-all-link">View All →</a>
             </div>
 
-            <form action="/professor/status/filter" method="post">
+            <form action="/professor/filterAssignment" method="post">
                 <div class="filter-controls">
                     <div class="filter-group">
                         <label for="statusFilter">Filter by Status:</label>
@@ -73,37 +75,48 @@
                 </thead>
 
                 <tbody>
+
+                    <% if (assignment.length === 0) { %>
+
+                    <tr>
+                        <td colspan="5" class="no-data">No Assignments Found</td>
+                    </tr>
+
+                    <% } else { %>
+
                     <% assignment.forEach(a => { %>
-                        <tr>
-                            <td data-label="Title"><%= a.title %></td>
-                            <td data-label="Student"><%= a.student_name %></td>
 
-                            <td data-label="Status">
-                                <span class="status-badge badge-<%= a.status %>"><%= a.status %></span>
-                            </td>
+                    <tr>
+                        <td data-label="Title"><%= a.title %></td>
 
-                            <td data-label="Submitted"><%= a.submit %></td>
+                        <td data-label="Student"><%= a.student_name %></td>
 
-                            <td data-label="Review Actions" class="action-buttons-cell">
+                        <td data-label="Status">
+                            <span class="status-badge badge-<%= a.status %>">
+                                <%= a.status %>
+                            </span>
+                        </td>
 
-                                <% if (a.status === "approved") { %>
-                                    <a href="/professor/forward/<%= a._id %>" class="review-btn forward-btn">
-                                        Forward
-                                    </a>
-                                <% } else { %>
-                                    <a href="/professor/review/<%= a._id %>" class="review-btn">
-                                        Review
-                                    </a>
-                                <% } %>
+                        <td data-label="Submitted"><%= a.submit %></td>
 
-                            </td>
+                        <td data-label="Review Actions" class="action-buttons-cell">
+                            <% if (a.status === "approved") { %>
+                            <a href="/professor/forward/<%= a._id %>" class="review-btn forward-btn">Forward</a>
+                            <% } else { %>
+                            <a href="/professor/review/<%= a._id %>" class="review-btn">Review</a>
+                            <% } %>
+                        </td>
+                    </tr>
 
-                        </tr>
                     <% }) %>
+
+                    <% } %>
+
                 </tbody>
             </table>
 
         </div>
     </div>
 </body>
+
 </html>

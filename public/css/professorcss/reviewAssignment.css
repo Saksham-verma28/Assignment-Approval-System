@@ -10,6 +10,9 @@
     --status-approved: #28a745;
     --status-submitted: #f5b400;
     --status-rejected: #dc3545;
+
+    /* ⭐ NEW ADDED */
+    --status-resubmitted: #3b82f6;
 }
 
 /* RESET */
@@ -112,9 +115,7 @@ header {
     font-size: 0.9rem;
     text-transform: capitalize;
     color: white;
-    width: auto;
     max-width: fit-content;
-    min-width: fit-content;
 }
 
 .badge-approved {
@@ -129,6 +130,13 @@ header {
 
 .badge-rejected {
     background-color: var(--status-rejected);
+    color: white;
+}
+
+/* ⭐ NEW: RESUBMITTED BADGE */
+.badge-resubmitted {
+    background-color: var(--status-resubmitted);
+    color: white;
 }
 
 /* ================= MAIN CONTENT ================= */

@@ -11,7 +11,8 @@ const transport = nodemailer.createTransport({
 })
 
 async function sendMail(to,sub,msg){
-    transport.sendMail({
+   return transport.sendMail({
+        form: process.env.MAIL_USER,
         to: to,
         subject: sub,
         html: msg

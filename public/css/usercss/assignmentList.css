@@ -185,6 +185,11 @@ body {
     background-color: #ef5350;
 }
 
+/* 🔵 NEW: RESUBMITTED BADGE */
+.resubmitted {
+    background-color: #3b82f6;
+}
+
 .actions-cell {
     text-align: center;
 }

@@ -6,14 +6,21 @@
     --color-light-terracotta: #d4bba2;
     --color-rust-hover: #bf4d28;
     --color-white: #ffffff;
+
     --color-status-draft: #e07a5f33;
     --color-status-submitted: #f5b40033;
     --color-status-approved: #28a74533;
     --color-status-rejected: #dc354533;
+
+    /* NEW ADDED */
+    --color-status-resubmitted: #3b82f633;
+    --color-resubmitted-main: #3b82f6;
+
     --color-draft-main: #e07a5f;
     --color-submitted-main: #f5b400;
     --color-approved-main: #28a745;
     --color-rejected-main: #dc3545;
+
     --color-delete: #dc3545;
     --color-delete-hover: #c82333;
 }
@@ -212,6 +219,11 @@ body {
 .badge-submitted { background-color: var(--color-submitted-main); color: black; }
 .badge-approved { background-color: var(--color-approved-main); }
 .badge-rejected { background-color: var(--color-rejected-main); }
+
+/* NEW BADGE */
+.badge-resubmitted { 
+    background-color: var(--color-resubmitted-main); 
+}
 
 .actions-cell {
     display: flex;

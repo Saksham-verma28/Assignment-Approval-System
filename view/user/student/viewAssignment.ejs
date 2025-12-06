@@ -175,10 +175,11 @@
 
         .timeline-container {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             width: 100%;
             gap: 0;
             margin-bottom: 2rem;
+            position: relative;
         }
 
         .timeline-step {
@@ -187,37 +188,33 @@
             align-items: center;
             text-align: center;
             position: relative;
-            animation: fadeInUp 0.6s ease-out backwards;
+            flex: 1;
         }
 
-        .timeline-step:nth-child(2) { animation-delay: 0.1s; }
-        .timeline-step:nth-child(4) { animation-delay: 0.2s; }
-        .timeline-step:nth-child(6) { animation-delay: 0.3s; }
-        .timeline-step:nth-child(8) { animation-delay: 0.4s; }
+        .timeline-step-wrapper {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            position: relative;
+        }
 
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .timeline-step-content {
+            width: 100%;
         }
 
         .timeline-dot {
-            width: 2.8rem;
-            height: 2.8rem;
+            width: 3.5rem;
+            height: 3.5rem;
             border-radius: 50%;
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             display: flex;
             justify-content: center;
             align-items: center;
             background: white;
-            border: 3px solid var(--color-border);
+            border: 4px solid #d1d5db;
             transition: all 0.3s ease;
             z-index: 2;
+            position: relative;
         }
 
         .timeline-dot:hover {
@@ -225,42 +222,155 @@
         }
 
         .timeline-dot.completed {
-            background: var(--color-primary);
-            border-color: var(--color-primary);
-            color: white;
-            animation: checkmark 0.5s ease-out;
+            background: white;
+            border-color: #d1d5db;
+            color: transparent;
         }
 
-        @keyframes checkmark {
+        .timeline-dot.completed .checkmark {
+            opacity: 0;
+            transform: scale(0);
+        }
+
+        /* First step (Draft) is always filled - no animation */
+        .timeline-step:first-child .timeline-dot.completed {
+            background: var(--color-primary);
+            border-color: var(--color-primary);
+        }
+
+        .timeline-step:first-child .timeline-dot.completed .checkmark {
+            opacity: 1;
+            transform: scale(1);
+            color: white;
+        }
+
+        /* Animate to orange background and show checkmark */
+        .timeline-dot.completed.animate-fill {
+            animation: fillCircle 0.3s ease-out forwards;
+        }
+
+        .timeline-dot.completed.animate-fill .checkmark {
+            animation: checkmarkDraw 0.3s ease-out forwards;
+        }
+
+        @keyframes fillCircle {
             0% {
-                transform: scale(0);
-            }
-            50% {
-                transform: scale(1.2);
+                background: white;
+                border-color: #d1d5db;
             }
             100% {
-                transform: scale(1);
+                background: var(--fill-color, var(--color-primary));
+                border-color: var(--fill-color, var(--color-primary));
             }
+        }
+
+        @keyframes checkmarkDraw {
+            0% {
+                opacity: 0;
+                transform: scale(0) rotate(-45deg);
+                color: white;
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.2) rotate(0deg);
+                color: white;
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) rotate(0deg);
+                color: white;
+            }
+        }
+
+        /* Staggered animation delays for timeline dots - fill when line reaches them */
+        .timeline-step:nth-child(2) .timeline-dot.completed.animate-fill {
+            animation-delay: 1.2s;
+        }
+
+        .timeline-step:nth-child(2) .timeline-dot.completed.animate-fill .checkmark {
+            animation-delay: 1.2s;
+        }
+
+        .timeline-step:nth-child(3) .timeline-dot.completed.animate-fill {
+            animation-delay: 2.2s;
+        }
+
+        .timeline-step:nth-child(3) .timeline-dot.completed.animate-fill .checkmark {
+            animation-delay: 2.2s;
+        }
+
+        .timeline-step:nth-child(4) .timeline-dot.completed.animate-fill {
+            animation-delay: 3.2s;
+        }
+
+        .timeline-step:nth-child(4) .timeline-dot.completed.animate-fill .checkmark {
+            animation-delay: 3.2s;
+        }
+
+        .timeline-step:nth-child(5) .timeline-dot.completed.animate-fill {
+            animation-delay: 4.2s;
+        }
+
+        .timeline-step:nth-child(5) .timeline-dot.completed.animate-fill .checkmark {
+            animation-delay: 4.2s;
+        }
+
+        .timeline-step:nth-child(6) .timeline-dot.completed.animate-fill {
+            animation-delay: 5.2s;
+        }
+
+        .timeline-step:nth-child(6) .timeline-dot.completed.animate-fill .checkmark {
+            animation-delay: 5.2s;
         }
 
         .timeline-dot.current {
-            background: var(--color-accent);
-            border-color: var(--color-accent);
-            animation: bounce 2s ease-in-out infinite;
+            background: white;
+            border-color: #d1d5db;
+        }
+
+        /* Delay current dot fill based on when 50% line reaches it */
+        .timeline-step:nth-child(3) .timeline-dot.current {
+            animation: fillCurrentCircle 0.3s ease-out 5.0s forwards, bounce 2s ease-in-out 5.3s infinite;
+        }
+
+        .timeline-step:nth-child(4) .timeline-dot.current {
+            animation: fillCurrentCircle 0.3s ease-out 5.0s forwards, bounce 2s ease-in-out 5.3s infinite;
+        }
+
+        .timeline-step:nth-child(5) .timeline-dot.current {
+            animation: fillCurrentCircle 0.3s ease-out 5.0s forwards, bounce 2s ease-in-out 5.3s infinite;
+        }
+
+        .timeline-step:nth-child(6) .timeline-dot.current {
+            animation: fillCurrentCircle 0.3s ease-out 5.0s forwards, bounce 2s ease-in-out 5.3s infinite;
+        }
+
+        @keyframes fillCurrentCircle {
+            0% {
+                background: white;
+                border-color: #d1d5db;
+            }
+            100% {
+                background: var(--color-accent);
+                border-color: var(--color-accent);
+            }
         }
 
         @keyframes bounce {
             0%, 100% {
-                transform: translateY(0);
+                transform: translateY(0) scale(1);
             }
             50% {
-                transform: translateY(-5px);
+                transform: translateY(-5px) scale(1);
             }
         }
 
         .timeline-dot.pending {
             background: white;
-            border-color: var(--color-border);
+            border-color: #d1d5db;
+        }
+
+        .timeline-dot.pending .pending-icon {
             animation: rotate 2s linear infinite;
         }
 
@@ -274,7 +384,7 @@
         }
 
         .timeline-label {
-            margin-top: 0.5rem;
+            margin-top: 1rem;
             font-size: 0.95rem;
             font-weight: 600;
             color: var(--color-text-main);
@@ -288,43 +398,165 @@
 
         /* Connector line */
         .timeline-line {
-            flex: 1;
-            height: 3px;
-            background: var(--color-border);
-            margin: 0 -0.5rem;
-            position: relative;
-            overflow: hidden;
+            position: absolute;
+            left: 50%;
+            top: 1.75rem;
+            width: 100%;
+            height: 4px;
+            background: white;
+            z-index: 1;
         }
 
         .timeline-line.completed {
-            background: var(--color-primary);
+            background: white;
+            overflow: visible;
         }
 
-        .timeline-line.completed::after {
+        .timeline-line.completed::before {
             content: '';
             position: absolute;
             top: 0;
-            left: -100%;
-            width: 100%;
+            left: 0;
+            width: 0%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            animation: shimmer 2s ease-in-out;
+            background: var(--color-primary);
+            animation: lineGrow 1s ease-out forwards;
         }
 
-        @keyframes shimmer {
+        /* Orange moving light effect */
+        .timeline-line.completed::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: 0;
+            width: 30px;
+            height: 8px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.9), transparent);
+            border-radius: 50%;
+            opacity: 0;
+            animation: movingLight 1s ease-out forwards;
+        }
+
+        @keyframes lineGrow {
+            from {
+                width: 0%;
+            }
             to {
-                left: 100%;
+                width: 100%;
             }
         }
 
+        @keyframes movingLight {
+            0% {
+                left: 0;
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                left: calc(100% - 30px);
+                opacity: 0;
+            }
+        }
+
+        /* Staggered delays for lines */
+        .timeline-step:nth-child(1) .timeline-line.completed::before,
+        .timeline-step:nth-child(1) .timeline-line.completed::after {
+            animation-delay: 0.2s;
+        }
+
+        .timeline-step:nth-child(2) .timeline-line.completed::before,
+        .timeline-step:nth-child(2) .timeline-line.completed::after {
+            animation-delay: 1.2s;
+        }
+
+        .timeline-step:nth-child(3) .timeline-line.completed::before,
+        .timeline-step:nth-child(3) .timeline-line.completed::after {
+            animation-delay: 2.2s;
+        }
+
+        .timeline-step:nth-child(4) .timeline-line.completed::before,
+        .timeline-step:nth-child(4) .timeline-line.completed::after {
+            animation-delay: 3.2s;
+        }
+
+        .timeline-step:nth-child(5) .timeline-line.completed::before,
+        .timeline-step:nth-child(5) .timeline-line.completed::after {
+            animation-delay: 4.2s;
+        }
+
         .timeline-line.pending-line {
-            background: repeating-linear-gradient(
+            position: absolute;
+            left: 50%;
+            top: 1.75rem;
+            width: 100%;
+            height: 4px;
+            z-index: 0;
+            background-image: repeating-linear-gradient(
                 90deg,
-                var(--color-border),
-                var(--color-border) 10px,
-                transparent 10px,
-                transparent 20px
-            );
+                #d1d5db 0,
+                #d1d5db 8px,
+                white 8px,
+                white 16px
+            ) !important;
+        }
+
+        .timeline-line.pending-line.active-pending::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 100%;
+            background: var(--color-primary);
+            animation: lineGrowHalf 1s ease-out forwards;
+            animation-delay: 4.3s;
+            z-index: 1;
+        }
+
+        .timeline-line.pending-line.active-pending::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: 0;
+            width: 30px;
+            height: 8px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.9), transparent);
+            border-radius: 50%;
+            opacity: 0;
+            animation: movingLightHalf 1s ease-out forwards;
+            animation-delay: 4.3s;
+            z-index: 1;
+        }
+
+        @keyframes lineGrowHalf {
+            from {
+                width: 0%;
+            }
+            to {
+                width: 50%;
+            }
+        }
+
+        @keyframes movingLightHalf {
+            0% {
+                left: 0;
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                left: calc(50% - 30px);
+                opacity: 0;
+            }
         }
 
         /* Buttons */
@@ -430,8 +662,48 @@
                 top: 2.8rem;
                 width: 4px;
                 height: calc(100% - 5.6rem);
-                background: var(--color-border);
+                background: white;
+                z-index: 0;
+            }
+
+            /* Animated orange line on top */
+            .timeline-container::after {
+                content: "";
+                position: absolute;
+                left: 1.4rem;
+                top: 2.8rem;
+                width: 4px;
+                height: 0%;
+                background: var(--color-primary);
                 z-index: 1;
+            }
+
+            /* Different animations based on progress */
+            .timeline-container.progress-1::after {
+                animation: verticalLineGrow1 3s ease-out forwards;
+            }
+
+            .timeline-container.progress-2::after {
+                animation: verticalLineGrow2 3s ease-out forwards;
+            }
+
+            .timeline-container.progress-3::after {
+                animation: verticalLineGrow3 3s ease-out forwards;
+            }
+
+            @keyframes verticalLineGrow1 {
+                from { height: 0%; }
+                to { height: 25%; }
+            }
+
+            @keyframes verticalLineGrow2 {
+                from { height: 0%; }
+                to { height: 50%; }
+            }
+
+            @keyframes verticalLineGrow3 {
+                from { height: 0%; }
+                to { height: 75%; }
             }
 
             .timeline-step {
@@ -480,29 +752,77 @@
                 display: none;
             }
 
-            /* Color the vertical line based on progress */
-            .timeline-container.progress-1::before {
-                background: linear-gradient(
-                    to bottom,
-                    var(--color-primary) 0%,
-                    var(--color-primary) 33.33%,
-                    var(--color-border) 33.33%,
-                    var(--color-border) 100%
-                );
+            /* Mobile: dots start empty and fill on animation */
+            .timeline-step .timeline-dot.completed {
+                background: white;
+                border-color: #d1d5db;
             }
 
-            .timeline-container.progress-2::before {
-                background: linear-gradient(
-                    to bottom,
-                    var(--color-primary) 0%,
-                    var(--color-primary) 66.66%,
-                    var(--color-border) 66.66%,
-                    var(--color-border) 100%
-                );
+            .timeline-step .timeline-dot.completed .checkmark {
+                opacity: 0;
+                transform: scale(0);
             }
 
-            .timeline-container.progress-3::before {
+            /* First step always filled on mobile too */
+            .timeline-step:first-child .timeline-dot.completed {
                 background: var(--color-primary);
+                border-color: var(--color-primary);
+            }
+
+            .timeline-step:first-child .timeline-dot.completed .checkmark {
+                opacity: 1;
+                transform: scale(1);
+                color: white;
+            }
+
+            /* Mobile animation delays */
+            .timeline-step:nth-child(2) .timeline-dot.completed.animate-fill {
+                animation: fillCircle 0.3s ease-out 0.8s forwards;
+            }
+
+            .timeline-step:nth-child(2) .timeline-dot.completed.animate-fill .checkmark {
+                animation: checkmarkDraw 0.3s ease-out 0.8s forwards;
+            }
+
+            .timeline-step:nth-child(3) .timeline-dot.completed.animate-fill {
+                animation: fillCircle 0.3s ease-out 1.5s forwards;
+            }
+
+            .timeline-step:nth-child(3) .timeline-dot.completed.animate-fill .checkmark {
+                animation: checkmarkDraw 0.3s ease-out 1.5s forwards;
+            }
+
+            .timeline-step:nth-child(4) .timeline-dot.completed.animate-fill {
+                animation: fillCircle 0.3s ease-out 2.2s forwards;
+            }
+
+            .timeline-step:nth-child(4) .timeline-dot.completed.animate-fill .checkmark {
+                animation: checkmarkDraw 0.3s ease-out 2.2s forwards;
+            }
+
+            .timeline-step:nth-child(5) .timeline-dot.completed.animate-fill {
+                animation: fillCircle 0.3s ease-out 2.9s forwards;
+            }
+
+            .timeline-step:nth-child(5) .timeline-dot.completed.animate-fill .checkmark {
+                animation: checkmarkDraw 0.3s ease-out 2.9s forwards;
+            }
+
+            /* Mobile current dot animation - after vertical line completes */
+            .timeline-step:nth-child(3) .timeline-dot.current {
+                animation: fillCurrentCircle 0.3s ease-out 3.5s forwards, bounce 2s ease-in-out 3.8s infinite;
+            }
+
+            .timeline-step:nth-child(4) .timeline-dot.current {
+                animation: fillCurrentCircle 0.3s ease-out 3.5s forwards, bounce 2s ease-in-out 3.8s infinite;
+            }
+
+            .timeline-step:nth-child(5) .timeline-dot.current {
+                animation: fillCurrentCircle 0.3s ease-out 3.5s forwards, bounce 2s ease-in-out 3.8s infinite;
+            }
+
+            .timeline-step:nth-child(6) .timeline-dot.current {
+                animation: fillCurrentCircle 0.3s ease-out 3.5s forwards, bounce 2s ease-in-out 3.8s infinite;
             }
 
             .assignment-actions {
@@ -554,9 +874,10 @@
             // Calculate progress based on status
             const status = assignmentDetail.status.toLowerCase();
             const isDraftDone = true;
-            const isSubmittedDone = status === 'submitted' || status === 'approved';
+            const isSubmittedDone = status === 'submitted' || status === 'approved' || status === 'resubmitted';
             const isApprovedDone = status === 'approved';
-            const isRejected = status === 'rejected';
+            const isRejected = status === 'rejected' || status === 'resubmitted';
+            const isResubmitted = status === 'resubmitted';
             
             // Determine progress class for mobile view
             let progressClass = 'progress-1';
@@ -571,21 +892,24 @@
 
             <!-- Draft Step -->
             <div class="timeline-step">
-                <div class="timeline-dot completed">✔</div>
+                <div class="timeline-dot completed">
+                    <span class="checkmark">✔</span>
+                </div>
                 <div class="timeline-step-content">
                     <div class="timeline-label">Draft</div>
                     <div class="timeline-details">
                         <%= assignmentDetail.createdAt ? new Date(assignmentDetail.createdAt).toLocaleDateString() : 'Assignment created' %>
                     </div>
                 </div>
+                <div class="timeline-line completed"></div>
             </div>
-
-            <div class="timeline-line completed"></div>
 
             <!-- Submitted Step -->
             <div class="timeline-step">
-                <div class="timeline-dot <%= (isSubmittedDone || isRejected) ? 'completed' : '' %>">
-                    <%= (isSubmittedDone || isRejected) ? '✔' : '' %>
+                <div class="timeline-dot <%= (isSubmittedDone || isRejected) ? 'completed animate-fill' : '' %>">
+                    <% if (isSubmittedDone || isRejected) { %>
+                        <span class="checkmark">✔</span>
+                    <% } %>
                 </div>
                 <div class="timeline-step-content">
                     <div class="timeline-label">Submitted</div>
@@ -593,37 +917,96 @@
                         <%= (isSubmittedDone || isRejected) ? assignmentDetail.submit : 'Awaiting submission' %>
                     </div>
                 </div>
+                <% if (isSubmittedDone || isRejected) { %>
+                    <div class="timeline-line completed"></div>
+                <% } else { %>
+                    <div class="timeline-line pending-line active-pending"></div>
+                <% } %>
             </div>
 
-            <div class="timeline-line <%= (isSubmittedDone || isRejected) ? 'completed' : '' %>"></div>
-
-            <% if (isRejected) { %>
-                <!-- Rejected Step -->
+            <% if (isRejected && !isResubmitted) { %>
+                <!-- Rejected Step (Not Yet Resubmitted) -->
                 <div class="timeline-step">
-                    <div class="timeline-dot" style="background: #ef4444; border-color: #ef4444; color: white;">✖</div>
+                    <div class="timeline-dot completed animate-fill" style="--fill-color: #ef4444;">
+                        <span class="checkmark">✖</span>
+                    </div>
                     <div class="timeline-step-content">
                         <div class="timeline-label">Rejected</div>
                         <div class="timeline-details">
                             <%= assignmentDetail.remark || 'Please resubmit your assignment' %>
                         </div>
                     </div>
+                    <div class="timeline-line pending-line active-pending"></div>
                 </div>
 
-                <div class="timeline-line"></div>
-
-                <!-- Resubmit Step -->
+                <!-- Resubmit Step (Pending Action) -->
                 <div class="timeline-step">
-                    <div class="timeline-dot pending">📝</div>
+                    <div class="timeline-dot pending">
+                        <span class="pending-icon">📝</span>
+                    </div>
                     <div class="timeline-step-content">
                         <div class="timeline-label">Resubmit</div>
                         <div class="timeline-details">Click below to resubmit your work</div>
                     </div>
                 </div>
-            <% } else { %>
-                <!-- Approved Step -->
+
+            <% } else if (isResubmitted) { %>
+                <!-- Rejected Step (Completed) -->
                 <div class="timeline-step">
-                    <div class="timeline-dot <%= isApprovedDone ? 'completed' : (isSubmittedDone ? 'current' : '') %>">
-                        <%= isApprovedDone ? '✔' : '' %>
+                    <div class="timeline-dot completed animate-fill" style="--fill-color: #ef4444;">
+                        <span class="checkmark">✖</span>
+                    </div>
+                    <div class="timeline-step-content">
+                        <div class="timeline-label">Rejected</div>
+                        <div class="timeline-details">
+                            <%= assignmentDetail.remark || 'Assignment was rejected' %>
+                        </div>
+                    </div>
+                    <div class="timeline-line completed"></div>
+                </div>
+
+                <!-- Resubmitted Step (Completed) -->
+                <div class="timeline-step">
+                    <div class="timeline-dot completed animate-fill">
+                        <span class="checkmark">✔</span>
+                    </div>
+                    <div class="timeline-step-content">
+                        <div class="timeline-label">Resubmitted</div>
+                        <div class="timeline-details">
+                            <%= assignmentDetail.resubmitDate ? new Date(assignmentDetail.resubmitDate).toLocaleDateString() : 'Assignment resubmitted' %>
+                        </div>
+                    </div>
+                    <div class="timeline-line pending-line active-pending"></div>
+                </div>
+
+                <!-- Pending Review Step (Current) -->
+                <div class="timeline-step">
+                    <div class="timeline-dot current">⏳</div>
+                    <div class="timeline-step-content">
+                        <div class="timeline-label">Pending Review</div>
+                        <div class="timeline-details">Under review by instructor</div>
+                    </div>
+                    <div class="timeline-line pending-line"></div>
+                </div>
+
+                <!-- Forward to HOD Step (Pending) -->
+                <div class="timeline-step">
+                    <div class="timeline-dot pending">
+                        <span class="pending-icon">📋</span>
+                    </div>
+                    <div class="timeline-step-content">
+                        <div class="timeline-label">Forward to HOD</div>
+                        <div class="timeline-details">Awaiting HOD review</div>
+                    </div>
+                </div>
+
+            <% } else { %>
+                <!-- Normal Flow: Approved Step -->
+                <div class="timeline-step">
+                    <div class="timeline-dot <%= isApprovedDone ? 'completed animate-fill' : (isSubmittedDone ? 'current' : '') %>">
+                        <% if (isApprovedDone) { %>
+                            <span class="checkmark">✔</span>
+                        <% } %>
                     </div>
                     <div class="timeline-step-content">
                         <div class="timeline-label">Approved</div>
@@ -631,14 +1014,17 @@
                             <%= isApprovedDone ? (assignmentDetail.remark || 'Approved by instructor') : 'Under review' %>
                         </div>
                     </div>
+                    <% if (isApprovedDone) { %>
+                        <div class="timeline-line pending-line active-pending"></div>
+                    <% } %>
                 </div>
 
                 <% if (isApprovedDone) { %>
-                    <div class="timeline-line pending-line"></div>
-
                     <!-- Final Step -->
                     <div class="timeline-step">
-                        <div class="timeline-dot pending">⏳</div>
+                        <div class="timeline-dot pending">
+                            <span class="pending-icon">⏳</span>
+                        </div>
                         <div class="timeline-step-content">
                             <div class="timeline-label">Forward to HOD</div>
                             <div class="timeline-details">Awaiting HOD review</div>
@@ -650,7 +1036,7 @@
         </div>
 
         <div class="assignment-actions">
-            <% if (isRejected) { %>
+            <% if (isRejected && !isResubmitted) { %>
                 <button class="btn btn-primary" onclick="window.location.href='/student/assignment/resubmit/<%= assignmentDetail._id %>'">
                     Resubmit Assignment
                 </button>

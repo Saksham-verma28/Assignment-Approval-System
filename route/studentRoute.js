@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const upload = require('../config/multer')
-const { studentHome, studentDashboard, uploadAssignment, statusFilter, assignmentFilter, allAssignment, renderAssignment, submitAssignment, deleteAssignment, assignmentHistory, editAssignment, uploadEditAssignment, resubmitAssignment } = require('../controllers/student')
+const { studentHome, studentDashboard, uploadAssignment, statusFilter, assignmentFilter, allAssignment, renderAssignment, submitAssignment, deleteAssignment, assignmentHistory, editAssignment, uploadEditAssignment, resubmitAssignment,resubmitUploadAssignment } = require('../controllers/student')
 const cloudinary = require("cloudinary").v2;
 const path = require("path");
 const multer = require("multer")
@@ -47,6 +47,6 @@ router.get('/assignment/resubmit/:id', resubmitAssignment)
 
 
 
-router.post('/assignment/resubmit/:id', upload.single('newFile'), resubmitAssignment)
+router.post('/assignment/resubmit/:id', upload.single('newFile'), resubmitUploadAssignment)
 
 module.exports = router

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access Denied</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5e6e0 0%, #e8d5cd 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            max-width: 520px;
+            width: 100%;
+            padding: 48px 40px;
+            text-align: center;
+            border-top: 4px solid #d67861;
+        }
+
+        .icon-circle {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #d67861 0%, #c96855 100%);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 32px;
+            box-shadow: 0 4px 12px rgba(214, 120, 97, 0.3);
+            position: relative;
+        }
+
+        .icon-circle::before {
+            content: '';
+            position: absolute;
+            width: 90px;
+            height: 90px;
+            border: 2px solid rgba(214, 120, 97, 0.2);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.5;
+            }
+        }
+
+        .icon-circle svg {
+            width: 40px;
+            height: 40px;
+            stroke: white;
+            fill: none;
+            stroke-width: 2.5;
+        }
+
+        h1 {
+            color: #5a3a31;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .message {
+            color: #7d6660;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        .info-box {
+            background: #fef5f3;
+            border-left: 4px solid #d67861;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: left;
+            margin-bottom: 24px;
+        }
+
+        .info-box h3 {
+            color: #d67861;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .info-box p {
+            color: #7d6660;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .info-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        .error-code {
+            display: inline-block;
+            background: rgba(214, 120, 97, 0.1);
+            color: #d67861;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+            margin-top: 24px;
+        }
+
+        .button {
+            background: linear-gradient(135deg, #d67861 0%, #c96855 100%);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(214, 120, 97, 0.3);
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(214, 120, 97, 0.4);
+        }
+
+        .button:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon-circle">
+            <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="15" y1="9" x2="9" y2="15"></line>
+                <line x1="9" y1="9" x2="15" y2="15"></line>
+            </svg>
+        </div>
+
+        <h1>Can't Access This Route</h1>
+
+        <p class="message">
+            You don't have permission to access this page. This area is restricted to specific user roles.
+        </p>
+
+        <div class="info-box">
+            <h3>Why am I seeing this?</h3>
+            <p>You're trying to access a route that doesn't match your account type. For example:</p>
+            <p>
+                • Students cannot access professor/admin routes<br>
+                • Professors cannot access student-specific routes
+            </p>
+            <p>Please navigate to your appropriate dashboard or contact support if you believe this is an error.</p>
+            <span class="error-code">ERROR 403: FORBIDDEN</span>
+        </div>
+
+        <div class="button-group">
+            <button class="button" onclick="goBack()">Go to Dashboard</button>
+        </div>
+    </div>
+</body>
+<script>
+    function goBack(){
+        window.history.back()
+    }
+</script>
+</html>

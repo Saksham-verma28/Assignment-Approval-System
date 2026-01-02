@@ -16,11 +16,31 @@
         <div class="dashboard-header">
             <div class="header-top">
                 <h1>Assignment Dashboard</h1>
-                <button class="logout-button" onclick="window.location.href='/auth/logout';">Logout</button>
+                <div class="user-profile">
+                    <div class="user-info" id="userProfileBtn">
+                        <div style="text-align: right;">
+                            <div class="user-name">
+                                <%= name %>
+                            </div>
+                            <div class="user-role">STUDENT</div>
+                        </div>
+                        <div class="user-avatar">
+                            <img src="<%= profilePic %>" alt="Profile" onerror="this.src='<%= profilePic %>'">
+                        </div>
+
+                    </div>
+                    <div class="dropdown-menu" id="dropdownMenu">
+                        <a href="/student/settings?name=<%= name %>" class="dropdown-item">
+                            <i class="fa-solid fa-gear"></i> Settings
+                        </a>
+                        <a href="/auth/logout" class="dropdown-item logout-item">
+                            <i class="fa-solid fa-power-off"></i> Logout
+                        </a>
+                    </div>
+                </div>
             </div>
 
             <div class="header-content">
-                <p>Welcome back, <strong><%= name %></strong></p>
                 <a href="/student/upload/assignment" class="upload-button">
                     <span style="font-size: x-large;">+ </span> Upload New Assignment
                 </a>
@@ -29,22 +49,30 @@
 
         <div class="metrics-grid">
             <div class="metric-card draft">
-                <div class="count"><%= totalDrafts %></div>
+                <div class="count">
+                    <%= totalDrafts %>
+                </div>
                 <div class="label">Drafts (In Progress)</div>
             </div>
 
             <div class="metric-card submitted">
-                <div class="count"><%= totalSubmitted %></div>
+                <div class="count">
+                    <%= totalSubmitted %>
+                </div>
                 <div class="label">Submitted</div>
             </div>
 
             <div class="metric-card approved">
-                <div class="count"><%= totalApproved %></div>
+                <div class="count">
+                    <%= totalApproved %>
+                </div>
                 <div class="label">Approved / Graded</div>
             </div>
 
             <div class="metric-card rejected">
-                <div class="count"><%= totalRejected %></div>
+                <div class="count">
+                    <%= totalRejected %>
+                </div>
                 <div class="label">Rejected / Needs Revision</div>
             </div>
         </div>
@@ -86,73 +114,82 @@
                 </thead>
 
                 <tbody>
-                    <% if (assignments && assignments.length > 0) { %>
-                        <% assignments.forEach(function(assignment) { %>
-                            <tr data-status="<%= assignment.status %>" data-id="<%= assignment._id %>">
+                    <% if (assignments && assignments.length> 0) { %>
+                        <% assignments.forEach(a=> { %>
+                            <tr data-status="<%= a.status %>" data-id="<%= a._id %>">
 
-                                <td data-label="Title"><%= assignment.title %></td>
-                                <td data-label="Category"><%= assignment.category %></td>
+                                <td data-label="Title">
+                                    <%= a.title %>
+                                </td>
+                                <td data-label="Category">
+                                    <%= a.category %>
+                                </td>
 
                                 <td data-label="Status">
-                                    <span class="status-badge badge-<%= assignment.status %>">
-                                        <%= assignment.status %>
+                                    <span class="status-badge badge-<%= a.status %>">
+                                        <%= a.status %>
                                     </span>
                                 </td>
 
-                                <td data-label="Submitted"><%= assignment.submit %></td>
+                                <td data-label="Submitted">
+                                    <%= a.submit %>
+                                </td>
 
                                 <td data-label="Actions" class="actions-cell">
 
-                                    <% if (assignment.status !== 'rejected') { %>
-                                        <a href="<%= assignment.upload_path %>" class="action-btn view-btn" target="_blank">
+                                    <% if (a.status !=='rejected' ) { %>
+                                        <a href="<%= a.upload_path %>" class="action-btn view-btn" target="_blank">
                                             <i class="fa-solid fa-eye"></i>
                                         </a>
 
-                                        <a href="<%= assignment.download %>" class="action-btn download-btn">
+                                        <a href="<%= a.download %>" class="action-btn download-btn">
                                             <i class="fa-solid fa-download"></i>
                                         </a>
-                                    <% } %>
+                                        <% } %>
 
-                                    <% if (assignment.status === 'draft') { %>
-                                        <a href="/student/assignment/edit/<%= assignment._id %>" class="action-btn edit-btn">
-                                            <% if (assignment.status === 'rejected') { %>
-                                                <i class="fa-solid fa-arrow-up-from-bracket"></i>
-                                            <% } else { %>
-                                                <i class="fa-solid fa-pen-to-square"></i>
-                                            <% } %>
-                                        </a>
-                                    <% } %>
-                                    <% if (assignment.status === 'rejected') { %>
-                                        <a href="/student/assignment/resubmit/<%= assignment._id %>" class="action-btn edit-btn">
-                                            <% if (assignment.status === 'rejected') { %>
-                                                <i class="fa-solid fa-arrow-up-from-bracket"></i>
-                                            <% } else { %>
-                                                <i class="fa-solid fa-pen-to-square"></i>
-                                            <% } %>
-                                        </a>
-                                    <% } %>
+                                            <% if (a.status==='draft' ) { %>
+                                                <a href="/student/assignment/edit/<%= a._id %>"
+                                                    class="action-btn edit-btn">
+                                                    <% if (a.status==='rejected' ) { %>
+                                                        <i class="fa-solid fa-arrow-up-from-bracket"></i>
+                                                        <% } else { %>
+                                                            <i class="fa-solid fa-pen-to-square"></i>
+                                                            <% } %>
+                                                </a>
+                                                <% } %>
+                                                    <% if (a.status==='rejected' ) { %>
+                                                        <a href="/student/assignment/resubmit/<%= a._id %>"
+                                                            class="action-btn edit-btn">
+                                                            <% if (a.status==='rejected' ) { %>
+                                                                <i class="fa-solid fa-arrow-up-from-bracket"></i>
+                                                                <% } else { %>
+                                                                    <i class="fa-solid fa-pen-to-square"></i>
+                                                                    <% } %>
+                                                        </a>
+                                                        <% } %>
 
 
 
-                                    <% if (assignment.status !== 'rejected') { %>
-                                        <a href="/student/assignment/delete/<%= assignment._id %>" class="action-btn delete-btn">
-                                            <i class="fa-solid fa-trash-can"></i>
-                                        </a>
-                                    <% } %>
+                                                            <% if (a.status !=='rejected' ) { %>
+                                                                <a href="/student/assignment/delete/<%= a._id %>"
+                                                                    class="action-btn delete-btn">
+                                                                    <i class="fa-solid fa-trash-can"></i>
+                                                                </a>
+                                                                <% } %>
 
                                 </td>
 
                                 <td data-label="History">
-                                    <a href="/student/assignment/history/<%= assignment._id %>" class="history-btn">History</a>
+                                    <a href="/student/assignment/history/<%= a._id %>" class="history-btn">History</a>
                                 </td>
 
                             </tr>
-                        <% }); %>
-                    <% } else { %>
-                        <tr class="no-assignments">
-                            <td colspan="6">No assignments found.</td>
-                        </tr>
-                    <% } %>
+                            <% }); %>
+                                <% } else { %>
+                                    <tr class="no-assignments">
+                                        <td colspan="6">No assignments found.</td>
+                                    </tr>
+                                    <% } %>
                 </tbody>
             </table>
 
@@ -175,8 +212,9 @@
                     <label for="professorSelect">Select Target Professor:</label>
                     <select id="professorSelect" name="professorId" required>
                         <% allProfessor.forEach(a=>{ %>
-                            <option value="<%= a.name %>">Dr. <%= a.name %></option>
-                        <% }) %>
+                            <option value="<%= a.name %>">Dr. <%= a.name %>
+                            </option>
+                            <% }) %>
                     </select>
                 </div>
 
@@ -216,8 +254,25 @@
             window.onclick = (event) => {
                 if (event.target === modal) modal.style.display = 'none';
             };
+
+            // Dropdown menu functionality
+            const userProfileBtn = document.getElementById('userProfileBtn');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+
+            userProfileBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                dropdownMenu.classList.toggle('show');
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!userProfileBtn.contains(e.target)) {
+                    dropdownMenu.classList.remove('show');
+                }
+            });
         });
     </script>
 
 </body>
+
 </html>

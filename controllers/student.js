@@ -6,6 +6,7 @@ const Tracker = require('../models/assignmentTraker');
 const cloudinary = require("cloudinary").v2;
 const fs = require('fs');
 const { sendMail } = require('../config/sendEmail');
+const { profile } = require('console');
 
 cloudinary.config({
     cloud_name: process.env.CLOUD_NAME,
@@ -15,19 +16,30 @@ cloudinary.config({
 
 async function studentHome(req, res) {
     const token = req.cookies["User"];
-    let name;
+    let name, email;
 
     jwt.verify(token, process.env.JWT_KEY, (err, decoded) => {
-        if (err) return res.redirect('/auth/login');
+       
         name = decoded.name;
+        email = decoded.email;
     });
 
-    const assignmentDetails = await Assignment.find({ student_name: name }).sort({ _id: -1 }).limit(5);
+    let user = await User.findOne({email: email})
+
+
+    
+
+
+    const assignmentDetails = await Assignment.find({ email: email }).sort({ _id: -1 }).limit(5);
     const totalDrafts = await Assignment.countDocuments({ student_name: name, status: 'draft' });
     const totalSubmitted = await Assignment.countDocuments({ student_name: name, status: { $in: ['submitted', 'resubmitted'] }});
     const totalApproved = await Assignment.countDocuments({ student_name: name, status: 'approved' });
     const totalRejected = await Assignment.countDocuments({ student_name: name, status: 'rejected' });
     const allProfessor = await User.find({ role: 'Professor' });
+
+
+
+
 
     res.render("user/student/studentHome", {
         assignments: assignmentDetails,
@@ -36,7 +48,8 @@ async function studentHome(req, res) {
         totalSubmitted,
         totalApproved,
         totalRejected,
-        allProfessor
+        allProfessor,
+        profilePic: user.profilePic
     });
 }
 
@@ -93,6 +106,11 @@ async function statusFilter(req, res) {
     if (req.body.status == 'all') status = await Assignment.find({ student_name: name });
     else status = await Assignment.find({ student_name: name, status: req.body.status });
 
+
+    let find = await User.find({name: name})
+
+    let user = find[0]
+
     const totalDrafts = await Assignment.countDocuments({ student_name: name, status: 'draft' });
     const totalSubmitted = await Assignment.countDocuments({ student_name: name, status: { $in: ['submitted', 'resubmitted'] }});
     const totalApproved = await Assignment.countDocuments({ student_name: name, status: 'approved' });
@@ -106,7 +124,8 @@ async function statusFilter(req, res) {
         totalSubmitted,
         totalApproved,
         totalRejected,
-        allProfessor
+        allProfessor,
+        profilePic: user.profilePic
     });
 }
 
@@ -149,6 +168,11 @@ async function submitAssignment(req, res) {
         }
     );
 
+    let find = await User.find({name: name})
+
+    let user = find[0]
+
+
     const assignment = await Assignment.find({ student_name: submitted.student_name });
     const totalDrafts = await Assignment.countDocuments({ student_name: submitted.student_name, status: 'draft' });
     const totalSubmitted = await Assignment.countDocuments({ student_name: submitted.student_name, status: { $in: ['submitted', 'resubmitted'] } });
@@ -176,7 +200,8 @@ async function submitAssignment(req, res) {
         totalSubmitted,
         totalApproved,
         totalRejected,
-        allProfessor
+        allProfessor,
+        profilePic: user.profilePic
     });
 }
 
@@ -187,6 +212,11 @@ async function deleteAssignment(req, res) {
     const token = req.cookies['User'];
     let name;
     jwt.verify(token, process.env.JWT_KEY, (err, decoded) => name = decoded.name);
+
+
+    let find = await User.find({name: name})
+
+    let user = find[0]
 
     const assignment = await Assignment.find({ student_name: name });
 
@@ -203,7 +233,8 @@ async function deleteAssignment(req, res) {
         totalSubmitted,
         totalApproved,
         totalRejected,
-        allProfessor
+        allProfessor,
+        profilePic: user.profilePic
     });
 }
 
@@ -278,11 +309,10 @@ async function resubmitAssignment(req, res) {
 }
 
 async function resubmitUploadAssignment(req, res) {
-    
     const id = req.params.id;
     const assignment = await Assignment.findById(id);
 
-    const {description } = req.body;
+    const { description } = req.body;
 
     let upload_path = assignment.upload_path;
     let downloadUrl = assignment.download;
@@ -297,13 +327,16 @@ async function resubmitUploadAssignment(req, res) {
 
         upload_path = result.secure_url;
         downloadUrl = upload_path.replace("/upload/", "/upload/fl_attachment/");
+
         fs.unlinkSync(filePath);
     }
 
+    
     await Assignment.findByIdAndUpdate(id, {
         description: description,
         upload_path: upload_path,
-        download: downloadUrl
+        download: downloadUrl,
+        status: "resubmitted"
     });
 
     await Tracker.updateOne(
@@ -314,9 +347,14 @@ async function resubmitUploadAssignment(req, res) {
         }
     );
 
-    const assignmentDetails = await Assignment.find({ student_name: assignment.student_name }).sort({ _id: -1 }).limit(5);
+    let user = await User.findOne({ name: assignment.student_name });
+
+    const assignmentDetails = await Assignment.find({ student_name: assignment.student_name })
+        .sort({ _id: -1 })
+        .limit(5);
+
     const totalDrafts = await Assignment.countDocuments({ student_name: assignment.student_name, status: 'draft' });
-    const totalSubmitted = await Assignment.countDocuments({ student_name: assignment.student_name,status: { $in: ['submitted', 'resubmitted'] }});
+    const totalSubmitted = await Assignment.countDocuments({ student_name: assignment.student_name, status: { $in: ['submitted', 'resubmitted'] } });
     const totalApproved = await Assignment.countDocuments({ student_name: assignment.student_name, status: 'approved' });
     const totalRejected = await Assignment.countDocuments({ student_name: assignment.student_name, status: 'rejected' });
     const allProfessor = await User.find({ role: 'Professor' });
@@ -332,10 +370,14 @@ async function resubmitUploadAssignment(req, res) {
         <div style="font-family: Arial;">
             <h2 style="color: #b63d2a;">University Assignment Approval System</h2>
             <p>Your assignment has been resubmitted successfully.</p>
-            <p><strong>Assignment File:</strong> ${assignment.upload_path ? assignment.upload_path.split('/').pop() : req.file.orignalname}</p>
+            <p><strong>Assignment File:</strong> ${req.file ? req.file.originalname : upload_path.split('/').pop()}</p>
         </div>
-    `
+        `
     );
+
+
+
+    
 
     res.render("user/student/studentHome", {
         assignments: assignmentDetails,
@@ -344,9 +386,11 @@ async function resubmitUploadAssignment(req, res) {
         totalSubmitted,
         totalApproved,
         totalRejected,
-        allProfessor
+        allProfessor,
+        profilePic: user.profilePic
     });
 }
+
 
 module.exports = {
     studentHome,

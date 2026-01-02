@@ -7,178 +7,185 @@
 
   <script type="module" src="https://unpkg.com/lucide@latest"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <link rel="stylesheet" href="/css/adminDashboard.css">
   <link rel="stylesheet" href="/css/sidebar.css">
-
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
-<body class="antialiased">
+<body>
 
 <%- include('../partials/sidebar') %>
 
-<div id="main-content">
-
-  <div class="dashboard-header">
-    <h2>Dashboard Overview</h2>
-    <p>Quick summary of the academic portal statistics.</p>
+<!-- Activity Sidebar (Right) -->
+<div id="activity-sidebar" class="activity-sidebar">
+  <div class="activity-sidebar-header">
+    <h3>Recent Activity</h3>
+    <button class="close-activity-btn" onclick="toggleActivitySidebar()">
+      <i data-lucide="x"></i>
+    </button>
   </div>
 
-  <div class="card-grid">
+  <div class="activity-sidebar-content">
+    <ul id="activity-log-list">
+      <% if (recentActivities && recentActivities.length > 0) { %>
+        <% recentActivities.forEach(activity => { %>
+          <li>
+            <i data-lucide="<%= activity.icon %>" style="color:<%= activity.color %>;"></i>
+            <div class="activity-details">
+              <span class="activity-text"><%= activity.description %></span>
+              <span class="activity-time"><%= activity.timeAgo %></span>
+            </div>
+          </li>
+        <% }) %>
+      <% } else { %>
+        <li class="no-activity">
+          <i data-lucide="inbox" style="color: var(--text-gray);"></i>
+          <span>No recent administrative activity found.</span>
+        </li>
+      <% } %>
+    </ul>
+  </div>
+</div>
 
+<!-- Overlay for sidebar -->
+<div id="activity-overlay" class="activity-overlay" onclick="toggleActivitySidebar()"></div>
+
+<!-- MAIN CONTENT -->
+<div id="main-content">
+
+  <!-- STATS CARDS -->
+  <div class="card-grid">
     <div class="card departments">
-      <div class="card-title">TOTAL DEPARTMENTS</div>
-      <div class="card-value"><%= dept %></div>
-      <i data-lucide="building-2"></i>
       <div class="card-border"></div>
+      <div class="card-title">Departments</div>
+      <div class="card-value"><%= dept %></div>
+      <i data-lucide="building-2" style="color: var(--border-sky)"></i>
     </div>
 
     <div class="card students">
-      <div class="card-title">TOTAL STUDENTS</div>
-      <div class="card-value"><%= student %></div>
-      <i data-lucide="user-check"></i>
       <div class="card-border"></div>
+      <div class="card-title">Students</div>
+      <div class="card-value"><%= student %></div>
+      <i data-lucide="user-check" style="color: var(--border-emerald)"></i>
     </div>
 
     <div class="card professors">
-      <div class="card-title">TOTAL PROFESSORS</div>
-      <div class="card-value"><%= professor %></div>
-      <i data-lucide="graduation-cap"></i>
       <div class="card-border"></div>
+      <div class="card-title">Professors</div>
+      <div class="card-value"><%= professor %></div>
+      <i data-lucide="graduation-cap" style="color: var(--border-orange)"></i>
     </div>
 
     <div class="card hods">
-      <div class="card-title">TOTAL HODs</div>
-      <div class="card-value"><%= hod %></div>
-      <i data-lucide="briefcase"></i>
       <div class="card-border"></div>
+      <div class="card-title">HODs</div>
+      <div class="card-value"><%= hod %></div>
+      <i data-lucide="briefcase" style="color: var(--border-fuchsia)"></i>
     </div>
-
   </div>
 
+  <!-- ACTIVITY SECTION -->
   <div class="activity-section">
-
-    <h3>Portal Resource Distribution</h3>
-
-    <div class="chart-container">
-
-      <!-- Doughnut Chart -->
-      <div id="chart-wrapper">
-        <canvas id="activityPieChart"></canvas>
-      </div>
-
-      <!-- Statistical Legend -->
-      <div class="chart-data-legend">
-
-        <div class="legend-item">
-          <span class="legend-color sky"></span>
-          <span class="legend-label">Departments</span>
-          <span class="legend-value"><%= dept %></span>
-        </div>
-
-        <div class="legend-item">
-          <span class="legend-color emerald"></span>
-          <span class="legend-label">Students</span>
-          <span class="legend-value"><%= student %></span>
-        </div>
-
-        <div class="legend-item">
-          <span class="legend-color orange"></span>
-          <span class="legend-label">Professors</span>
-          <span class="legend-value"><%= professor %></span>
-        </div>
-
-        <div class="legend-item">
-          <span class="legend-color fuchsia"></span>
-          <span class="legend-label">HODs</span>
-          <span class="legend-value"><%= hod %></span>
-        </div>
-
-      </div>
-
-      <!-- Right Side Summary -->
-      <div class="chart-legend-summary">
-
-        <h4>Key Performance Indicators</h4>
-
-        <div class="kpi-grid">
-          <div>
-            <span class="kpi-value"><%= dept + student + professor + hod %></span>
-            <span class="kpi-label">Total Entities</span>
-          </div>
-
-          <div>
-            <span class="kpi-value">
-              <%= professor > 0 ? (student / professor).toFixed(0) : 'N/A' %>:1
-            </span>
-            <span class="kpi-label">Student : Faculty Ratio</span>
-          </div>
-        </div>
-
-        <h4>Quick Actions</h4>
-
-        <div class="action-buttons">
-          <a href="/admin/user-form" class="btn btn-primary">
-            <i data-lucide="user-plus"></i> Add New User
-          </a>
-
-          <a href="/department/form" class="btn btn-secondary">
-            <i data-lucide="building-2"></i> Create Department
-          </a>
-        </div>
-
-        <div class="action-buttons">
-          <a href="/admin/users" class="btn btn-tertiary">Manage Users</a>
-          <a href="/admin/department/list" class="btn btn-tertiary">Manage Departments</a>
-        </div>
-
-        <h4>Latest System Activity</h4>
-
-        <ul id="activity-log-list">
-
-          <% if (recentActivities && recentActivities.length > 0) { %>
-
-            <% recentActivities.forEach(activity => { %>
-              <li>
-                <i data-lucide="<%= activity.icon %>" style="color:<%= activity.color %>;"></i>
-                <span><%= activity.description %></span>
-                <span class="time"><%= activity.timeAgo %></span>
-              </li>
-            <% }) %>
-
-          <% } else { %>
-
-            <li class="no-activity">No recent administrative activity found.</li>
-
-          <% } %>
-
-        </ul>
-
-      </div>
-
+    <div class="activity-header">
+      <h3>Portal Resource Distribution</h3>
+      <button class="view-activity-btn" onclick="toggleActivitySidebar()">
+        <i data-lucide="activity"></i>
+        <span>View Recent Activity</span>
+      </button>
     </div>
 
+    <div class="chart-container">
+      <!-- LEFT: CHART + LEGEND -->
+      <div class="chart-left">
+        <div id="chart-wrapper">
+          <canvas id="activityPieChart"></canvas>
+          <div class="chart-center-text">
+            <div class="chart-center-number"><%= dept + student + professor + hod %></div>
+            <div class="chart-center-label">Total</div>
+          </div>
+        </div>
+
+        <div class="chart-legend">
+          <div class="legend-item">
+            <div class="legend-color" style="background: var(--border-sky)"></div>
+            <span class="legend-label">Departments</span>
+            <span class="legend-value"><%= dept %></span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background: var(--border-emerald)"></div>
+            <span class="legend-label">Students</span>
+            <span class="legend-value"><%= student %></span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background: var(--border-orange)"></div>
+            <span class="legend-label">Professors</span>
+            <span class="legend-value"><%= professor %></span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background: var(--border-fuchsia)"></div>
+            <span class="legend-label">HODs</span>
+            <span class="legend-value"><%= hod %></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: KPIs + ACTIONS -->
+      <div class="chart-right">
+        <!-- KPIs -->
+        <div class="kpi-section">
+          <h4>Key Metrics</h4>
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <span class="kpi-value"><%= dept + student + professor + hod %></span>
+              <span class="kpi-label">Total Entities</span>
+            </div>
+            <div class="kpi-card">
+              <span class="kpi-value">
+                <%= professor > 0 ? (student / professor).toFixed(0) : 'N/A' %>:1
+              </span>
+              <span class="kpi-label">Student:Faculty</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="actions-section">
+          <h4>Quick Actions</h4>
+          <div class="action-buttons">
+            <a href="/admin/user-form" class="btn-primary">
+              <i data-lucide="user-plus"></i> 
+              <span>Add New User</span>
+            </a>
+            <a href="/department/form" class="btn-secondary">
+              <i data-lucide="building-2"></i> 
+              <span>Create Department</span>
+            </a>
+            <a href="/admin/users" class="btn-tertiary">
+              <i data-lucide="users"></i>
+              <span>Manage All Users</span>
+            </a>
+            <a href="/admin/department/list" class="btn-tertiary">
+              <i data-lucide="list"></i>
+              <span>Manage Departments</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
 </div>
 
-
 <script>
 document.addEventListener("DOMContentLoaded", () => {
+  lucide.createIcons();
 
   const pieCtx = document.getElementById('activityPieChart');
-
   const values = [<%= dept %>, <%= student %>, <%= professor %>, <%= hod %>];
   const labels = ["Departments", "Students", "Professors", "HODs"];
-
-  const colors = [
-    getComputedStyle(document.documentElement).getPropertyValue('--border-sky'),
-    getComputedStyle(document.documentElement).getPropertyValue('--border-emerald'),
-    getComputedStyle(document.documentElement).getPropertyValue('--border-orange'),
-    getComputedStyle(document.documentElement).getPropertyValue('--border-fuchsia')
-  ];
+  const colors = ['#0EA5E9', '#10B981', '#F97316', '#D946EF'];
 
   new Chart(pieCtx, {
     type: "doughnut",
@@ -187,26 +194,46 @@ document.addEventListener("DOMContentLoaded", () => {
       datasets: [{
         data: values,
         backgroundColor: colors,
-        borderColor: getComputedStyle(document.documentElement).getPropertyValue('--bg-surface-dark'),
-        borderWidth: 4,
-        hoverOffset: 8
+        borderColor: '#1a1a2e',
+        borderWidth: 3,
+        hoverOffset: 10
       }]
     },
     options: {
-      cutout: "75%",
+      cutout: "70%",
       plugins: {
-        legend: { display: false }
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: 'rgba(15, 23, 42, 0.95)',
+          titleColor: '#E5E7EB',
+          bodyColor: '#9CA3AF',
+          borderColor: 'rgba(99, 102, 241, 0.3)',
+          borderWidth: 1,
+          padding: 12,
+          cornerRadius: 8
+        }
       },
       responsive: true,
-      maintainAspectRatio: false
+      maintainAspectRatio: true
     }
   });
-
 });
+
+function toggleActivitySidebar() {
+  const sidebar = document.getElementById('activity-sidebar');
+  const overlay = document.getElementById('activity-overlay');
+  
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('open');
+  
+  // Reinitialize icons after sidebar opens
+  setTimeout(() => {
+    lucide.createIcons();
+  }, 100);
+}
 </script>
 
 <script src="/js/active.js"></script>
-<script> lucide.createIcons(); </script>
 
 </body>
 </html>

@@ -7,15 +7,20 @@ const User = require('../models/user');
 
 async function professorDashboard(req, res) {
     const token = req.cookies['User'];
-    let name;
+    let name, email;
 
     jwt.verify(token, process.env.JWT_KEY, (err, decoded) => {
         name = decoded.name;
     });
 
-    const submittedAssignment = await Assignment.find({ professor: name });
+    let user = await User.findOne({name: name})
+    
 
-    res.render('user/professor/dashboard', { name, assignment: submittedAssignment });
+
+    const submittedAssignment = await Assignment.find({ professor: name });
+    
+
+    res.render('user/professor/dashboard', { name, assignment: submittedAssignment, profilePic: user.profilePic});
 }
 
 async function reviewAssignment(req, res) {

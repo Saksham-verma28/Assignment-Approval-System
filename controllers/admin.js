@@ -39,6 +39,8 @@ async function home(req, res) {
       timeAgo: activity.timestamp ? moment(activity.timestamp).fromNow() : ''
     }));
 
+    
+
     res.render('admin/adminHome', {
       dept: countdept,
       student: countStudent,

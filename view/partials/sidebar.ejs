@@ -1,72 +1,127 @@
 <header class="header">
-    <div class="header-inner">
+  <div class="header-inner">
 
-        <h1 class="logo">
-            <span class="logo-accent">Admin</span> Portal
-        </h1>
+    <h1 class="logo">
+      <span class="logo-accent">Admin</span>Portal
+    </h1>
 
-        <nav class="nav-desktop">
-            <a href="/admin/home" class="nav-link-top" onclick="active(this)">
-                <i data-lucide="layout-dashboard"></i>
-                <span class="hidden-lg">Dashboard Overview</span>
-                <span class="visible-lg">Dashboard</span>
-            </a>
+    <nav class="nav-desktop">
+      <a href="/admin/home" class="nav-link-top" onclick="setActive(this)">
+        <i data-lucide="layout-dashboard"></i>
+        <span class="hidden-lg">Dashboard Overview</span>
+        <span class="visible-lg">Dashboard</span>
+      </a>
 
-            <a href="/admin/department/list" class="nav-link-top" onclick="active(this)">
-                <i data-lucide="building-2"></i>
-                <span>Department</span>
-            </a>
+      <a href="/admin/department/list" class="nav-link-top" onclick="setActive(this)">
+        <i data-lucide="building-2"></i>
+        <span>Departments</span>
+      </a>
 
-            <a href="/admin/users" class="nav-link-top" onclick="active(this)">
-                <i data-lucide="users"></i>
-                <span>User</span>
-            </a>
+      <a href="/admin/users" class="nav-link-top" onclick="setActive(this)">
+        <i data-lucide="users"></i>
+        <span>Users</span>
+      </a>
 
-            <a href="/admin/user-form" class="nav-link-top" onclick="active(this)">
-                <i data-lucide="user-plus"></i>
-                <span class="hidden-lg">Add User</span>
-                <span class="visible-lg">Add</span>
-            </a>
+      <a href="/admin/user-form" class="nav-link-top" onclick="setActive(this)">
+        <i data-lucide="user-plus"></i>
+        <span class="hidden-lg">Add User</span>
+        <span class="visible-lg">Add</span>
+      </a>
 
-            <a href="/department/form" class="nav-link-top" onclick="active(this)">
-                <i data-lucide="hard-hat"></i>
-                <span class="hidden-lg">Create Department</span>
-                <span class="visible-lg">Create Dept</span>
-            </a>
-        </nav>
-
-        <div class="user-controls">
-            <a id="logout-btn" href="/admin/logout">
-                <i data-lucide="log-out"></i>
-                <span>Logout</span>
-            </a>
-
-            <button class="menu-toggle" onclick="toggleMobileMenu()">
-                <i id="menu-icon" data-lucide="menu"></i>
-                <i id="close-icon" data-lucide="x" style="display:none;"></i>
-            </button>
-        </div>
-    </div>
-
-    <nav id="mobile-nav">
-        <a href="/admin/home" class="nav-link-mobile">
-            <i data-lucide="layout-dashboard"></i><span>Dashboard Overview</span>
-        </a>
-
-        <a href="/admin/department/list" class="nav-link-mobile">
-            <i data-lucide="building-2"></i><span>Department</span>
-        </a>
-
-        <a href="/admin/users" class="nav-link-mobile">
-            <i data-lucide="users"></i><span>User</span>
-        </a>
-
-        <a href="/admin/user-form" class="nav-link-mobile">
-            <i data-lucide="user-plus"></i><span>Add User</span>
-        </a>
-
-        <a href="/department/form" class="nav-link-mobile">
-            <i data-lucide="hard-hat"></i><span>Create Department</span>
-        </a>
+      <a href="/department/form" class="nav-link-top" onclick="setActive(this)">
+        <i data-lucide="hard-hat"></i>
+        <span class="hidden-lg">Create Department</span>
+        <span class="visible-lg">Create Dept</span>
+      </a>
     </nav>
+
+    <div class="user-controls">
+      <a id="logout-btn" href="/admin/logout">
+        <i data-lucide="log-out"></i>
+        <span>Logout</span>
+      </a>
+
+      <button class="menu-toggle" onclick="toggleMobileMenu()">
+        <i id="menu-icon" data-lucide="menu"></i>
+        <i id="close-icon" data-lucide="x" style="display:none;"></i>
+      </button>
+    </div>
+  </div>
+
+  <nav id="mobile-nav">
+    <a href="/admin/home" class="nav-link-mobile">
+      <i data-lucide="layout-dashboard"></i><span>Dashboard Overview</span>
+    </a>
+
+    <a href="/admin/department/list" class="nav-link-mobile">
+      <i data-lucide="building-2"></i><span>Departments</span>
+    </a>
+
+    <a href="/admin/users" class="nav-link-mobile">
+      <i data-lucide="users"></i><span>Users</span>
+    </a>
+
+    <a href="/admin/user-form" class="nav-link-mobile">
+      <i data-lucide="user-plus"></i><span>Add User</span>
+    </a>
+
+    <a href="/department/form" class="nav-link-mobile">
+      <i data-lucide="hard-hat"></i><span>Create Department</span>
+    </a>
+  </nav>
 </header>
+
+<script>
+// Initialize Lucide icons
+document.addEventListener('DOMContentLoaded', function() {
+  lucide.createIcons();
+});
+
+// Toggle mobile menu
+function toggleMobileMenu() {
+  const mobileNav = document.getElementById('mobile-nav');
+  const menuIcon = document.getElementById('menu-icon');
+  const closeIcon = document.getElementById('close-icon');
+  
+  mobileNav.classList.toggle('open');
+  
+  if (mobileNav.classList.contains('open')) {
+    menuIcon.style.display = 'none';
+    closeIcon.style.display = 'block';
+  } else {
+    menuIcon.style.display = 'block';
+    closeIcon.style.display = 'none';
+  }
+  
+  lucide.createIcons();
+}
+
+// Set active link
+function setActive(element) {
+  // Remove active from all links
+  document.querySelectorAll('.nav-link-top, .nav-link-mobile').forEach(link => {
+    link.classList.remove('active-link');
+  });
+  
+  // Add active to clicked link
+  element.classList.add('active-link');
+  
+  // Close mobile menu if open
+  const mobileNav = document.getElementById('mobile-nav');
+  if (mobileNav.classList.contains('open')) {
+    toggleMobileMenu();
+  }
+}
+
+// Set active link based on current URL
+window.addEventListener('DOMContentLoaded', function() {
+  const currentPath = window.location.pathname;
+  const links = document.querySelectorAll('.nav-link-top, .nav-link-mobile');
+  
+  links.forEach(link => {
+    if (link.getAttribute('href') === currentPath) {
+      link.classList.add('active-link');
+    }
+  });
+});
+</script>

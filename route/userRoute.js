@@ -4,8 +4,10 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user')
 const {sendMail} = require('../config/sendEmail')
 const {generateSecureOTP} = require('../config/generateOTP')
-
-
+const cloudinary = require("cloudinary").v2;
+const { upload, upload2 } = require('../config/multer')
+const fs = require('fs')
+const path = require('path')
 const {userLogin, moveToDashboard} = require('../controllers/user');
 const hashPass = require('../hashPassword');
 
@@ -82,4 +84,86 @@ router.post("/reset-password", async(req, res) => {
 
     return res.json({ success: true, message: "Password updated successfully" });
 });
+
+
+cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.CLOUD_KEY,
+    api_secret: process.env.CLOUD_SECRET
+});
+
+
+
+router.post('/update/profile', upload2.single('profileImage'), async (req, res) => {
+
+    let email;
+    let token = req.cookies["User"];
+    jwt.verify(token, process.env.JWT_KEY, (err, decoded) => {
+        email = decoded.email;
+    });
+
+    let { name } = req.body;
+
+    if (req.file) {
+        const filePath = req.file.path;
+
+        const result = await cloudinary.uploader.upload(filePath, {
+            resource_type: "image",
+        });
+
+        const profile = result.secure_url;
+        fs.unlinkSync(filePath);
+
+        await User.updateOne(
+            { email: email },
+            { $set: { name: name, profilePic: profile } }
+        );
+    } else {
+        await User.updateOne(
+            { email: email },
+            { $set: { name: name } }
+        );
+    }
+
+    let user = await User.findOne({ email: email });
+
+    res.render("user/editProfile", { user: user, success: true });
+});
+
+
+
+router.post('/update/password', async (req, res) => {
+    const { newPassword, confirmPassword } = req.body;
+
+    let email;
+    let token = req.cookies["User"];
+    jwt.verify(token, process.env.JWT_KEY, (err, decoded) => {
+        email = decoded.email
+    })
+
+
+
+    let newHashPass = await hashPass(newPassword)
+
+     await User.updateOne(
+        { email: email },
+        { $set: {password: hashPass} }
+    );
+
+    let find = await User.find({ email: email })
+    let user = find[0]
+
+
+    res.render("user/editProfile", { user: user, success: true})
+
+})
+
+
+
+
+
+
+router.get('/unauthorized/login',(req,res)=>{
+    res.render('user/unauthorized')
+})
 module.exports = router

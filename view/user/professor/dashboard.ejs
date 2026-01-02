@@ -16,11 +16,25 @@
         <div class="dashboard-header">
             <div class="header-top">
                 <h1>Professor Review Dashboard</h1>
-                <button class="logout-button" onclick="window.location.href='/auth/logout'">Logout</button>
-            </div>
-
-            <div class="header-content">
-                <p>Welcome back, <strong>Dr. <%= name %></strong></p>
+                <div class="user-profile">
+                    <div class="user-info" id="userProfileBtn">
+                        <div style="text-align: right;">
+                            <div class="user-name">Dr. <%= name %></div>
+                            <div class="user-role">PROFESSOR</div>
+                        </div>
+                        <div class="user-avatar">
+                            <img src="<%= profilePic %>" alt="Professor's Profile Picture">
+                        </div>
+                    </div>
+                    <div class="dropdown-menu" id="dropdownMenu">
+                        <a href="/professor/settings?name=<%= name %>" class="dropdown-item">
+                            <i class="fa-solid fa-gear"></i> Settings
+                        </a>
+                        <a href="/auth/logout" class="dropdown-item logout-item">
+                            <i class="fa-solid fa-power-off"></i> Logout
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -117,6 +131,27 @@
 
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Dropdown menu functionality
+            const userProfileBtn = document.getElementById('userProfileBtn');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+
+            userProfileBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                dropdownMenu.classList.toggle('show');
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!userProfileBtn.contains(e.target)) {
+                    dropdownMenu.classList.remove('show');
+                }
+            });
+        });
+    </script>
+
 </body>
 
 </html>

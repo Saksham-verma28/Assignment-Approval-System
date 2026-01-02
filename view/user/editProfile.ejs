@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Settings</title>
+    <style>
+        :root {
+            --color-cream: #fdf8f4;
+            --color-dark-brown: #5d4037;
+            --color-light-brown: #8d6e63;
+            --color-terracotta: #e07a5f;
+            --color-light-terracotta: #d4bba2;
+            --color-rust-hover: #bf4d28;
+            --color-white: #ffffff;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background-color: var(--color-cream);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 15px;
+            color: var(--color-dark-brown);
+        }
+
+        .settings-container {
+            width: 100%;
+            max-width: 1200px;
+            background-color: var(--color-white);
+            padding: 2rem 2.2rem;
+            border-radius: 14px;
+            box-shadow: 0 12px 32px rgba(0,0,0,0.15);
+            margin: 20px 0;
+        }
+
+        .settings-header {
+            border-bottom: 2px solid var(--color-terracotta);
+            margin-bottom: 2rem;
+            padding: 32px 0 22px;   /* more space above & below line */
+            position: relative;
+        }
+
+        .settings-header h1 {
+            font-size: 2rem;
+            margin: 0;
+            font-weight: 900;
+            color: var(--color-dark-brown);
+        }
+
+        .back-btn {
+            position: absolute;
+            right: 2.2rem;
+            top: 8px;              /* button clearly above the line */
+            background-color: var(--color-terracotta);
+            color: var(--color-white);
+            padding: 8px 22px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            z-index: 10;
+        }
+
+        .back-btn:hover {
+            background-color: var(--color-rust-hover);
+        }
+
+        .settings-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 30px;
+        }
+
+        .sidebar {
+            background-color: var(--color-cream);
+            border-radius: 12px;
+            padding: 20px;
+            height: fit-content;
+        }
+
+        .sidebar-item {
+            padding: 14px 18px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s;
+            color: var(--color-dark-brown);
+            font-weight: 600;
+        }
+
+        .sidebar-item:hover {
+            background-color: var(--color-light-terracotta);
+        }
+
+        .sidebar-item.active {
+            background-color: var(--color-terracotta);
+            color: var(--color-white);
+        }
+
+        .content-area {
+            background-color: var(--color-cream);
+            border-radius: 12px;
+            padding: 30px;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--color-dark-brown);
+        }
+
+        .section-subtitle {
+            color: var(--color-light-brown);
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+
+        .profile-section {
+            display: flex;
+            gap: 40px;
+            align-items: flex-start;
+        }
+
+        .profile-image-container {
+            text-align: center;
+        }
+
+        .profile-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: #d0d0d0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .profile-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            image-orientation: from-image;
+        }
+
+        .profile-image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+            border-radius: 50%;
+        }
+
+        .profile-image:hover .profile-image-overlay {
+            opacity: 1;
+        }
+
+        .profile-image-overlay svg {
+            width: 40px;
+            height: 40px;
+            fill: white;
+            margin-bottom: 5px;
+        }
+
+        .hidden-file-input {
+            display: none;
+        }
+
+        .upload-info {
+            font-size: 0.85rem;
+            color: var(--color-light-brown);
+            line-height: 1.6;
+        }
+
+        .form-section {
+            flex: 1;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            color: var(--color-terracotta);
+            margin-bottom: 8px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--color-light-terracotta);
+            border-radius: 8px;
+            font-family: 'Georgia', serif;
+            font-size: 1rem;
+            background-color: var(--color-white);
+            color: var(--color-dark-brown);
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--color-terracotta);
+        }
+
+        .update-button {
+            padding: 12px 30px;
+            background-color: var(--color-terracotta);
+            color: var(--color-white);
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            float: right;
+        }
+
+        .update-button:hover {
+            background-color: var(--color-rust-hover);
+        }
+
+        .password-requirements {
+            background-color: #fff5f2;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid var(--color-terracotta);
+            margin-bottom: 25px;
+        }
+
+        .password-requirements p {
+            margin: 0 0 10px;
+        }
+
+        .password-requirements ul {
+            margin: 0;
+            padding-left: 20px;
+            list-style: none;
+        }
+        
+        .password-requirements li {
+            color: var(--color-terracotta);
+            margin-bottom: 5px;
+            position: relative;
+            padding-left: 5px;
+        }
+
+        .password-requirements li::before {
+            content: "•";
+            position: absolute;
+            left: -10px;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .password-input-wrapper {
+            position: relative;
+        }
+
+        @media (max-width: 768px) {
+            .settings-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: flex;
+                overflow-x: auto;
+                padding: 15px;
+            }
+
+            .sidebar-item {
+                white-space: nowrap;
+                margin-right: 8px;
+                margin-bottom: 0;
+            }
+
+            .profile-section {
+                flex-direction: column;
+                gap: 25px;
+            }
+
+            .profile-image-container {
+                width: 100%;
+                text-align: center;
+            }
+
+            .profile-image {
+                margin-left: auto;
+                margin-right: auto;
+                display: block;
+                margin-bottom: 15px; 
+            }
+
+            .update-button {
+                float: none;
+                width: 100%;
+            }
+
+            .settings-container {
+                padding: 1.5rem 1rem;
+            }
+
+            .back-btn {
+                right: 1rem;
+                top: 1.2rem;
+                padding: 6px 14px;
+                font-size: 0.9rem;
+            }
+
+            .settings-header h1 {
+                margin-right: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="settings-container">
+
+        <div class="settings-header">
+            <h1>Account Settings</h1>
+            <a href="<%= user.role=='Student'?'/student/dashboard':'/professor/dashboard' %>" class="back-btn">← Back</a>
+        </div>
+
+        <div class="settings-layout">
+
+            <div class="sidebar">
+                <div class="sidebar-item active" onclick="showSection('name-image')">Name &amp; Image</div>
+                <div class="sidebar-item" onclick="showSection('password')">Change Password</div>
+            </div>
+
+            <div class="content-area">
+
+                <% if (success) { %>
+                    <h2 style="color: green;">Profile updated!</h2>
+                <% } %>
+
+                <div class="section active" id="name-image-section">
+                    <h2 class="section-title">Update your name &amp; image here</h2>
+                    <p class="section-subtitle">Information added here will be displayed on the profile page.</p>
+
+                    <form action="/user/update/profile" method="POST" enctype="multipart/form-data">
+                        <div class="profile-section">
+                            <div class="profile-image-container">
+                                <label for="profileImageInput">
+                                    <div class="profile-image">
+                                        <img id="profilePreview" src="<%= user.profilePic %>" alt="Profile picture">
+                                        <div class="profile-image-overlay">
+                                            <svg viewBox="0 0 24 24">
+                                                <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </label>
+
+                                <input
+                                    type="file"
+                                    name="profileImage"
+                                    id="profileImageInput"
+                                    class="hidden-file-input"
+                                    accept="image/jpeg,image/jpg,image/png"
+                                    onchange="handleImageUpload(event)"
+                                >
+
+                                <div class="upload-info">
+                                    Choose image to upload your profile picture.<br>
+                                    Supported extensions are (.jpg, .png).<br>
+                                    Maximum image size 2MB.
+                                </div>
+                            </div>
+
+                            <div class="form-section">
+                                <div class="form-group">
+                                    <label for="fullName">Full Name*</label>
+                                    <input
+                                        type="text"
+                                        name="name"
+                                        id="fullName"
+                                        value="<%= user.name %>"
+                                        required
+                                    >
+                                </div>
+
+                                <button type="submit" class="update-button">Update</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="section" id="password-section">
+                    <h2 class="section-title">Change your account password</h2>
+
+                    <div class="password-requirements">
+                        <p>The password has to be</p>
+                        <ul>
+                            <li>Minimum 8 characters long</li>
+                            <li>One uppercase letter at least</li>
+                            <li>One lowercase letter at least</li>
+                            <li>One special character at least</li>
+                            <li>One number</li>
+                            <li>Maximum 32 characters long</li>
+                        </ul>
+                    </div>
+
+                    <form action="/user/update/password" method="POST" onsubmit="return validatePassword()">
+
+                        <div class="form-group">
+                            <label for="newPassword">New password</label>
+                            <div class="password-input-wrapper">
+                                <input type="password" name="newPassword" id="newPassword" required>
+                                <span class="password-toggle" onclick="togglePassword('newPassword')">👁</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirm password</label>
+                            <div class="password-input-wrapper">
+                                <input type="password" name="confirmPassword" id="confirmPassword" required>
+                                <span class="password-toggle" onclick="togglePassword('confirmPassword')">👁</span>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="update-button">Update</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+<script>
+    function showSection(sectionName) {
+        document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
+        document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
+
+        if (sectionName === 'name-image') {
+            document.getElementById('name-image-section').classList.add('active');
+            document.querySelectorAll('.sidebar-item')[0].classList.add('active');
+        } else {
+            document.getElementById('password-section').classList.add('active');
+            document.querySelectorAll('.sidebar-item')[1].classList.add('active');
+        }
+    }
+
+    function togglePassword(id) {
+        const input = document.getElementById(id);
+        input.type = input.type === 'password' ? 'text' : 'password';
+    }
+
+    function validatePassword() {
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+
+        if (newPassword !== confirmPassword) {
+            alert('Passwords do not match');
+            return false;
+        }
+
+        const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,32}$/;
+
+        if (!regex.test(newPassword)) {
+            alert('Password does not meet the requirements');
+            return false;
+        }
+
+        return true;
+    }
+
+    function handleImageUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+        if (!validTypes.includes(file.type)) {
+            alert('Only JPG and PNG files are allowed');
+            event.target.value = '';
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('profilePreview').src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+</script>
+
+</body>
+</html>

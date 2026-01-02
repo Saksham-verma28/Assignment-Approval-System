@@ -15,8 +15,6 @@
     <%- include('../partials/sidebar') %>
 
     <div id="main-content">
-        <h1 class="page-title">All Users</h1>
-
         <form action="/admin/user/search" method="GET" class="filter-form">
             <input type="hidden" name="page" value="1">
             <input type="hidden" name="limit" value="<%= locals.limit || 20 %>">
@@ -56,6 +54,7 @@
                 </select>
             </div>
 
+            <!-- APPLY BUTTON ONLY FOR MOBILE -->
             <div class="mobile-submit-button">
                 <button type="submit" class="action-button edit-button">
                     Apply
@@ -181,51 +180,11 @@
         </div>
 
     </div>
+
     <script src="/js/active.js"></script>
     <script>
         window.onload = () => {
             if (typeof lucide !== "undefined") lucide.createIcons();
-        };
-
-        function openEditModal(user) {
-            const modal = document.getElementById("edit-user-modal");
-            const form = document.getElementById("edit-user-form");
-
-            form.action = `/admin/users/${user._id}/edit`;
-
-            document.getElementById("edit-user-id").value = user._id;
-            document.getElementById("edit-name").value = user.name;
-            document.getElementById("edit-email").value = user.email;
-            document.getElementById("edit-phone").value = user.phone;
-            document.getElementById("edit-department").value = user.department;
-            document.getElementById("edit-role").value = user.role;
-
-            modal.style.display = "block";
-        }
-
-        function closeEditModal() {
-            document.getElementById("edit-user-modal").style.display = "none";
-        }
-
-        function openDeleteModal(userId) {
-            const modal = document.getElementById("delete-user-modal");
-            const form = document.getElementById("delete-user-form");
-
-            form.action = `/admin/users/${userId}`;
-
-            modal.style.display = "block";
-        }
-
-        function closeDeleteModal() {
-            document.getElementById("delete-user-modal").style.display = "none";
-        }
-
-        window.onclick = (event) => {
-            const editModal = document.getElementById("edit-user-modal");
-            const deleteModal = document.getElementById("delete-user-modal");
-
-            if (event.target === editModal) closeEditModal();
-            if (event.target === deleteModal) closeDeleteModal();
         };
     </script>
 

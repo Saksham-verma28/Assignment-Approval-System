@@ -37,7 +37,7 @@ async function adminLogin(req, res) {
         await ActivityLog.create({
             actionType: 'LOGIN',
             entityType: 'System',
-            description: `${username} logged in.`,
+            description: `Admin logged in.`,
             performedBy: ADMIN_STATIC_ID,
             icon: 'log-in',
             color: 'var(--border-emerald)'

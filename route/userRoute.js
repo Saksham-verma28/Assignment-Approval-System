@@ -1,9 +1,12 @@
 const express = require('express');
 const router = express.Router();
+
 const jwt = require('jsonwebtoken');
+
 const User = require('../models/user');
 
 const { sendMail } = require('../config/sendEmail');
+
 const { generateSecureOTP } = require('../config/generateOTP');
 
 const cloudinary = require("cloudinary").v2;
@@ -63,7 +66,7 @@ router.post("/send-otp", async (req, res) => {
         storedOTP = otp;
         storedEmail = email;
 
-        const mailResponse = await sendMail(
+        const mailStatus = await sendMail(
             email,
             "University Assignment Portal - OTP Verification",
             `
@@ -80,7 +83,7 @@ router.post("/send-otp", async (req, res) => {
                     </p>
 
                     <p style="font-size: 15px;">
-                        Use the OTP below to reset your password.
+                        You requested to reset your password.
                     </p>
 
                     <h1 style="letter-spacing: 5px; text-align:center; color:#e68b74;">
@@ -102,11 +105,11 @@ router.post("/send-otp", async (req, res) => {
             `
         );
 
-        if (!mailResponse) {
+        if (!mailStatus) {
 
             return res.json({
                 success: false,
-                message: "OTP mail failed to send"
+                message: "Failed to send OTP mail"
             });
 
         }

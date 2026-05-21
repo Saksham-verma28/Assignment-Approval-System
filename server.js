@@ -8,9 +8,11 @@ const cookieParser = require('cookie-parser')
 
 dotenv.config()
 
+const { connectDB } = require('./config/connectDB');
 
 
 
+connectDB();
 const authRoute = require('./route/authRoute');
 const adminRoute = require('./route/adminRoute');
 const userRoute = require('./route/userRoute')

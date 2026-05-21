@@ -11,18 +11,27 @@ const transport = nodemailer.createTransport({
 });
 
 async function sendMail(to, sub, msg) {
+
     try {
+
         const info = await transport.sendMail({
-            from: process.env.MAIL_USER,
+            from: `"Assignment System" <${process.env.MAIL_USER}>`,
             to: to,
             subject: sub,
             html: msg
         });
 
-        console.log("Mail Sent:", info.messageId);
+        console.log("MAIL SENT SUCCESSFULLY");
+        console.log(info.messageId);
+
+        return true;
 
     } catch (error) {
-        console.log("Mail Error:", error);
+
+        console.log("MAIL ERROR:");
+        console.log(error);
+
+        return false;
     }
 }
 

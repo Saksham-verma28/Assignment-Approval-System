@@ -1,90 +1,193 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-const User = require('../models/user')
-const {sendMail} = require('../config/sendEmail')
-const {generateSecureOTP} = require('../config/generateOTP')
+const User = require('../models/user');
+
+const { sendMail } = require('../config/sendEmail');
+const { generateSecureOTP } = require('../config/generateOTP');
+
 const cloudinary = require("cloudinary").v2;
-const { upload, upload2 } = require('../config/multer')
-const fs = require('fs')
-const path = require('path')
-const {userLogin, moveToDashboard} = require('../controllers/user');
+
+const { upload2 } = require('../config/multer');
+
+const fs = require('fs');
+
+const { userLogin, moveToDashboard } = require('../controllers/user');
+
 const hashPass = require('../hashPassword');
 
-router.get('/login',userLogin)
 
-router.post('/login',moveToDashboard);
+// ================= LOGIN =================
+
+router.get('/login', userLogin);
+
+router.post('/login', moveToDashboard);
 
 
-router.get('/forget',(req,res)=>{
-    res.render("user/forgetPass", {err: ''})
-})
+// ================= FORGET PASSWORD =================
+
+router.get('/forget', (req, res) => {
+
+    res.render("user/forgetPass", { err: '' });
+
+});
+
+
+// ================= OTP STORAGE =================
 
 let storedOTP = "";
 let storedEmail = "";
 
 
+// ================= SEND OTP =================
+
 router.post("/send-otp", async (req, res) => {
-    const email = req.body.email;
 
-    const exist = await User.findOne({ email });
+    try {
 
-    if (!exist) {
+        const email = req.body.email;
+
+        const exist = await User.findOne({ email });
+
+        if (!exist) {
+
+            return res.json({
+                success: false,
+                message: "User not found! Please enter a registered university email."
+            });
+
+        }
+
+        const otp = generateSecureOTP();
+
+        storedOTP = otp;
+        storedEmail = email;
+
+        const mailResponse = await sendMail(
+            email,
+            "University Assignment Portal - OTP Verification",
+            `
+            <div style="font-family: Arial, sans-serif; padding: 20px; background:#f5f5f5;">
+
+                <div style="max-width: 500px; margin: auto; background: white; padding: 25px; border-radius: 10px;">
+
+                    <h2 style="color:#333; text-align: center;">
+                        University Assignment Approval System
+                    </h2>
+
+                    <p style="font-size: 15px;">
+                        Dear Student,
+                    </p>
+
+                    <p style="font-size: 15px;">
+                        Use the OTP below to reset your password.
+                    </p>
+
+                    <h1 style="letter-spacing: 5px; text-align:center; color:#e68b74;">
+                        ${otp}
+                    </h1>
+
+                    <p style="font-size: 14px;">
+                        OTP valid for 10 minutes.
+                    </p>
+
+                    <p style="font-size: 14px;">
+                        Regards,<br>
+                        University Assignment Approval System
+                    </p>
+
+                </div>
+
+            </div>
+            `
+        );
+
+        if (!mailResponse) {
+
+            return res.json({
+                success: false,
+                message: "OTP mail failed to send"
+            });
+
+        }
+
+        return res.json({
+            success: true,
+            email,
+            message: "OTP sent successfully!"
+        });
+
+    } catch (error) {
+
+        console.log(error);
+
         return res.json({
             success: false,
-            message: "User not found! Please enter a registered university email."
+            message: "Server Error"
         });
+
     }
 
-    const otp = generateSecureOTP();
-
-    storedOTP = otp;
-    storedEmail = email;
-
-    sendMail(
-        email,
-        "University Assignment Portal - OTP Verification",
-        `
-        <div style="font-family: Arial, sans-serif; padding: 20px; background:#f5f5f5;">
-            <div style="max-width: 500px; margin: auto; background: white; padding: 25px; border-radius: 10px;">
-                <h2 style="color:#333; text-align: center;">University Assignment Approval System</h2>
-                <p style="font-size: 15px;">Dear Student,</p>
-                <p style="font-size: 15px;">
-                    You have requested to reset your password. Use the One-Time Password provided below:
-                </p>
-                <h1 style="letter-spacing: 5px; text-align:center; color:#e68b74;">${otp}</h1>
-                <p style="font-size: 14px;">Valid for 10 minutes. Do not share this OTP.</p>
-                <p style="font-size: 14px;">Regards,<br>University Assignment Approval System</p>
-            </div>
-        </div>`
-    );
-
-    return res.json({
-        success: true,
-        email,
-        message: "OTP sent successfully!"
-    });
 });
 
-router.post("/reset-password", async(req, res) => {
-    const { otp, newPassword, confirmPassword } = req.body;
 
-    if (otp !== storedOTP) {
-        return res.json({ success: false, message: "Invalid OTP" });
+// ================= RESET PASSWORD =================
+
+router.post("/reset-password", async (req, res) => {
+
+    try {
+
+        const { otp, newPassword, confirmPassword } = req.body;
+
+        if (otp !== storedOTP) {
+
+            return res.json({
+                success: false,
+                message: "Invalid OTP"
+            });
+
+        }
+
+        if (newPassword !== confirmPassword) {
+
+            return res.json({
+                success: false,
+                message: "Passwords do not match"
+            });
+
+        }
+
+        const hashPassword = await hashPass(newPassword);
+
+        await User.findOneAndUpdate(
+            { email: storedEmail },
+            {
+                $set: {
+                    password: hashPassword
+                }
+            }
+        );
+
+        return res.json({
+            success: true,
+            message: "Password updated successfully"
+        });
+
+    } catch (error) {
+
+        console.log(error);
+
+        return res.json({
+            success: false,
+            message: "Server Error"
+        });
+
     }
 
-    if (newPassword !== confirmPassword) {
-        return res.json({ success: false, message: "Passwords do not match" });
-        
-    }
-
-    const hashPassword = await hashPass(newPassword)
-
-    await User.findOneAndUpdate({email: storedEmail}, {$set: {password: hashPassword}});
-
-    return res.json({ success: true, message: "Password updated successfully" });
 });
 
+
+// ================= CLOUDINARY =================
 
 cloudinary.config({
     cloud_name: process.env.CLOUD_NAME,
@@ -93,77 +196,137 @@ cloudinary.config({
 });
 
 
+// ================= UPDATE PROFILE =================
 
 router.post('/update/profile', upload2.single('profileImage'), async (req, res) => {
 
-    let email;
-    let token = req.cookies["User"];
-    jwt.verify(token, process.env.JWT_KEY, (err, decoded) => {
-        email = decoded.email;
-    });
+    try {
 
-    let { name } = req.body;
+        let email;
 
-    if (req.file) {
-        const filePath = req.file.path;
+        let token = req.cookies["User"];
 
-        const result = await cloudinary.uploader.upload(filePath, {
-            resource_type: "image",
+        jwt.verify(token, process.env.JWT_KEY, (err, decoded) => {
+
+            email = decoded.email;
+
         });
 
-        const profile = result.secure_url;
-        fs.unlinkSync(filePath);
+        let { name } = req.body;
 
-        await User.updateOne(
-            { email: email },
-            { $set: { name: name, profilePic: profile } }
-        );
-    } else {
-        await User.updateOne(
-            { email: email },
-            { $set: { name: name } }
-        );
+        if (req.file) {
+
+            const filePath = req.file.path;
+
+            const result = await cloudinary.uploader.upload(filePath, {
+                resource_type: "image",
+            });
+
+            const profile = result.secure_url;
+
+            fs.unlinkSync(filePath);
+
+            await User.updateOne(
+                { email: email },
+                {
+                    $set: {
+                        name: name,
+                        profilePic: profile
+                    }
+                }
+            );
+
+        } else {
+
+            await User.updateOne(
+                { email: email },
+                {
+                    $set: {
+                        name: name
+                    }
+                }
+            );
+
+        }
+
+        let user = await User.findOne({ email: email });
+
+        res.render("user/editProfile", {
+            user: user,
+            success: true
+        });
+
+    } catch (error) {
+
+        console.log(error);
+
     }
 
-    let user = await User.findOne({ email: email });
-
-    res.render("user/editProfile", { user: user, success: true });
 });
 
 
+// ================= UPDATE PASSWORD =================
 
 router.post('/update/password', async (req, res) => {
-    const { newPassword, confirmPassword } = req.body;
 
-    let email;
-    let token = req.cookies["User"];
-    jwt.verify(token, process.env.JWT_KEY, (err, decoded) => {
-        email = decoded.email
-    })
+    try {
+
+        const { newPassword, confirmPassword } = req.body;
+
+        if (newPassword !== confirmPassword) {
+
+            return res.render("user/editProfile", {
+                success: false
+            });
+
+        }
+
+        let email;
+
+        let token = req.cookies["User"];
+
+        jwt.verify(token, process.env.JWT_KEY, (err, decoded) => {
+
+            email = decoded.email;
+
+        });
+
+        let newHashPass = await hashPass(newPassword);
+
+        await User.updateOne(
+            { email: email },
+            {
+                $set: {
+                    password: newHashPass
+                }
+            }
+        );
+
+        let user = await User.findOne({ email: email });
+
+        res.render("user/editProfile", {
+            user: user,
+            success: true
+        });
+
+    } catch (error) {
+
+        console.log(error);
+
+    }
+
+});
 
 
+// ================= UNAUTHORIZED =================
 
-    let newHashPass = await hashPass(newPassword)
+router.get('/unauthorized/login', (req, res) => {
 
-     await User.updateOne(
-        { email: email },
-        { $set: {password: hashPass} }
-    );
+    res.render('user/unauthorized');
 
-    let find = await User.find({ email: email })
-    let user = find[0]
+});
 
 
-    res.render("user/editProfile", { user: user, success: true})
+// ================= EXPORT =================
 
-})
-
-
-
-
-
-
-router.get('/unauthorized/login',(req,res)=>{
-    res.render('user/unauthorized')
-})
-module.exports = router
+module.exports = router;

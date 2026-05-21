@@ -15,14 +15,13 @@ async function sendMail(to, sub, msg) {
     try {
 
         const info = await transport.sendMail({
-            from: `"Assignment System" <${process.env.MAIL_USER}>`,
+            from: "s282006v@gmail.com",
             to: to,
             subject: sub,
             html: msg
         });
 
         console.log("MAIL SENT SUCCESSFULLY");
-        console.log(info.messageId);
 
         return true;
 
